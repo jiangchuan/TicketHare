@@ -13,6 +13,30 @@ android {
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
     }
+
+    sourceSets.main {
+        jni.srcDirs = [] // This prevents the auto generation of Android.mk
+        jniLibs.srcDir 'src/main/libs' // This is not necessary unless you have precompiled libraries in your project.
+    }
+    task buildNative(type: Exec, description: 'Compile JNI source via NDK') {
+        def ndkDir = android.ndkDirectory
+        commandLine "$ndkDir/ndk-build",
+                '-C', file('src/main/jni').absolutePath, // Change src/main/jni the relative path to your jni source
+                '-j', Runtime.runtime.availableProcessors(),
+                'all',
+                'NDK_DEBUG=0'
+    }
+    task cleanNative(type: Exec, description: 'Clean JNI object files') {
+        def ndkDir = android.ndkDirectory
+        commandLine "$ndkDir/ndk-build",
+                '-C', file('src/main/jni').absolutePath, // Change src/main/jni the relative path to your jni source
+                'clean'
+    }
+    clean.dependsOn 'cleanNative'
+    tasks.withType(JavaCompile) {
+        compileTask -> compileTask.dependsOn buildNative
+    }
+
     buildTypes {
         release {
             minifyEnabled false
@@ -66,4 +90,16 @@ dependencies {
     compile 'io.grpc:grpc-protobuf-lite:1.1.0-SNAPSHOT' // CURRENT_GRPC_VERSION
     compile 'io.grpc:grpc-stub:1.1.0-SNAPSHOT' // CURRENT_GRPC_VERSION
     compile 'javax.annotation:javax.annotation-api:1.2'
+
+    // Baidu Map
+    compile files('src/main/libs/locSDK_6.13.jar')
+    compile files('src/main/libs/baidumapapi_base_v4_1_1.jar')
+    compile files('src/main/libs/baidumapapi_cloud_v4_1_1.jar')
+    compile files('src/main/libs/baidumapapi_map_v4_1_1.jar')
+    compile files('src/main/libs/baidumapapi_radar_v4_1_1.jar')
+    compile files('src/main/libs/baidumapapi_search_v4_1_1.jar')
+    compile files('src/main/libs/baidumapapi_util_v4_1_1.jar')
+
+    compile project(':cam2')
+
 }

@@ -1,1 +1,1 @@
-include ':app'
+include ':cam2', ':app'

@@ -1,0 +1,444 @@
+[
+    {
+        "outputFile": "/Users/Jiangchuan/Documents/good6/TicketHare/cam2/build/intermediates/incremental/mergeReleaseResources/merged.dir/values/values.xml",
+        "map": [
+            {
+                "to": {
+                    "startLine": 2,
+                    "startColumn": 4,
+                    "startOffset": 55,
+                    "endColumn": 63,
+                    "endOffset": 114
+                },
+                "from": {
+                    "file": "/Users/Jiangchuan/Documents/good6/TicketHare/cam2/src/main/res/values/colors.xml",
+                    "position": {
+                        "startLine": 8,
+                        "startColumn": 2,
+                        "startOffset": 409,
+                        "endColumn": 61,
+                        "endOffset": 468
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 3,
+                    "startColumn": 4,
+                    "startOffset": 119,
+                    "endColumn": 55,
+                    "endOffset": 170
+                },
+                "from": {
+                    "file": "/Users/Jiangchuan/Documents/good6/TicketHare/cam2/src/main/res/values/colors.xml",
+                    "position": {
+                        "startLine": 6,
+                        "startColumn": 2,
+                        "startOffset": 293,
+                        "endColumn": 53,
+                        "endOffset": 344
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 4,
+                    "startColumn": 4,
+                    "startOffset": 175,
+                    "endColumn": 63,
+                    "endOffset": 234
+                },
+                "from": {
+                    "file": "/Users/Jiangchuan/Documents/good6/TicketHare/cam2/src/main/res/values/colors.xml",
+                    "position": {
+                        "startLine": 7,
+                        "startColumn": 2,
+                        "startOffset": 347,
+                        "endColumn": 61,
+                        "endOffset": 406
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 5,
+                    "startColumn": 4,
+                    "startOffset": 239,
+                    "endColumn": 57,
+                    "endOffset": 292
+                },
+                "from": {
+                    "file": "/Users/Jiangchuan/Documents/good6/TicketHare/cam2/src/main/res/values/colors.xml",
+                    "position": {
+                        "startLine": 4,
+                        "startColumn": 2,
+                        "startOffset": 173,
+                        "endColumn": 55,
+                        "endOffset": 226
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 6,
+                    "startColumn": 4,
+                    "startOffset": 297,
+                    "endColumn": 65,
+                    "endOffset": 358
+                },
+                "from": {
+                    "file": "/Users/Jiangchuan/Documents/good6/TicketHare/cam2/src/main/res/values/colors.xml",
+                    "position": {
+                        "startLine": 5,
+                        "startColumn": 2,
+                        "startOffset": 229,
+                        "endColumn": 63,
+                        "endOffset": 290
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 7,
+                    "startColumn": 4,
+                    "startOffset": 363,
+                    "endColumn": 57,
+                    "endOffset": 416
+                },
+                "from": {
+                    "file": "/Users/Jiangchuan/Documents/good6/TicketHare/cam2/src/main/res/values/colors.xml",
+                    "position": {
+                        "startLine": 2,
+                        "startColumn": 2,
+                        "startOffset": 53,
+                        "endColumn": 55,
+                        "endOffset": 106
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 8,
+                    "startColumn": 4,
+                    "startOffset": 421,
+                    "endColumn": 65,
+                    "endOffset": 482
+                },
+                "from": {
+                    "file": "/Users/Jiangchuan/Documents/good6/TicketHare/cam2/src/main/res/values/colors.xml",
+                    "position": {
+                        "startLine": 3,
+                        "startColumn": 2,
+                        "startOffset": 109,
+                        "endColumn": 63,
+                        "endOffset": 170
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 9,
+                    "startColumn": 4,
+                    "startOffset": 487,
+                    "endColumn": 44,
+                    "endOffset": 527
+                },
+                "from": {
+                    "file": "/Users/Jiangchuan/Documents/good6/TicketHare/cam2/src/main/res/values/colors.xml",
+                    "position": {
+                        "startLine": 10,
+                        "startColumn": 2,
+                        "startOffset": 507,
+                        "endColumn": 42,
+                        "endOffset": 547
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 10,
+                    "startColumn": 4,
+                    "startOffset": 532,
+                    "endColumn": 37,
+                    "endOffset": 565
+                },
+                "from": {
+                    "file": "/Users/Jiangchuan/Documents/good6/TicketHare/cam2/src/main/res/values/colors.xml",
+                    "position": {
+                        "startLine": 9,
+                        "startColumn": 2,
+                        "startOffset": 471,
+                        "endColumn": 35,
+                        "endOffset": 504
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 13,
+                    "startColumn": 4,
+                    "startOffset": 4094,
+                    "endColumn": 63,
+                    "endOffset": 4153
+                },
+                "from": {
+                    "file": "/Users/Jiangchuan/Documents/good6/TicketHare/cam2/src/main/res/values/dimens.xml",
+                    "position": {
+                        "startLine": 8,
+                        "startColumn": 2,
+                        "startOffset": 445,
+                        "endColumn": 61,
+                        "endOffset": 504
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 14,
+                    "startColumn": 4,
+                    "startOffset": 4158,
+                    "endColumn": 72,
+                    "endOffset": 4226
+                },
+                "from": {
+                    "file": "/Users/Jiangchuan/Documents/good6/TicketHare/cam2/src/main/res/values/dimens.xml",
+                    "position": {
+                        "startLine": 4,
+                        "startColumn": 2,
+                        "startOffset": 181,
+                        "endColumn": 70,
+                        "endOffset": 249
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 15,
+                    "startColumn": 4,
+                    "startOffset": 4231,
+                    "endColumn": 67,
+                    "endOffset": 4294
+                },
+                "from": {
+                    "file": "/Users/Jiangchuan/Documents/good6/TicketHare/cam2/src/main/res/values/dimens.xml",
+                    "position": {
+                        "startLine": 3,
+                        "startColumn": 2,
+                        "startOffset": 115,
+                        "endColumn": 65,
+                        "endOffset": 178
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 16,
+                    "startColumn": 4,
+                    "startOffset": 4299,
+                    "endColumn": 63,
+                    "endOffset": 4358
+                },
+                "from": {
+                    "file": "/Users/Jiangchuan/Documents/good6/TicketHare/cam2/src/main/res/values/dimens.xml",
+                    "position": {
+                        "startLine": 2,
+                        "startColumn": 2,
+                        "startOffset": 53,
+                        "endColumn": 61,
+                        "endOffset": 112
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 17,
+                    "startColumn": 4,
+                    "startOffset": 4363,
+                    "endColumn": 67,
+                    "endOffset": 4426
+                },
+                "from": {
+                    "file": "/Users/Jiangchuan/Documents/good6/TicketHare/cam2/src/main/res/values/dimens.xml",
+                    "position": {
+                        "startLine": 7,
+                        "startColumn": 2,
+                        "startOffset": 379,
+                        "endColumn": 65,
+                        "endOffset": 442
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 18,
+                    "startColumn": 4,
+                    "startOffset": 4431,
+                    "endColumn": 66,
+                    "endOffset": 4493
+                },
+                "from": {
+                    "file": "/Users/Jiangchuan/Documents/good6/TicketHare/cam2/src/main/res/values/dimens.xml",
+                    "position": {
+                        "startLine": 6,
+                        "startColumn": 2,
+                        "startOffset": 314,
+                        "endColumn": 64,
+                        "endOffset": 376
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 19,
+                    "startColumn": 4,
+                    "startOffset": 4498,
+                    "endColumn": 63,
+                    "endOffset": 4557
+                },
+                "from": {
+                    "file": "/Users/Jiangchuan/Documents/good6/TicketHare/cam2/src/main/res/values/dimens.xml",
+                    "position": {
+                        "startLine": 5,
+                        "startColumn": 2,
+                        "startOffset": 252,
+                        "endColumn": 61,
+                        "endOffset": 311
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 20,
+                    "startColumn": 4,
+                    "startOffset": 4562,
+                    "endColumn": 44,
+                    "endOffset": 4602
+                },
+                "from": {
+                    "file": "/Users/Jiangchuan/.android/build-cache/7c0dd2ed4e1c74e1293573347860ac0f9225f26b/output/res/values/values.xml",
+                    "position": {
+                        "startLine": 4,
+                        "startColumn": 4,
+                        "startOffset": 3579,
+                        "endColumn": 44,
+                        "endOffset": 3619
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 21,
+                    "startColumn": 4,
+                    "startOffset": 4607,
+                    "endColumn": 46,
+                    "endOffset": 4649
+                },
+                "from": {
+                    "file": "/Users/Jiangchuan/.android/build-cache/7c0dd2ed4e1c74e1293573347860ac0f9225f26b/output/res/values/values.xml",
+                    "position": {
+                        "startLine": 5,
+                        "startColumn": 4,
+                        "startOffset": 3624,
+                        "endColumn": 46,
+                        "endOffset": 3666
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 22,
+                    "startColumn": 4,
+                    "startOffset": 4654,
+                    "endColumn": 47,
+                    "endOffset": 4697
+                },
+                "from": {
+                    "file": "/Users/Jiangchuan/.android/build-cache/7c0dd2ed4e1c74e1293573347860ac0f9225f26b/output/res/values/values.xml",
+                    "position": {
+                        "startLine": 6,
+                        "startColumn": 4,
+                        "startOffset": 3671,
+                        "endColumn": 47,
+                        "endOffset": 3714
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 23,
+                    "startColumn": 4,
+                    "startOffset": 4702,
+                    "endColumn": 38,
+                    "endOffset": 4736
+                },
+                "from": {
+                    "file": "/Users/Jiangchuan/.android/build-cache/7c0dd2ed4e1c74e1293573347860ac0f9225f26b/output/res/values/values.xml",
+                    "position": {
+                        "startLine": 7,
+                        "startColumn": 4,
+                        "startOffset": 3719,
+                        "endColumn": 38,
+                        "endOffset": 3753
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 24,
+                    "startColumn": 4,
+                    "startOffset": 4741,
+                    "endColumn": 43,
+                    "endOffset": 4780
+                },
+                "from": {
+                    "file": "/Users/Jiangchuan/Documents/good6/TicketHare/cam2/src/main/res/values/strings.xml",
+                    "position": {
+                        "startLine": 2,
+                        "startColumn": 2,
+                        "startOffset": 53,
+                        "endColumn": 41,
+                        "endOffset": 92
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 25,
+                    "startColumn": 4,
+                    "startOffset": 4785,
+                    "endColumn": 53,
+                    "endOffset": 4834
+                },
+                "from": {
+                    "file": "/Users/Jiangchuan/Documents/good6/TicketHare/cam2/src/main/res/values/strings.xml",
+                    "position": {
+                        "startLine": 3,
+                        "startColumn": 2,
+                        "startOffset": 95,
+                        "endColumn": 51,
+                        "endOffset": 144
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 26,
+                    "startColumn": 4,
+                    "startOffset": 4839,
+                    "endColumn": 70,
+                    "endOffset": 4905
+                },
+                "from": {
+                    "file": "/Users/Jiangchuan/Documents/good6/TicketHare/cam2/src/main/res/values/strings.xml",
+                    "position": {
+                        "startLine": 5,
+                        "startColumn": 2,
+                        "startOffset": 148,
+                        "endColumn": 68,
+                        "endOffset": 214
+                    }
+                }
+            }
+        ]
+    }
+]
