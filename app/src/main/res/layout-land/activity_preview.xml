@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/ticket_preview_hint_textview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/lime_green"
+        android:gravity="center_horizontal"
+        android:text="@string/ticket_preview_hint"
+        android:textColor="@color/red"
+        android:textSize="24sp"
+        android:visibility="gone" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ScrollView
+            android:id="@+id/imageDetailsScrollView"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="2">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/image_margin"
+                android:layout_marginTop="@dimen/text_margin"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:orientation="vertical">
+
+                <include layout="@layout/image_details" />
+
+            </LinearLayout>
+
+        </ScrollView>
+
+
+        <ScrollView
+            android:id="@+id/ticketDetailsScrollView"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="3.45">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_margin="@dimen/image_margin"
+                android:layout_marginTop="@dimen/text_margin"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
+                android:orientation="vertical">
+
+                <include layout="@layout/ticket_details" />
+
+                <include layout="@layout/submit_buttons" />
+
+            </LinearLayout>
+
+        </ScrollView>
+    </LinearLayout>
+</LinearLayout>

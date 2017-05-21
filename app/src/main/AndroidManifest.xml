@@ -56,6 +56,19 @@
             android:process=":cwac_cam2"
             android:theme="@style/android:Theme.DeviceDefault"/>
 
+        <activity android:name=".database.DetailsActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.VIEW" />
+            </intent-filter>
+        </activity>
+
+        <provider
+            android:name=".database.DBProvider"
+            android:authorities="io.chizi.tickethare.database.DBProvider"
+            android:exported="true"
+            android:multiprocess="true" >
+        </provider>
+
 
     </application>
 

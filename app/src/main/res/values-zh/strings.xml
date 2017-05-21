@@ -4,4 +4,213 @@
 
     <string name="copy_right">赤子科技 2016\u00a9</string>
 
+    <string name="acquire_start">开始</string>
+
+    <string name="button_submit">生成罚单</string>
+    <string name="action_settings">设置</string>
+    <string name="cancelBtnTxt">取消</string>
+    <string name="plate_label">车牌号</string>
+    <string name="time_label">时间</string>
+    <string name="address_label">地点</string>
+    <string name="host_label">IP地址</string>
+    <string name="transSize_label">图片传输尺寸</string>
+    <string name="compressRatio_label">压缩系数</string>
+    <string name="processingTime_label">识别时长</string>
+    <string name="lonLat_label">经纬度</string>
+    <string name="hint_user">用户名</string>
+    <string name="hint_police_department">交警分局</string>
+    <string name="hint_email">电子邮件</string>
+    <string name="hint_password">密码</string>
+
+    <string name="scan_no_result">无扫描结果!请重新扫描。</string>
+    <string name="scan_result">扫描结果: </string>
+    <string name="scan_info_text">请将二维码放在扫描框中</string>
+
+    <string name="login_btn_label">登录</string>
+    <string name="create_account_btn_label">创建账户</string>
+    <string name="update_account_btn_label">更新账户</string>
+    <string name="new_account_label">没有账户? 创建一个</string>
+    <string name="login_label">已有账户? 登录</string>
+    <string name="save_btn_label">保存</string>
+    <string name="take_picture_btn_label">拍摄车牌相片</string>
+    <string name="show_map_btn_label">定位地图</string>
+    <string name="save_ticket_btn_label">保存</string>
+    <string name="show_db_btn_label">查看数据</string>
+    <string name="save_map_screen_btn_label">截图保存</string>
+
+    <string name="progress_dialog_waiting">稍等 ...</string>
+    <string name="progress_dialog_recognizing">正在处理 ...</string>
+    <string name="progress_dialog_logining">正在登录 ...</string>
+    <string name="alert_dialog_license_check">对吗?</string>
+    <string name="alert_dialog_license_check_yes">是</string>
+    <string name="alert_dialog_license_check_no">否</string>
+    <string name="alert_dialog_authenticate">正在登录 ...</string>
+    <string name="alert_dialog_dbresponse">已上传罚单数: </string>
+
+    <string name="checkbox_torch">开/关 手电</string>
+    <string name="toast_ticket_saved">罚单已保存</string>
+    <string name="toast_insert_db_failed">插入数据库失败</string>
+    <string name="toast_no_ticket_id">还没扫描罚单二维码!</string>
+    <string name="toast_no_user">没有用户登录!</string>
+    <string name="toast_ticket_no_license">没有提取到牌照!</string>
+    <string name="toast_ticket_no_license_color">没有提取到牌照颜色!</string>
+    <string name="toast_ticket_no_time">没有提取到时间!</string>
+    <string name="toast_map_saved">屏幕截图成功，图片存在: </string>
+    <string name="toast_map_saving">正在截取屏幕图片 ...</string>
+    <string name="toast_login_failed">用户名或密码不正确!</string>
+    <string name="toast_login_success">登录成功!</string>
+    <string name="toast_signup_failed">新建账户失败!</string>
+    <string name="toast_signup_success">新建账户成功!</string>
+    <string name="toast_update_failed">更新账户失败!</string>
+    <string name="toast_update_success">更新账户成功!</string>
+    <string name="toast_wrong_userid">用户名不能为空!</string>
+    <string name="request_wrong_userid">请输入用户名!</string>
+    <string name="toast_wrong_password">密码不能为空!</string>
+    <string name="request_wrong_password">请输入密码!</string>
+    <string name="toast_wrong_repassword">重输密码和密码不匹配!</string>
+    <string name="request_wrong_repassword">请输入相同的密码!</string>
+    <string name="toast_wrong_police_name">姓名不能为空!</string>
+    <string name="request_wrong_police_name">请输入姓名!</string>
+    <string name="toast_wrong_police_city">城市不能为空!</string>
+    <string name="request_wrong_police_city">请输入城市!</string>
+    <string name="toast_wrong_police_dept">分局名不能为空!</string>
+    <string name="request_wrong_police_dept">请输入分局名!</string>
+    <string name="toast_wrong_police_station">警务站名不能为空!</string>
+    <string name="request_wrong_police_station">请输入警务站名!</string>
+    <string name="toast_update_hint">长按可更改帐户信息</string>
+
+    <string name="empty_database">无罚单查看, 请先生成罚单</string>
+    <string name="img_file_create_error">创建照片文件错误! 请重新拍照。</string>
+    <string name="no_internet_error">请先连接网络再拍照。</string>
+    <string name="recognition_error">没有检测到车牌! 请将车牌完全框住再拍照。</string>
+    <string name="decode_error">图片解码错误! 请重新拍照。</string>
+    <string name="transmission_error">服务端没有接收到相片! 请重新拍照。</string>
+    <string name="start_ticket">即将生成罚单号: </string>
+
+    <string name="camera_hint_front">\u2460车辆取证: 近处框车牌拍车身</string>
+    <string name="camera_hint_back">\u2461地点取证: 远处拍车身拍环境</string>
+    <string name="ticket_preview_hint">\u2462证据确认: 车色车型证据确认</string>
+    <string name="camera_hint_qrcode">\u2463扫码生效: 扫二维码罚单生成</string>
+    <string name="camera_hint_side">\u2464贴单通告: 驾驶侧贴单并拍照</string>
+
+    <string name="proof_address">证据一: 违停地址</string>
+    <string name="proof_vehicle">证据二: 违停车辆</string>
+    <string name="proof_environment">证据三: 违停地点</string>
+    <string name="proof_notification">证据四: 违停告知</string>
+
+    <string name="plate_rect">车牌识别区</string>
+    <string name="ticket_address_label">正在定位 ... </string>
+    <string name="ticket_address_header">违停地址: </string>
+
+    <string name="tab_acquire">生成罚单</string>
+    <string name="tab_database">查看罚单</string>
+
+    <string name="ticket_title">市道路停车记录告知单</string>
+    <string name="ticket_number">编号: </string>
+    <string name="ticket_car_license">车辆牌号:</string>
+
+    <string name="police_type_prompt">职位</string>
+    <string-array name="police_type_arrays">
+        <item>警察</item>
+        <item>协警</item>
+    </string-array>
+
+    <string name="police_city_prompt">城市</string>
+    <string-array name="police_city_arrays">
+        <item>北京</item>
+        <item>上海</item>
+        <item>重庆</item>
+        <item>大连</item>
+        <item>成都</item>
+        <item>内江</item>
+    </string-array>
+
+    <string name="ticket_car_color">车身颜色:</string>
+    <string name="car_color_prompt">选择</string>
+    <string-array name="car_color_arrays">
+        <item>黑</item>
+        <item>白</item>
+        <item>银</item>
+        <item>灰</item>
+        <item>红</item>
+        <item>橙</item>
+        <item>黄</item>
+        <item>绿</item>
+        <item>青</item>
+        <item>蓝</item>
+        <item>紫</item>
+    </string-array>
+
+    <integer-array name="vehicle_color_int_arrays">
+        <item>@color/black</item>
+        <item>@color/white</item>
+        <item>@color/silver</item>
+        <item>@color/gray</item>
+        <item>@color/red</item>
+        <item>@color/orange</item>
+        <item>@color/yellow</item>
+        <item>@color/green</item>
+        <item>@color/cyan</item>
+        <item>@color/blue</item>
+        <item>@color/purple</item>
+    </integer-array>
+
+    <integer-array name="vehicle_text_color_int_arrays">
+        <item>@color/white</item>
+        <item>@color/black</item>
+        <item>@color/black</item>
+        <item>@color/black</item>
+        <item>@color/white</item>
+        <item>@color/black</item>
+        <item>@color/black</item>
+        <item>@color/black</item>
+        <item>@color/black</item>
+        <item>@color/white</item>
+        <item>@color/white</item>
+    </integer-array>
+
+    <string name="car_type_prompt">选择车型</string>
+    <string-array name="car_type_arrays">
+        <item>小型客车</item>
+        <item>小型货车</item>
+        <item>摩托车</item>
+        <item>大型客车</item>
+        <item>大型货车</item>
+        <item>其他</item>
+    </string-array>
+
+    <string name="ticket_car_type">车辆类型:</string>
+    <string name="radiobutton_big_bus">大型客车</string>
+    <string name="radiobutton_small_bus">小型客车</string>
+    <string name="radiobutton_big_truck">大型货车</string>
+    <string name="radiobutton_small_truck">小型货车</string>
+    <string name="radiobutton_motorcycle">摩托车</string>
+    <string name="radiobutton_other_car_type">其他</string>
+
+    <string name="ticket_license_color">号牌颜色:</string>
+    <string name="radiobutton_yellow">黄色</string>
+    <string name="radiobutton_blue">蓝色</string>
+    <string name="radiobutton_black">黑色</string>
+    <string name="radiobutton_other_license_color">其他</string>
+
+    <string name="ticket_parking_time">停车时间:</string>
+    <string name="ticket_parking_address">停车地点:</string>
+    <string name="ticket_description1">
+        该机动车在上述时间、地点未在道路停车泊位或停车场内停放,
+        现已对现场道路交通情况进行了图像记录,
+        并报告
+    </string>
+    <string name="ticket_description2">
+        审核认定是否违法停放。
+        你可在七个工作日后登陆http://www.cdjg.gov.cn查询,
+        或在收到公安机关交通管理部门通知后前往接受处理。
+    </string>
+    <string name="ticket_police">交通协管员:</string>
+    <string name="ticket_year">年</string>
+    <string name="ticket_month">月</string>
+    <string name="ticket_day">日</string>
+    <string name="ticket_hour">时</string>
+    <string name="ticket_minute">分</string>
+    <string name="ticket_sub_description">备注:</string>
+
 </resources>

@@ -16,7 +16,7 @@ extern "C" {
 #endif
 string mappingpath="/sdcard/mrcar/chinese_mapping";
 JNIEXPORT jstring JNICALL
-Java_io_grpc_helloworldexample_acquire_PlateRecognizer_plateRecognition(JNIEnv *env, jclass type, jlong matImg,
+Java_io_chizi_tickethare_acquire_PlateRecognizer_plateRecognition(JNIEnv *env, jclass type, jlong matImg,
                                                    jlong matResult) {
 
     // TODO

@@ -4,4 +4,213 @@
 
     <string name="copy_right">ChiziTech 2016\u00a9</string>
 
+    <string name="acquire_start">Start</string>
+
+    <string name="button_submit">Generate Ticket</string>
+    <string name="action_settings">Settings</string>
+    <string name="cancelBtnTxt">Cancel</string>
+    <string name="plate_label">Plate</string>
+    <string name="time_label">Time</string>
+    <string name="address_label">Address</string>
+    <string name="host_label">Host IP</string>
+    <string name="transSize_label">Trans Image Size</string>
+    <string name="compressRatio_label">Compress Ratio</string>
+    <string name="processingTime_label">Time taken</string>
+    <string name="lonLat_label">Lon-Lat</string>
+    <string name="hint_user">User ID</string>
+    <string name="hint_police_department">Police department</string>
+    <string name="hint_email">Email</string>
+    <string name="hint_password">Password</string>
+
+    <string name="scan_no_result">No scan result! Please scan again.</string>
+    <string name="scan_result">Scan result: </string>
+    <string name="scan_info_text">Place the QR code inside the view finder</string>
+
+    <string name="login_btn_label">LOGIN</string>
+    <string name="create_account_btn_label">Create Account</string>
+    <string name="update_account_btn_label">Update Account</string>
+    <string name="new_account_label">No account yet? Create one</string>
+    <string name="login_label">Already a member? Login</string>
+    <string name="save_btn_label">Save</string>
+    <string name="take_picture_btn_label">Take picture</string>
+    <string name="show_map_btn_label">Show map</string>
+    <string name="save_ticket_btn_label">Save</string>
+    <string name="show_db_btn_label">Show database</string>
+    <string name="save_map_screen_btn_label">Save screen</string>
+
+    <string name="progress_dialog_waiting">Just a moment ...</string>
+    <string name="progress_dialog_recognizing">Processing ...</string>
+    <string name="progress_dialog_logining">Logining ...</string>
+    <string name="alert_dialog_license_check"> correct?</string>
+    <string name="alert_dialog_license_check_yes">Yes</string>
+    <string name="alert_dialog_license_check_no">No</string>
+    <string name="alert_dialog_authenticate">Authenticating ...</string>
+    <string name="alert_dialog_dbresponse">Number of uploaded tickets: </string>
+
+    <string name="checkbox_torch">On/Off flashlight</string>
+    <string name="toast_ticket_saved">Ticket saved</string>
+    <string name="toast_insert_db_failed">Row Insert Failed</string>
+    <string name="toast_no_ticket_id">No ticket QR code scanned!</string>
+    <string name="toast_no_user">No user login!</string>
+    <string name="toast_ticket_no_license">No license number captured!</string>
+    <string name="toast_ticket_no_license_color">No license color captured!</string>
+    <string name="toast_ticket_no_time">No time captured!</string>
+    <string name="toast_map_saved">Map saved in: </string>
+    <string name="toast_map_saving">Saving the map ...</string>
+    <string name="toast_login_failed">Login failed!</string>
+    <string name="toast_login_success">Login success!</string>
+    <string name="toast_signup_failed">Create account failed!</string>
+    <string name="toast_signup_success">Create account success!</string>
+    <string name="toast_update_failed">Update account failed!</string>
+    <string name="toast_update_success">Update account success!</string>
+    <string name="toast_wrong_userid">Empty user ID!</string>
+    <string name="request_wrong_userid">Enter a user ID please!</string>
+    <string name="toast_wrong_password">Empty password!</string>
+    <string name="request_wrong_password">Enter a password please!</string>
+    <string name="toast_wrong_repassword">Password does not match!</string>
+    <string name="request_wrong_repassword">Enter the same password please!</string>
+    <string name="toast_wrong_police_name">Empty name!</string>
+    <string name="request_wrong_police_name">Enter a name please!</string>
+    <string name="toast_wrong_police_city">Empty city!</string>
+    <string name="request_wrong_police_city">Enter a city please!</string>
+    <string name="toast_wrong_police_dept">Empty police department!</string>
+    <string name="request_wrong_police_dept">Enter a police department!</string>
+    <string name="toast_wrong_police_station">Empty police station!</string>
+    <string name="request_wrong_police_station">Enter a police station please!</string>
+    <string name="toast_update_hint">Long press to update the profile</string>
+
+    <string name="empty_database">No ticket saved yet, Please acquire ticket first.</string>
+    <string name="img_file_create_error">Fail to create image file! Take picture again.</string>
+    <string name="no_internet_error">Please connect internet first, and then take picture</string>
+    <string name="recognition_error">No license plate detected! Take picture again.</string>
+    <string name="decode_error">Image decode error! Take picture again.</string>
+    <string name="transmission_error">No image received! Take picture again.</string>
+    <string name="start_ticket">Going to acquire ticket number: </string>
+
+    <string name="camera_hint_front">\u2460Put license in the center focus to take picture:</string>
+    <string name="camera_hint_back">\u2461Take environment picture:</string>
+    <string name="ticket_preview_hint">\u2462Double check the ticket:</string>
+    <string name="camera_hint_qrcode">\u2463Scan QR code to generate ticket:</string>
+    <string name="camera_hint_side">\u2464Take notification picture:</string>
+
+    <string name="proof_address">Proof 1: Address</string>
+    <string name="proof_vehicle">Proof 2: Vehicle</string>
+    <string name="proof_environment">Proof 3: Environment</string>
+    <string name="proof_notification">Proof 4: Notification</string>
+
+    <string name="plate_rect">License plate capture rectangle</string>
+    <string name="ticket_address_label">Locating ... </string>
+    <string name="ticket_address_header">Address: </string>
+
+    <string name="tab_acquire">Acquire</string>
+    <string name="tab_database">Database</string>
+
+    <string name="ticket_title">市道路停车记录告知单</string>
+    <string name="ticket_number">编号: </string>
+    <string name="ticket_car_license">车辆牌号:</string>
+
+    <string name="police_type_prompt">Police Type</string>
+    <string-array name="police_type_arrays">
+        <item>Police</item>
+        <item>Asistant</item>
+    </string-array>
+
+    <string name="police_city_prompt">City</string>
+    <string-array name="police_city_arrays">
+        <item>Beijing</item>
+        <item>Shanghai</item>
+        <item>Chongqing</item>
+        <item>Dalian</item>
+        <item>Chengdu</item>
+        <item>Neijiang</item>
+    </string-array>
+
+    <string name="ticket_car_color">车身颜色:</string>
+    <string name="car_color_prompt">选择</string>
+    <string-array name="car_color_arrays">
+        <item>黑</item>
+        <item>白</item>
+        <item>银</item>
+        <item>灰</item>
+        <item>红</item>
+        <item>橙</item>
+        <item>黄</item>
+        <item>绿</item>
+        <item>青</item>
+        <item>蓝</item>
+        <item>紫</item>
+    </string-array>
+
+    <integer-array name="vehicle_color_int_arrays">
+        <item>@color/black</item>
+        <item>@color/white</item>
+        <item>@color/silver</item>
+        <item>@color/gray</item>
+        <item>@color/red</item>
+        <item>@color/orange</item>
+        <item>@color/yellow</item>
+        <item>@color/green</item>
+        <item>@color/cyan</item>
+        <item>@color/blue</item>
+        <item>@color/purple</item>
+    </integer-array>
+
+    <integer-array name="vehicle_text_color_int_arrays">
+        <item>@color/white</item>
+        <item>@color/black</item>
+        <item>@color/black</item>
+        <item>@color/black</item>
+        <item>@color/white</item>
+        <item>@color/black</item>
+        <item>@color/black</item>
+        <item>@color/black</item>
+        <item>@color/black</item>
+        <item>@color/white</item>
+        <item>@color/white</item>
+    </integer-array>
+
+    <string name="car_type_prompt">选择车型</string>
+    <string-array name="car_type_arrays">
+        <item>小型客车</item>
+        <item>小型货车</item>
+        <item>摩托车</item>
+        <item>大型客车</item>
+        <item>大型货车</item>
+        <item>其他</item>
+    </string-array>
+
+    <string name="ticket_car_type">车辆类型:</string>
+    <string name="radiobutton_big_bus">大型客车</string>
+    <string name="radiobutton_small_bus">小型客车</string>
+    <string name="radiobutton_big_truck">大型货车</string>
+    <string name="radiobutton_small_truck">小型货车</string>
+    <string name="radiobutton_motorcycle">摩托车</string>
+    <string name="radiobutton_other_car_type">其他</string>
+
+    <string name="ticket_license_color">号牌颜色:</string>
+    <string name="radiobutton_yellow">黄色</string>
+    <string name="radiobutton_blue">蓝色</string>
+    <string name="radiobutton_black">黑色</string>
+    <string name="radiobutton_other_license_color">其他</string>
+
+    <string name="ticket_parking_time">停车时间:</string>
+    <string name="ticket_parking_address">停车地点:</string>
+    <string name="ticket_description1">
+        该机动车在上述时间、地点未在道路停车泊位或停车场内停放,
+        现已对现场道路交通情况进行了图像记录,
+        并报告
+    </string>
+    <string name="ticket_description2">
+        审核认定是否违法停放。
+        你可在七个工作日后登陆http://www.cdjg.gov.cn查询,
+        或在收到公安机关交通管理部门通知后前往接受处理。
+    </string>
+    <string name="ticket_police">交通协管员:</string>
+    <string name="ticket_year">年</string>
+    <string name="ticket_month">月</string>
+    <string name="ticket_day">日</string>
+    <string name="ticket_hour">时</string>
+    <string name="ticket_minute">分</string>
+    <string name="ticket_sub_description">备注:</string>
+
 </resources>

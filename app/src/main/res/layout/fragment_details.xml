@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+
+    <!--<TextView-->
+    <!--android:id="@+id/ticket_preview_hint_textview"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="wrap_content"-->
+    <!--android:background="@color/lime_green"-->
+    <!--android:gravity="center_horizontal"-->
+    <!--android:text="@string/ticket_preview_hint"-->
+    <!--android:textColor="@color/red"-->
+    <!--android:textSize="24sp"-->
+    <!--android:visibility="gone" />-->
+
+    <ScrollView
+        android:id="@+id/ticketDetailsScrollView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_margin="@dimen/image_margin"
+            android:layout_marginTop="@dimen/text_margin"
+            android:focusable="true"
+            android:focusableInTouchMode="true"
+            android:orientation="vertical">
+
+            <include layout="@layout/ticket_details" />
+
+            <include layout="@layout/image_details" />
+
+            <include layout="@layout/submit_buttons" />
+
+        </LinearLayout>
+
+    </ScrollView>
+</LinearLayout>

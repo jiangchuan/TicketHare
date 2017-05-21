@@ -101,5 +101,6 @@ dependencies {
     compile files('src/main/libs/baidumapapi_util_v4_1_1.jar')
 
     compile project(':cam2')
+    compile project(':openCVLibrary310')
 
 }
