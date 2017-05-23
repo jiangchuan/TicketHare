@@ -23,8 +23,9 @@ public interface AppConstants {
     static final int TRANS_IMAGE_H = 800;
     static final int COMPRESS_RATIO = 80;
 
-    static final String HOST_IP = "104.154.251.38";
-//    static final String HOST_IP = "192.168.1.109";
+//    static final String HOST_IP = "104.154.251.38";
+    static final String HOST_IP = "192.168.1.63";
+    static final int PORT = 50051;
 
     static final String POLICE_USER_ID = "police_user_id";
     static final String POLICE_PASSWORD = "police_password";

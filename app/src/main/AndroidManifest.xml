@@ -47,6 +47,15 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".login.LoginActivity"
+            android:theme="@style/AppTheme.Dark" />
+
+        <activity android:name=".login.SignupActivity"
+            android:theme="@style/AppTheme.Dark" />
+
+        <activity android:name=".login.UpdateProfileActivity"
+            android:theme="@style/AppTheme.Dark" />
+
         <activity android:name=".MainActivity"
             android:theme="@style/AppTheme">
         </activity>

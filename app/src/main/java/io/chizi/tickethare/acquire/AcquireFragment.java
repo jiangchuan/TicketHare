@@ -347,9 +347,7 @@ public class AcquireFragment extends Fragment {
 
         Intent intentFrom = activity.getIntent(); // Get the Intent that called for this Activity to open
 
-//        userID = intentFrom.getExtras().getString(POLICE_USER_ID); // Get the data that was sent
-        userID = "X0003";
-
+        userID = intentFrom.getExtras().getString(POLICE_USER_ID); // Get the data that was sent
         getUserInfo(userID); // Get policeName policeDept, and policeCity
         policeNameTextView.setText(policeName);
         policeUserIDTextView.setText(userID);

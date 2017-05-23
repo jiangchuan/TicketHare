@@ -21,9 +21,9 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import io.chizi.ticket.GreeterGrpc;
-import io.chizi.ticket.HelloReply;
-import io.chizi.ticket.HelloRequest;
+import io.chizi.ticket.LoginReply;
+import io.chizi.ticket.LoginRequest;
+import io.chizi.ticket.TicketGrpc;
 import io.chizi.tickethare.MainActivity;
 import io.chizi.tickethare.R;
 import io.chizi.tickethare.database.DBProvider;
@@ -39,6 +39,7 @@ import static io.chizi.tickethare.database.DBProvider.KEY_POLICE_TYPE;
 import static io.chizi.tickethare.database.DBProvider.KEY_USER_ID;
 import static io.chizi.tickethare.util.AppConstants.HOST_IP;
 import static io.chizi.tickethare.util.AppConstants.POLICE_USER_ID;
+import static io.chizi.tickethare.util.AppConstants.PORT;
 
 /**
  * Created by Jiangchuan on 5/21/17.
@@ -58,6 +59,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private EditText userIDEditText;
     private EditText passwordEditText;
+
     private Button loginButton;
     private TextView signupLink;
     private ProgressDialog progressDialog;
@@ -71,11 +73,10 @@ public class LoginActivity extends AppCompatActivity {
 
         userIDEditText = (EditText) findViewById(R.id.user_id);
         passwordEditText = (EditText) findViewById(R.id.input_password);
-        loginButton = (Button) findViewById(R.id.btn_login);
-        signupLink = (TextView) findViewById(R.id.link_signup);
 
         resolver = getContentResolver();
 
+        loginButton = (Button) findViewById(R.id.btn_login);
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -83,6 +84,7 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
 
+        signupLink = (TextView) findViewById(R.id.link_signup);
         signupLink.setOnClickListener(new View.OnClickListener() {
 
             @Override
@@ -109,20 +111,7 @@ public class LoginActivity extends AppCompatActivity {
         new GrpcTask().execute();
     }
 
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        if (requestCode == REQUEST_SIGNUP) {
-//            if (resultCode == RESULT_OK) {
-//                userID = data.getStringExtra(POLICE_USER_ID);
-//                password = data.getStringExtra(POLICE_PASSWORD);
-//                userIDEditText.setText(userID);
-//                passwordEditText.setText(password);
-//            }
-//        }
-//    }
-
     private class GrpcTask extends AsyncTask<Void, Void, List<String>> {
-        private int mPort = 50051;
         private ManagedChannel mChannel;
 
         @Override
@@ -130,7 +119,7 @@ public class LoginActivity extends AppCompatActivity {
             if (progressDialog == null) {
                 prepareProgressDialog();
             }
-            mChannel = ManagedChannelBuilder.forAddress(HOST_IP, mPort)
+            mChannel = ManagedChannelBuilder.forAddress(HOST_IP, PORT)
                     .usePlaintext(true)
                     .build();
         }
@@ -142,15 +131,15 @@ public class LoginActivity extends AppCompatActivity {
             }
             ArrayList<String> resultList = new ArrayList<String>();
             try {
-                GreeterGrpc.GreeterBlockingStub blockingStub = GreeterGrpc.newBlockingStub(mChannel);
-//                HelloRequest loginRequest = HelloRequest.newBuilder().setUserId(userID).setPassword(password).build();
-//                HelloReply reply = blockingStub.sayHello(loginRequest);
-//                resultList.add(String.valueOf(reply.getLoginSuccess()));
-//                resultList.add(reply.getPoliceName());
-//                resultList.add(reply.getPoliceType());
-//                resultList.add(reply.getPoliceCity());
-//                resultList.add(reply.getPoliceDept());
-//                resultList.add(reply.getPoliceStation());
+                TicketGrpc.TicketBlockingStub blockingStub = TicketGrpc.newBlockingStub(mChannel);
+                LoginRequest loginRequest = LoginRequest.newBuilder().setUserId(userID).setPassword(password).build();
+                LoginReply reply = blockingStub.login(loginRequest);
+                resultList.add(String.valueOf(reply.getLoginSuccess()));
+                resultList.add(reply.getPoliceName());
+                resultList.add(reply.getPoliceType());
+                resultList.add(reply.getPoliceCity());
+                resultList.add(reply.getPoliceDept());
+                resultList.add(reply.getPoliceStation());
                 return resultList;
             } catch (Exception e) {
                 StringWriter sw = new StringWriter();

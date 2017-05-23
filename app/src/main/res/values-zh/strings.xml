@@ -41,6 +41,8 @@
     <string name="progress_dialog_waiting">稍等 ...</string>
     <string name="progress_dialog_recognizing">正在处理 ...</string>
     <string name="progress_dialog_logining">正在登录 ...</string>
+    <string name="progress_dialog_creating_account">正在创建帐户 ...</string>
+    <string name="progress_dialog_updating_profile">正在更新账户 ...</string>
     <string name="alert_dialog_license_check">对吗?</string>
     <string name="alert_dialog_license_check_yes">是</string>
     <string name="alert_dialog_license_check_no">否</string>

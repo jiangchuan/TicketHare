@@ -41,6 +41,8 @@
     <string name="progress_dialog_waiting">Just a moment ...</string>
     <string name="progress_dialog_recognizing">Processing ...</string>
     <string name="progress_dialog_logining">Logining ...</string>
+    <string name="progress_dialog_creating_account">Creating account ...</string>
+    <string name="progress_dialog_updating_profile">Updating profile ...</string>
     <string name="alert_dialog_license_check"> correct?</string>
     <string name="alert_dialog_license_check_yes">Yes</string>
     <string name="alert_dialog_license_check_no">No</string>
