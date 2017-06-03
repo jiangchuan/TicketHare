@@ -60,6 +60,10 @@
             android:theme="@style/AppTheme">
         </activity>
 
+        <activity android:name=".acquire.PreviewActivity"
+            android:theme="@style/AppTheme">
+        </activity>
+
         <activity
             android:name="com.commonsware.cwac.cam2.CameraActivity"
             android:process=":cwac_cam2"

@@ -353,7 +353,6 @@ public class PreviewActivity extends Activity {
         generateTicketButton.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                saveTicket();
                 Intent goingBack = new Intent();
                 vehicleColor = vehicleColorSpinner.getSelectedItem().toString();
                 goingBack.putExtra(BACK_VEHICLE_COLOR, vehicleColor);

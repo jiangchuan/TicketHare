@@ -80,6 +80,8 @@
     <string name="toast_wrong_police_station">警务站名不能为空!</string>
     <string name="request_wrong_police_station">请输入警务站名!</string>
     <string name="toast_update_hint">长按可更改帐户信息</string>
+    <string name="toast_no_police_info">数据库里没有警察信息!</string>
+    <string name="toast_null_img_file">返回文件为空!</string>
 
     <string name="empty_database">无罚单查看, 请先生成罚单</string>
     <string name="img_file_create_error">创建照片文件错误! 请重新拍照。</string>
@@ -89,11 +91,10 @@
     <string name="transmission_error">服务端没有接收到相片! 请重新拍照。</string>
     <string name="start_ticket">即将生成罚单号: </string>
 
-    <string name="camera_hint_front">\u2460车辆取证: 近处框车牌拍车身</string>
-    <string name="camera_hint_back">\u2461地点取证: 远处拍车身拍环境</string>
+    <string name="camera_hint_far">\u2460地点取证: 远处拍车身拍环境</string>
+    <string name="camera_hint_close">\u2461车辆取证: 近处框车牌拍车身</string>
     <string name="ticket_preview_hint">\u2462证据确认: 车色车型证据确认</string>
-    <string name="camera_hint_qrcode">\u2463扫码生效: 扫二维码罚单生成</string>
-    <string name="camera_hint_side">\u2464贴单通告: 驾驶侧贴单并拍照</string>
+    <string name="camera_hint_ticket">\u2463贴单通告: 驾驶侧贴单并拍照</string>
 
     <string name="proof_address">证据一: 违停地址</string>
     <string name="proof_vehicle">证据二: 违停车辆</string>

@@ -111,17 +111,17 @@ import static io.chizi.tickethare.util.AppConstants.CURRENT_VEHICLE_COLOR;
 import static io.chizi.tickethare.util.AppConstants.CURRENT_VEHICLE_TYPE;
 import static io.chizi.tickethare.util.AppConstants.FILE_INSDCARD_DIR;
 import static io.chizi.tickethare.util.AppConstants.GOBACK_USER_ID;
-import static io.chizi.tickethare.util.AppConstants.IMG1_FILE_PREFIX;
-import static io.chizi.tickethare.util.AppConstants.IMG2_FILE_PREFIX;
-import static io.chizi.tickethare.util.AppConstants.IMG3_FILE_PREFIX;
+import static io.chizi.tickethare.util.AppConstants.CLOSE_IMG_FILE_PREFIX;
+import static io.chizi.tickethare.util.AppConstants.FAR_IMG_FILE_PREFIX;
+import static io.chizi.tickethare.util.AppConstants.TICKET_IMG_FILE_PREFIX;
 import static io.chizi.tickethare.util.AppConstants.JPEG_FILE_SUFFIX;
 import static io.chizi.tickethare.util.AppConstants.MAP_FILE_PREFIX;
 import static io.chizi.tickethare.util.AppConstants.POLICE_USER_ID;
 import static io.chizi.tickethare.util.AppConstants.PREF_INSTALLED_KEY;
-import static io.chizi.tickethare.util.AppConstants.REQUEST_BACK_IMAGE_CAPTURE;
-import static io.chizi.tickethare.util.AppConstants.REQUEST_FRONT_IMAGE_CAPTURE;
+import static io.chizi.tickethare.util.AppConstants.REQUEST_FAR_IMG_CAPTURE;
+import static io.chizi.tickethare.util.AppConstants.REQUEST_CLOSE_IMG_CAPTURE;
 import static io.chizi.tickethare.util.AppConstants.REQUEST_PREVIEW_SHOW;
-import static io.chizi.tickethare.util.AppConstants.REQUEST_SIDE_IMAGE_CAPTURE;
+import static io.chizi.tickethare.util.AppConstants.REQUEST_TICKET_IMG_CAPTURE;
 import static io.chizi.tickethare.util.AppConstants.REQUEST_UPDATE_PROFILE;
 import static io.chizi.tickethare.util.AppConstants.RUNTIME_DATA_DIR_ASSET;
 import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_ADDRESS;
@@ -155,8 +155,6 @@ import static io.chizi.tickethare.util.AppConstants.TRANS_IMAGE_W;
  */
 
 public class AcquireFragment extends Fragment {
-
-
     private static final String LOG_TAG = AcquireFragment.class.getName();
     private static final float VERTICAL_RATIO_W = 2.6f;
     private static final float VERTICAL_RATIO_H = 10.0f;
@@ -186,9 +184,9 @@ public class AcquireFragment extends Fragment {
     private TextView policeDeptTextView;
 
     private String currentTime;
-    private String currentImageFilePath1;
-    private String currentImageFilePath2;
-    private String currentImageFilePath3;
+    private String closeImgFilePath;
+    private String farImgFilePath;
+    private String ticketImgFilePath;
     private String currentMapFilePath;
     private int licenseCorrect = -1;
     private int year = -1;
@@ -197,9 +195,9 @@ public class AcquireFragment extends Fragment {
     private int hour = -1;
     private int minute = -1;
 
-    private File currentImageFile1 = null;
-    private File currentImageFile2 = null;
-    private File currentImageFile3 = null;
+    private File closeImgFile = null;
+    private File farImgFile = null;
+    private File ticketImgFile = null;
     private Bitmap imageBitmap = null;
     //    private byte[] imageBytes;
     private ByteArrayOutputStream imageOS;
@@ -211,57 +209,6 @@ public class AcquireFragment extends Fragment {
     private String annPath = "ann.xml";
     private String ann_chinesePath = "ann_chinese.xml";
     private String mappingPath = "province_mapping";
-
-    private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(getActivity()) {
-        @Override
-        public void onManagerConnected(int status) {
-            switch (status) {
-                case LoaderCallbackInterface.SUCCESS:
-                    Log.d(LOG_TAG, "OpenCV loaded successfully");
-                    System.loadLibrary("platerecognizer");
-                    break;
-                default:
-                    super.onManagerConnected(status);
-                    break;
-            }
-        }
-    };
-
-    private class PlateRecognizeTask extends AsyncTask<String, Integer, String> {
-        @Override
-        protected String doInBackground(String... params) {
-            Bitmap bitmap = BitmapUtil.scaleBitmap(imageBitmap, TRANS_IMAGE_W, TRANS_IMAGE_H);
-            bitmap = BitmapUtil.cropBitmapCenter(bitmap, SCREEN_WIDTH, SCREEN_HEIGHT, RATIO_ENLARGE, VERTICAL_RATIO_W, VERTICAL_RATIO_H, HORIZONTAL_RATIO_W, HORIZONTAL_RATIO_H);
-            Mat m = new Mat();
-            Utils.bitmapToMat(bitmap, m);
-            return plateRecognition(m.getNativeObjAddr(), m.getNativeObjAddr());
-        }
-
-        @Override
-        protected void onPostExecute(String result) {
-            if (result != null && !result.equalsIgnoreCase("0") && result.length() == 10) {
-                licenseNum = result.substring(3);
-                licenseColor = result.substring(0, 1);
-                vehicleType = "小型客车"; // TODO: Add recognization for vehicle type and color
-                vehicleColor = "黑";
-                showLicenseCheckDialog();
-            } else {
-                showAlertandFront(getString(R.string.recognition_error));
-            }
-            backToHome();
-        }
-    }
-
-
-    Button.OnClickListener takePictureClickListener = new Button.OnClickListener() {
-        @Override
-        public void onClick(View view) {
-//            takePictureButton.setImageResource(R.drawable.camera_gray);
-            takePictureButton.setEnabled(false);
-            saveScreen();
-            takeFrontPictureIntent();
-        }
-    };
 
     private SimpleDateFormat dateFormatf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
@@ -335,7 +282,6 @@ public class AcquireFragment extends Fragment {
         policeDeptTextView = (TextView) view.findViewById(R.id.police_dept_textview);
         takePictureButton = (Button) view.findViewById(R.id.take_pic_button);
         profileImageView = (ImageView) view.findViewById(R.id.profile_image_view);
-//        profileImageView.setContentDescription("This is the profile!");
         addressLonLatTextView = (TextView) view.findViewById(R.id.addressLonLat);
     }
 
@@ -361,7 +307,14 @@ public class AcquireFragment extends Fragment {
                     ANDROID_DATA_DIR + File.separatorChar + RUNTIME_DATA_DIR_ASSET);
         }
 
-        takePictureButton.setOnClickListener(takePictureClickListener);
+        takePictureButton.setOnClickListener(new Button.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                takePictureButton.setEnabled(false);
+                saveScreen();
+                takeFarPictureIntent();
+            }
+        });
         profileImageView.setOnClickListener(new ImageView.OnClickListener() {
             @Override
             public void onClick(View view) {
@@ -373,7 +326,6 @@ public class AcquireFragment extends Fragment {
                 t.show();
             }
         });
-
         profileImageView.setOnLongClickListener(new ImageView.OnLongClickListener() {
             @Override
             public boolean onLongClick(View v) {
@@ -399,9 +351,9 @@ public class AcquireFragment extends Fragment {
 
             currentTime = savedInstanceState.getString(SAVED_INSTANCE_CURR_TIME);
             currentMapFilePath = savedInstanceState.getString(SAVED_INSTANCE_CURR_MAP_PATH);
-            currentImageFilePath1 = savedInstanceState.getString(SAVED_INSTANCE_CURR_IMG1_PATH);
-            currentImageFilePath2 = savedInstanceState.getString(SAVED_INSTANCE_CURR_IMG2_PATH);
-            currentImageFilePath3 = savedInstanceState.getString(SAVED_INSTANCE_CURR_IMG3_PATH);
+            closeImgFilePath = savedInstanceState.getString(SAVED_INSTANCE_CURR_IMG1_PATH);
+            farImgFilePath = savedInstanceState.getString(SAVED_INSTANCE_CURR_IMG2_PATH);
+            ticketImgFilePath = savedInstanceState.getString(SAVED_INSTANCE_CURR_IMG3_PATH);
 
             address = savedInstanceState.getString(SAVED_INSTANCE_ADDRESS);
             longitude = savedInstanceState.getDouble(SAVED_INSTANCE_LONGITUDE);
@@ -418,9 +370,7 @@ public class AcquireFragment extends Fragment {
         activity.getWindowManager().getDefaultDisplay().getMetrics(metric);
         SCREEN_WIDTH = metric.widthPixels;  // 屏幕宽度（像素）
         SCREEN_HEIGHT = metric.heightPixels;  // 屏幕高度（像素）
-
     }
-
 
     public void showPreview() {
         Intent goToPreviewActivityIntent = new Intent(getActivity(), PreviewActivity.class);
@@ -439,8 +389,8 @@ public class AcquireFragment extends Fragment {
         params.putDouble(CURRENT_LONGITUDE, longitude);
         params.putDouble(CURRENT_LATITUDE, latitude);
         params.putString(CURRENT_MAP_FILE_PATH, currentMapFilePath);
-        params.putString(CURRENT_IMG1_FILE_PATH, currentImageFilePath1);
-        params.putString(CURRENT_IMG2_FILE_PATH, currentImageFilePath2);
+        params.putString(CURRENT_IMG1_FILE_PATH, closeImgFilePath);
+        params.putString(CURRENT_IMG2_FILE_PATH, farImgFilePath);
         goToPreviewActivityIntent.putExtras(params);
         startActivityForResult(goToPreviewActivityIntent, REQUEST_PREVIEW_SHOW);
     }
@@ -449,28 +399,33 @@ public class AcquireFragment extends Fragment {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case REQUEST_FRONT_IMAGE_CAPTURE:
+            case REQUEST_FAR_IMG_CAPTURE:
                 if (resultCode == getActivity().RESULT_OK) {
-                    if (currentImageFilePath1 != null) {
-                        imageBitmap = BitmapUtil.getScaledBitmap(currentImageFilePath1, TRANS_IMAGE_W, TRANS_IMAGE_H);
-                        if (imageBitmap != null) {
-                            new PlateRecognizeTask().execute();
-                        } else {
-                            showAlertandFront("imageBitmap is null!");
-                        }
+                    if (farImgFilePath != null) {
+                        takeClosePictureIntent();
                     } else {
-                        showAlertandFront("currentImageFilePath1 is null!");
+                        showAlertandRepeat("farImgFilePath is null!", REQUEST_FAR_IMG_CAPTURE);
                     }
                 } else {
-//                    showAlertandFront("resultCode is not OK!");
+                    Toast.makeText(getActivity(), R.string.toast_null_img_file, Toast.LENGTH_SHORT).show();
                     backToHome();
                 }
                 break;
 
-            case REQUEST_BACK_IMAGE_CAPTURE:
+            case REQUEST_CLOSE_IMG_CAPTURE:
                 if (resultCode == getActivity().RESULT_OK) {
-                    showPreview();
+                    if (closeImgFilePath != null) {
+                        imageBitmap = BitmapUtil.getScaledBitmap(closeImgFilePath, TRANS_IMAGE_W, TRANS_IMAGE_H);
+                        if (imageBitmap != null) {
+                            new PlateRecognizeTask().execute();
+                        } else {
+                            showAlertandRepeat("imageBitmap is null!", REQUEST_CLOSE_IMG_CAPTURE);
+                        }
+                    } else {
+                        showAlertandRepeat("closeImgFilePath is null!", REQUEST_CLOSE_IMG_CAPTURE);
+                    }
                 } else {
+                    Toast.makeText(getActivity(), R.string.toast_null_img_file, Toast.LENGTH_SHORT).show();
                     backToHome();
                 }
                 break;
@@ -486,34 +441,30 @@ public class AcquireFragment extends Fragment {
                 }
                 break;
 
-//            case REQUEST_QRCODE_SCAN:
-//                if (resultCode == getActivity().RESULT_OK) {
-//                    String scannedQRCode = data.getStringExtra(SCANNED_QR_CODE);
-//                    if (scannedQRCode == null) {
-//                        Log.d(LOG_TAG, "Cancelled scan");
-//                        showAlertandQR(getString(R.string.scan_no_result));
-//                        scanQRCode();
-//                    } else {
-//                        Log.d(LOG_TAG, "Scanned");
-//                        ticketID = Long.parseLong(scannedQRCode);
-//                        takeSidePictureIntent();
-//                    }
-//                } else {
-//                    showPreview();
-//                }
-//                break;
+            case REQUEST_TICKET_IMG_CAPTURE:
+                if (resultCode == getActivity().RESULT_OK) {
+                    if (ticketImgFilePath != null) {
+                        Calendar now = Calendar.getInstance();
+                        currentTime = dateFormatf.format(now.getTime());
+                        year = now.get(Calendar.YEAR);
+                        month = now.get(Calendar.MONTH) + 1; // Note: zero based!
+                        day = now.get(Calendar.DAY_OF_MONTH);
+                        hour = now.get(Calendar.HOUR_OF_DAY);
+                        minute = now.get(Calendar.MINUTE);
+//                        saveTicket();
+                        showPreview();
+                        backToHome();
+                    } else {
+                        showAlertandRepeat("ticketImgFilePath is null!", REQUEST_TICKET_IMG_CAPTURE);
+                    }
+                } else {
+                    Toast.makeText(getActivity(), R.string.toast_null_img_file, Toast.LENGTH_SHORT).show();
+                    backToHome();
+                }
 
-            case REQUEST_SIDE_IMAGE_CAPTURE:
-                Calendar now = Calendar.getInstance();
-                currentTime = dateFormatf.format(now.getTime());
-                year = now.get(Calendar.YEAR);
-                month = now.get(Calendar.MONTH) + 1; // Note: zero based!
-                day = now.get(Calendar.DAY_OF_MONTH);
-                hour = now.get(Calendar.HOUR_OF_DAY);
-                minute = now.get(Calendar.MINUTE);
-                saveTicket();
-                backToHome();
                 break;
+
+
 
             case REQUEST_UPDATE_PROFILE:
                 if (resultCode == getActivity().RESULT_OK) {
@@ -528,7 +479,6 @@ public class AcquireFragment extends Fragment {
     }
 
     private void backToHome() {
-//            takePictureButton.setImageResource(R.drawable.camera);
         takePictureButton.setEnabled(true);
     }
 
@@ -593,7 +543,7 @@ public class AcquireFragment extends Fragment {
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
-//                takeFrontPictureIntent();
+//                takeClosePictureIntent();
 //                saveTicket();
             }
         });
@@ -608,10 +558,9 @@ public class AcquireFragment extends Fragment {
             policeCity = cursor.getString(cursor.getColumnIndex(KEY_POLICE_CITY));
             policeDept = cursor.getString(cursor.getColumnIndex(KEY_POLICE_DEPT));
         } else {
-            Toast.makeText(getActivity(), "No police info stored in database!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getActivity(), R.string.toast_no_police_info, Toast.LENGTH_SHORT).show();
         }
     }
-
 
     public void saveTicket() {
         if (ticketID == -1L) {
@@ -660,14 +609,14 @@ public class AcquireFragment extends Fragment {
             if (currentMapFilePath != null) {
                 values.put(KEY_MAP_URI, currentMapFilePath);
             }
-            if (currentImageFilePath1 != null) {
-                values.put(KEY_IMG1_URI, currentImageFilePath1);
+            if (closeImgFilePath != null) {
+                values.put(KEY_IMG1_URI, closeImgFilePath);
             }
-            if (currentImageFilePath2 != null) {
-                values.put(KEY_IMG2_URI, currentImageFilePath2);
+            if (farImgFilePath != null) {
+                values.put(KEY_IMG2_URI, farImgFilePath);
             }
-            if (currentImageFilePath3 != null) {
-                values.put(KEY_IMG3_URI, currentImageFilePath3);
+            if (ticketImgFilePath != null) {
+                values.put(KEY_IMG3_URI, ticketImgFilePath);
             }
             resolver.insert(DBProvider.TICKET_URL, values);
             Toast.makeText(getActivity(), R.string.toast_ticket_saved, Toast.LENGTH_SHORT).show();
@@ -775,9 +724,9 @@ public class AcquireFragment extends Fragment {
 
         outState.putString(SAVED_INSTANCE_CURR_TIME, currentTime);
         outState.putString(SAVED_INSTANCE_CURR_MAP_PATH, currentMapFilePath);
-        outState.putString(SAVED_INSTANCE_CURR_IMG1_PATH, currentImageFilePath1);
-        outState.putString(SAVED_INSTANCE_CURR_IMG2_PATH, currentImageFilePath2);
-        outState.putString(SAVED_INSTANCE_CURR_IMG3_PATH, currentImageFilePath3);
+        outState.putString(SAVED_INSTANCE_CURR_IMG1_PATH, closeImgFilePath);
+        outState.putString(SAVED_INSTANCE_CURR_IMG2_PATH, farImgFilePath);
+        outState.putString(SAVED_INSTANCE_CURR_IMG3_PATH, ticketImgFilePath);
 
         outState.putString(SAVED_INSTANCE_ADDRESS, address);
         outState.putDouble(SAVED_INSTANCE_LONGITUDE, longitude);
@@ -792,78 +741,72 @@ public class AcquireFragment extends Fragment {
         super.onSaveInstanceState(outState);
     }
 
-//    public void scanQRCode() {
-//        Intent goToDecoderActivityIntent = new Intent(getActivity(), DecoderActivity.class);
-//        startActivityForResult(goToDecoderActivityIntent, REQUEST_QRCODE_SCAN);
-//    }
-
-    private void takeFrontPictureIntent() {
+    private void takeFarPictureIntent() {
         try {
-            currentImageFile1 = FileUtil.createImageFile(getActivity(), IMG1_FILE_PREFIX, JPEG_FILE_SUFFIX);
-            currentImageFilePath1 = currentImageFile1.getAbsolutePath();
+            farImgFile = FileUtil.createImageFile(getActivity(), FAR_IMG_FILE_PREFIX, JPEG_FILE_SUFFIX);
+            farImgFilePath = farImgFile.getAbsolutePath();
+            Intent intent = new CameraActivity.IntentBuilder(getActivity())
+                    .facing(Facing.BACK)
+                    .to(farImgFile)
+                    .flashModes(FLASH_MODES)
+                    .zoomStyle(ZoomStyle.SEEKBAR)
+                    .updateMediaStore()
+                    .confirmationQuality(0.3f)
+                    .hintText(getString(R.string.camera_hint_far))
+                    .build();
+            startActivityForResult(intent, REQUEST_FAR_IMG_CAPTURE);
+        } catch (IOException e) {
+            e.printStackTrace();
+            farImgFile = null;
+            farImgFilePath = null;
+            showAlertandRepeat(getString(R.string.img_file_create_error), REQUEST_FAR_IMG_CAPTURE);
+        }
+    }
+
+    private void takeClosePictureIntent() {
+        try {
+            closeImgFile = FileUtil.createImageFile(getActivity(), CLOSE_IMG_FILE_PREFIX, JPEG_FILE_SUFFIX);
+            closeImgFilePath = closeImgFile.getAbsolutePath();
             Intent intent = new CameraActivity.IntentBuilder(getActivity())
                     // .skipConfirm()
                     .facing(Facing.BACK)
-                    .to(currentImageFile1)
+                    .to(closeImgFile)
                     // .debug()
                     .flashModes(FLASH_MODES)
                     .zoomStyle(ZoomStyle.SEEKBAR)
                     .updateMediaStore()
                     .confirmationQuality(0.3f)
-                    .hintText(getString(R.string.camera_hint_front))
+                    .hintText(getString(R.string.camera_hint_close))
                     .showFocus(1)
-                    // .skipOrientationNormalization()
                     .build();
-            startActivityForResult(intent, REQUEST_FRONT_IMAGE_CAPTURE);
+            startActivityForResult(intent, REQUEST_CLOSE_IMG_CAPTURE);
         } catch (IOException e) {
             e.printStackTrace();
-            currentImageFile1 = null;
-            currentImageFilePath1 = null;
-            showAlertandFront(getString(R.string.img_file_create_error));
+            closeImgFile = null;
+            closeImgFilePath = null;
+            showAlertandRepeat(getString(R.string.img_file_create_error), REQUEST_CLOSE_IMG_CAPTURE);
         }
     }
 
-    private void takeBackPictureIntent() {
+    private void takeTicketPictureIntent() {
         try {
-            currentImageFile2 = FileUtil.createImageFile(getActivity(), IMG2_FILE_PREFIX, JPEG_FILE_SUFFIX);
-            currentImageFilePath2 = currentImageFile2.getAbsolutePath();
+            ticketImgFile = FileUtil.createImageFile(getActivity(), TICKET_IMG_FILE_PREFIX, JPEG_FILE_SUFFIX);
+            ticketImgFilePath = ticketImgFile.getAbsolutePath();
             Intent intent = new CameraActivity.IntentBuilder(getActivity())
                     .facing(Facing.BACK)
-                    .to(currentImageFile2)
+                    .to(ticketImgFile)
                     .flashModes(FLASH_MODES)
                     .zoomStyle(ZoomStyle.SEEKBAR)
                     .updateMediaStore()
                     .confirmationQuality(0.3f)
-                    .hintText(getString(R.string.camera_hint_back))
+                    .hintText(getString(R.string.camera_hint_ticket))
                     .build();
-            startActivityForResult(intent, REQUEST_BACK_IMAGE_CAPTURE);
+            startActivityForResult(intent, REQUEST_TICKET_IMG_CAPTURE);
         } catch (IOException e) {
             e.printStackTrace();
-            currentImageFile2 = null;
-            currentImageFilePath2 = null;
-            showAlertandBack(getString(R.string.img_file_create_error));
-        }
-    }
-
-    private void takeSidePictureIntent() {
-        try {
-            currentImageFile3 = FileUtil.createImageFile(getActivity(), IMG3_FILE_PREFIX, JPEG_FILE_SUFFIX);
-            currentImageFilePath3 = currentImageFile3.getAbsolutePath();
-            Intent intent = new CameraActivity.IntentBuilder(getActivity())
-                    .facing(Facing.BACK)
-                    .to(currentImageFile3)
-                    .flashModes(FLASH_MODES)
-                    .zoomStyle(ZoomStyle.SEEKBAR)
-                    .updateMediaStore()
-                    .confirmationQuality(0.3f)
-                    .hintText(getString(R.string.camera_hint_side))
-                    .build();
-            startActivityForResult(intent, REQUEST_SIDE_IMAGE_CAPTURE);
-        } catch (IOException e) {
-            e.printStackTrace();
-            currentImageFile3 = null;
-            currentImageFilePath3 = null;
-            showAlertandSide(getString(R.string.img_file_create_error));
+            ticketImgFile = null;
+            ticketImgFilePath = null;
+            showAlertandRepeat(getString(R.string.img_file_create_error), REQUEST_TICKET_IMG_CAPTURE);
         }
     }
 
@@ -879,51 +822,22 @@ public class AcquireFragment extends Fragment {
         dialog.show();
     }
 
-    private void showAlertandFront(String alertString) {
+    private void showAlertandRepeat(String alertString, final int requestCode) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(alertString);
         builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                takeFrontPictureIntent();
-                dialog.dismiss();
-            }
-        });
-        AlertDialog dialog = builder.create();
-        dialog.show();
-    }
-
-    private void showAlertandBack(String alertString) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(alertString);
-        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                takeBackPictureIntent();
-                dialog.dismiss();
-            }
-        });
-        AlertDialog dialog = builder.create();
-        dialog.show();
-    }
-
-    private void showAlertandQR(String alertString) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(alertString);
-        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-//                scanQRCode();
-                dialog.dismiss();
-            }
-        });
-        AlertDialog dialog = builder.create();
-        dialog.show();
-    }
-
-    private void showAlertandSide(String alertString) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(alertString);
-        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                takeSidePictureIntent();
+                switch (requestCode) {
+                    case REQUEST_FAR_IMG_CAPTURE:
+                        takeFarPictureIntent();
+                        break;
+                    case REQUEST_CLOSE_IMG_CAPTURE:
+                        takeClosePictureIntent();
+                        break;
+                    case REQUEST_TICKET_IMG_CAPTURE:
+                        takeTicketPictureIntent();
+                        break;
+                }
                 dialog.dismiss();
             }
         });
@@ -937,14 +851,14 @@ public class AcquireFragment extends Fragment {
         builder.setPositiveButton(R.string.alert_dialog_license_check_yes, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 licenseCorrect = 1;
-                takeBackPictureIntent();
+                showPreview();
                 dialog.dismiss();
             }
         });
         builder.setNegativeButton(R.string.alert_dialog_license_check_no, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 licenseCorrect = 0;
-                takeBackPictureIntent();
+                showPreview();
                 dialog.dismiss();
             }
         });
@@ -952,5 +866,44 @@ public class AcquireFragment extends Fragment {
         dialog.show();
     }
 
+    private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(getActivity()) {
+        @Override
+        public void onManagerConnected(int status) {
+            switch (status) {
+                case LoaderCallbackInterface.SUCCESS:
+                    Log.d(LOG_TAG, "OpenCV loaded successfully");
+                    System.loadLibrary("platerecognizer");
+                    break;
+                default:
+                    super.onManagerConnected(status);
+                    break;
+            }
+        }
+    };
+
+    private class PlateRecognizeTask extends AsyncTask<String, Integer, String> {
+        @Override
+        protected String doInBackground(String... params) {
+            Bitmap bitmap = BitmapUtil.scaleBitmap(imageBitmap, TRANS_IMAGE_W, TRANS_IMAGE_H);
+            bitmap = BitmapUtil.cropBitmapCenter(bitmap, SCREEN_WIDTH, SCREEN_HEIGHT, RATIO_ENLARGE, VERTICAL_RATIO_W, VERTICAL_RATIO_H, HORIZONTAL_RATIO_W, HORIZONTAL_RATIO_H);
+            Mat m = new Mat();
+            Utils.bitmapToMat(bitmap, m);
+            return plateRecognition(m.getNativeObjAddr(), m.getNativeObjAddr());
+        }
+
+        @Override
+        protected void onPostExecute(String result) {
+            if (result != null && !result.equalsIgnoreCase("0") && result.length() == 10) {
+                licenseNum = result.substring(3);
+                licenseColor = result.substring(0, 1);
+                vehicleType = "小型客车"; // TODO: Add recognization for vehicle type and color
+                vehicleColor = "黑";
+                showLicenseCheckDialog();
+            } else {
+                licenseCorrect = 0;
+                showPreview();
+            }
+        }
+    }
 
 }

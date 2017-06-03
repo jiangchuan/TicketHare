@@ -7,9 +7,9 @@ package io.chizi.tickethare.util;
 public interface AppConstants {
     static final int REQUEST_SIGNUP = 0;
     static final int REQUEST_UPDATE_PROFILE = 1;
-    static final int REQUEST_FRONT_IMAGE_CAPTURE = 2;
-    static final int REQUEST_BACK_IMAGE_CAPTURE = 3;
-    static final int REQUEST_SIDE_IMAGE_CAPTURE = 4;
+    static final int REQUEST_CLOSE_IMG_CAPTURE = 2;
+    static final int REQUEST_FAR_IMG_CAPTURE = 3;
+    static final int REQUEST_TICKET_IMG_CAPTURE = 4;
     static final int REQUEST_QRCODE_SCAN = 5;
     static final int REQUEST_LOCATION_SHOW = 6;
     static final int REQUEST_PREVIEW_SHOW = 7;
@@ -24,7 +24,7 @@ public interface AppConstants {
     static final int COMPRESS_RATIO = 80;
 
 //    static final String HOST_IP = "104.154.251.38";
-    static final String HOST_IP = "192.168.1.5";
+    static final String HOST_IP = "192.168.1.8";
     static final int PORT = 50051;
 
     static final String POLICE_USER_ID = "police_user_id";
@@ -94,9 +94,9 @@ public interface AppConstants {
     static final String OPENALPR_CONF_FILE = "openalpr.conf";
     static final String PREF_INSTALLED_KEY = "installed";
     static final String MAP_FILE_PREFIX = "MAP_";
-    static final String IMG1_FILE_PREFIX = "IMG1_";
-    static final String IMG2_FILE_PREFIX = "IMG2_";
-    static final String IMG3_FILE_PREFIX = "IMG3_";
+    static final String CLOSE_IMG_FILE_PREFIX = "CLOSE_";
+    static final String FAR_IMG_FILE_PREFIX = "FAR_";
+    static final String TICKET_IMG_FILE_PREFIX = "TICKET_";
     static final String PNG_FILE_SUFFIX = ".png";
     static final String JPEG_FILE_SUFFIX = ".jpg";
     static final String ALPR_FRAGMENT_TAG = "alpr";
