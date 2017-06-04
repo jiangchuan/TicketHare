@@ -8,8 +8,8 @@ option objc_class_prefix = "CZT";
 package ticket;
 
 service Ticket {
-  rpc CreateAccount (AccountRequest) returns (AccountReply) {}
-  rpc Login (LoginRequest) returns (LoginReply) {}
+  rpc HareCreateAccount (AccountRequest) returns (AccountReply) {}
+  rpc HareLogin (LoginRequest) returns (LoginReply) {}
   rpc RecordTicket (TicketRequest) returns (TicketReply) {}
 }
 

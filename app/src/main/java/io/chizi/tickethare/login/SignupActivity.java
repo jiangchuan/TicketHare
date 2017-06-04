@@ -161,7 +161,7 @@ public class SignupActivity extends AppCompatActivity {
                         .setPoliceDept(policeDept)
                         .setPoliceStation(policeStation)
                         .build();
-                AccountReply reply = blockingStub.createAccount(accountRequest);
+                AccountReply reply = blockingStub.hareCreateAccount(accountRequest);
                 resultList.add(String.valueOf(reply.getCreateSuccess()));
                 return resultList;
             } catch (Exception e) {

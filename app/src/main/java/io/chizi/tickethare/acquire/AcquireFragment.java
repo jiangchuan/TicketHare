@@ -83,9 +83,9 @@ import static io.chizi.tickethare.database.DBProvider.KEY_CAR_TYPE;
 import static io.chizi.tickethare.database.DBProvider.KEY_DATETIME;
 import static io.chizi.tickethare.database.DBProvider.KEY_DAY;
 import static io.chizi.tickethare.database.DBProvider.KEY_HOUR;
-import static io.chizi.tickethare.database.DBProvider.KEY_IMG1_URI;
-import static io.chizi.tickethare.database.DBProvider.KEY_IMG2_URI;
-import static io.chizi.tickethare.database.DBProvider.KEY_IMG3_URI;
+import static io.chizi.tickethare.database.DBProvider.KEY_FAR_IMG_URI;
+import static io.chizi.tickethare.database.DBProvider.KEY_CLOSE_IMG_URI;
+import static io.chizi.tickethare.database.DBProvider.KEY_TICKET_IMG_URI;
 import static io.chizi.tickethare.database.DBProvider.KEY_LATITUDE;
 import static io.chizi.tickethare.database.DBProvider.KEY_LICENSE_COLOR;
 import static io.chizi.tickethare.database.DBProvider.KEY_LICENSE_CORRECT;
@@ -188,6 +188,7 @@ public class AcquireFragment extends Fragment {
     private String licenseColor = "蓝";
     private String vehicleType = "小型客车";
     private String vehicleColor = "黑";
+
 
     private String userID;
     private String policeName;
@@ -328,6 +329,7 @@ public class AcquireFragment extends Fragment {
             @Override
             public void onClick(View view) {
                 takePictureButton.setEnabled(false);
+                initFields();
                 saveScreen();
                 takeFarPictureIntent();
             }
@@ -505,7 +507,17 @@ public class AcquireFragment extends Fragment {
 
     private Long generateTicketID() {
         // TODO: Generate ticket here.
-        return 123L;
+        return 1234L;
+    }
+
+    private void initFields() {
+        currentTime = null;
+        ticketID = -1L;
+        licenseNum = null;
+        licenseColor = "蓝";
+        licenseCorrect = -1;
+        vehicleType = "小型客车";
+        vehicleColor = "黑";
     }
 
     private void backToHome() {
@@ -639,14 +651,14 @@ public class AcquireFragment extends Fragment {
             if (mapFilePath != null) {
                 values.put(KEY_MAP_URI, mapFilePath);
             }
-            if (closeImgFilePath != null) {
-                values.put(KEY_IMG1_URI, closeImgFilePath);
-            }
             if (farImgFilePath != null) {
-                values.put(KEY_IMG2_URI, farImgFilePath);
+                values.put(KEY_FAR_IMG_URI, farImgFilePath);
+            }
+            if (closeImgFilePath != null) {
+                values.put(KEY_CLOSE_IMG_URI, closeImgFilePath);
             }
             if (ticketImgFilePath != null) {
-                values.put(KEY_IMG3_URI, ticketImgFilePath);
+                values.put(KEY_TICKET_IMG_URI, ticketImgFilePath);
             }
             resolver.insert(DBProvider.TICKET_URL, values);
             Toast.makeText(getActivity(), R.string.toast_ticket_saved, Toast.LENGTH_SHORT).show();

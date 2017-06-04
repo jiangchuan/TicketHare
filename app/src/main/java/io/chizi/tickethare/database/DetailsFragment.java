@@ -27,9 +27,9 @@ import static io.chizi.tickethare.database.DBProvider.KEY_CAR_COLOR;
 import static io.chizi.tickethare.database.DBProvider.KEY_CAR_TYPE;
 import static io.chizi.tickethare.database.DBProvider.KEY_DAY;
 import static io.chizi.tickethare.database.DBProvider.KEY_HOUR;
-import static io.chizi.tickethare.database.DBProvider.KEY_IMG1_URI;
-import static io.chizi.tickethare.database.DBProvider.KEY_IMG2_URI;
-import static io.chizi.tickethare.database.DBProvider.KEY_IMG3_URI;
+import static io.chizi.tickethare.database.DBProvider.KEY_FAR_IMG_URI;
+import static io.chizi.tickethare.database.DBProvider.KEY_CLOSE_IMG_URI;
+import static io.chizi.tickethare.database.DBProvider.KEY_TICKET_IMG_URI;
 import static io.chizi.tickethare.database.DBProvider.KEY_LATITUDE;
 import static io.chizi.tickethare.database.DBProvider.KEY_LICENSE_COLOR;
 import static io.chizi.tickethare.database.DBProvider.KEY_LICENSE_NUM;
@@ -331,7 +331,7 @@ public class DetailsFragment extends Fragment {
             photo1VTO.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
                 public boolean onPreDraw() {
                     photo1DetailsImageView.getViewTreeObserver().removeOnPreDrawListener(this);
-                    String filePath = getStringColumnValues(KEY_IMG1_URI)[getShownIndex()];
+                    String filePath = getStringColumnValues(KEY_FAR_IMG_URI)[getShownIndex()];
                     if (filePath != null) {
                         Bitmap bitmap = BitmapUtil.getScaledBitmap(filePath, TRANS_IMAGE_W, TRANS_IMAGE_H);
                         if (bitmap != null) {
@@ -349,7 +349,7 @@ public class DetailsFragment extends Fragment {
             photo2VTO.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
                 public boolean onPreDraw() {
                     photo2DetailsImageView.getViewTreeObserver().removeOnPreDrawListener(this);
-                    String filePath = getStringColumnValues(KEY_IMG2_URI)[getShownIndex()];
+                    String filePath = getStringColumnValues(KEY_CLOSE_IMG_URI)[getShownIndex()];
                     if (filePath != null) {
                         Bitmap bitmap = BitmapUtil.getScaledBitmap(filePath, TRANS_IMAGE_W, TRANS_IMAGE_H);
                         if (bitmap != null) {
@@ -367,7 +367,7 @@ public class DetailsFragment extends Fragment {
             photo3VTO.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
                 public boolean onPreDraw() {
                     photo3DetailsImageView.getViewTreeObserver().removeOnPreDrawListener(this);
-                    String filePath = getStringColumnValues(KEY_IMG3_URI)[getShownIndex()];
+                    String filePath = getStringColumnValues(KEY_TICKET_IMG_URI)[getShownIndex()];
                     if (filePath != null) {
                         Bitmap bitmap = BitmapUtil.getScaledBitmap(filePath, TRANS_IMAGE_W, TRANS_IMAGE_H);
                         if (bitmap != null) {

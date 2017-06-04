@@ -133,7 +133,7 @@ public class LoginActivity extends AppCompatActivity {
             try {
                 TicketGrpc.TicketBlockingStub blockingStub = TicketGrpc.newBlockingStub(mChannel);
                 LoginRequest loginRequest = LoginRequest.newBuilder().setUserId(userID).setPassword(password).build();
-                LoginReply reply = blockingStub.login(loginRequest);
+                LoginReply reply = blockingStub.hareLogin(loginRequest);
                 resultList.add(String.valueOf(reply.getLoginSuccess()));
                 resultList.add(reply.getPoliceName());
                 resultList.add(reply.getPoliceType());
