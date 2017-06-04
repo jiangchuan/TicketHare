@@ -2,6 +2,7 @@ package io.chizi.tickethare.acquire;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.DialogInterface;
@@ -40,6 +41,7 @@ import com.commonsware.cwac.cam2.CameraActivity;
 import com.commonsware.cwac.cam2.Facing;
 import com.commonsware.cwac.cam2.FlashMode;
 import com.commonsware.cwac.cam2.ZoomStyle;
+import com.google.protobuf.ByteString;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.LoaderCallbackInterface;
@@ -54,15 +56,25 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
 
+import io.chizi.ticket.TicketGrpc;
+import io.chizi.ticket.TicketReply;
+import io.chizi.ticket.TicketRequest;
 import io.chizi.tickethare.R;
 import io.chizi.tickethare.database.DBProvider;
 import io.chizi.tickethare.database.TitlesFragment;
 import io.chizi.tickethare.login.UpdateProfileActivity;
 import io.chizi.tickethare.util.BitmapUtil;
 import io.chizi.tickethare.util.FileUtil;
+import io.grpc.ManagedChannel;
+import io.grpc.ManagedChannelBuilder;
 
 import static io.chizi.tickethare.acquire.PlateRecognizer.plateRecognition;
 import static io.chizi.tickethare.database.DBProvider.KEY_ADDRESS;
@@ -90,18 +102,19 @@ import static io.chizi.tickethare.database.DBProvider.KEY_USER_ID;
 import static io.chizi.tickethare.database.DBProvider.KEY_YEAR;
 import static io.chizi.tickethare.util.AppConstants.ANDROID_DATA_DIR;
 import static io.chizi.tickethare.util.AppConstants.BACK_LICENSE_COLOR;
+import static io.chizi.tickethare.util.AppConstants.BACK_LICENSE_NUM;
 import static io.chizi.tickethare.util.AppConstants.BACK_VEHICLE_COLOR;
 import static io.chizi.tickethare.util.AppConstants.BACK_VEHICLE_TYPE;
 import static io.chizi.tickethare.util.AppConstants.COMPRESS_RATIO;
 import static io.chizi.tickethare.util.AppConstants.CURRENT_ADDRESS;
-import static io.chizi.tickethare.util.AppConstants.CURRENT_IMG1_FILE_PATH;
-import static io.chizi.tickethare.util.AppConstants.CURRENT_IMG2_FILE_PATH;
+import static io.chizi.tickethare.util.AppConstants.FAR_IMG_FILE_PATH;
+import static io.chizi.tickethare.util.AppConstants.CLOSE_IMG_FILE_PATH;
 import static io.chizi.tickethare.util.AppConstants.CURRENT_LATITUDE;
 import static io.chizi.tickethare.util.AppConstants.CURRENT_LICENSE_COLOR;
 import static io.chizi.tickethare.util.AppConstants.CURRENT_LICENSE_CORRECT;
 import static io.chizi.tickethare.util.AppConstants.CURRENT_LICENSE_NUM;
 import static io.chizi.tickethare.util.AppConstants.CURRENT_LONGITUDE;
-import static io.chizi.tickethare.util.AppConstants.CURRENT_MAP_FILE_PATH;
+import static io.chizi.tickethare.util.AppConstants.MAP_FILE_PATH;
 import static io.chizi.tickethare.util.AppConstants.CURRENT_POLICE_CITY;
 import static io.chizi.tickethare.util.AppConstants.CURRENT_POLICE_DEPT;
 import static io.chizi.tickethare.util.AppConstants.CURRENT_POLICE_NAME;
@@ -113,6 +126,8 @@ import static io.chizi.tickethare.util.AppConstants.FILE_INSDCARD_DIR;
 import static io.chizi.tickethare.util.AppConstants.GOBACK_USER_ID;
 import static io.chizi.tickethare.util.AppConstants.CLOSE_IMG_FILE_PREFIX;
 import static io.chizi.tickethare.util.AppConstants.FAR_IMG_FILE_PREFIX;
+import static io.chizi.tickethare.util.AppConstants.HOST_IP;
+import static io.chizi.tickethare.util.AppConstants.PORT;
 import static io.chizi.tickethare.util.AppConstants.TICKET_IMG_FILE_PREFIX;
 import static io.chizi.tickethare.util.AppConstants.JPEG_FILE_SUFFIX;
 import static io.chizi.tickethare.util.AppConstants.MAP_FILE_PREFIX;
@@ -187,7 +202,7 @@ public class AcquireFragment extends Fragment {
     private String closeImgFilePath;
     private String farImgFilePath;
     private String ticketImgFilePath;
-    private String currentMapFilePath;
+    private String mapFilePath;
     private int licenseCorrect = -1;
     private int year = -1;
     private int month = -1;
@@ -227,6 +242,8 @@ public class AcquireFragment extends Fragment {
 
     // Database
     ContentResolver resolver; // Provides access to other applications Content Providers
+
+    private ProgressDialog progressDialog;
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -350,7 +367,7 @@ public class AcquireFragment extends Fragment {
             vehicleColor = savedInstanceState.getString(SAVED_INSTANCE_VEHICLE_COLOR);
 
             currentTime = savedInstanceState.getString(SAVED_INSTANCE_CURR_TIME);
-            currentMapFilePath = savedInstanceState.getString(SAVED_INSTANCE_CURR_MAP_PATH);
+            mapFilePath = savedInstanceState.getString(SAVED_INSTANCE_CURR_MAP_PATH);
             closeImgFilePath = savedInstanceState.getString(SAVED_INSTANCE_CURR_IMG1_PATH);
             farImgFilePath = savedInstanceState.getString(SAVED_INSTANCE_CURR_IMG2_PATH);
             ticketImgFilePath = savedInstanceState.getString(SAVED_INSTANCE_CURR_IMG3_PATH);
@@ -388,9 +405,9 @@ public class AcquireFragment extends Fragment {
         params.putString(CURRENT_ADDRESS, address);
         params.putDouble(CURRENT_LONGITUDE, longitude);
         params.putDouble(CURRENT_LATITUDE, latitude);
-        params.putString(CURRENT_MAP_FILE_PATH, currentMapFilePath);
-        params.putString(CURRENT_IMG1_FILE_PATH, closeImgFilePath);
-        params.putString(CURRENT_IMG2_FILE_PATH, farImgFilePath);
+        params.putString(MAP_FILE_PATH, mapFilePath);
+        params.putString(FAR_IMG_FILE_PATH, farImgFilePath);
+        params.putString(CLOSE_IMG_FILE_PATH, closeImgFilePath);
         goToPreviewActivityIntent.putExtras(params);
         startActivityForResult(goToPreviewActivityIntent, REQUEST_PREVIEW_SHOW);
     }
@@ -407,7 +424,7 @@ public class AcquireFragment extends Fragment {
                         showAlertandRepeat("farImgFilePath is null!", REQUEST_FAR_IMG_CAPTURE);
                     }
                 } else {
-                    Toast.makeText(getActivity(), R.string.toast_null_img_file, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), R.string.toast_result_code_not_ok, Toast.LENGTH_SHORT).show();
                     backToHome();
                 }
                 break;
@@ -425,17 +442,20 @@ public class AcquireFragment extends Fragment {
                         showAlertandRepeat("closeImgFilePath is null!", REQUEST_CLOSE_IMG_CAPTURE);
                     }
                 } else {
-                    Toast.makeText(getActivity(), R.string.toast_null_img_file, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), R.string.toast_result_code_not_ok, Toast.LENGTH_SHORT).show();
                     backToHome();
                 }
                 break;
 
             case REQUEST_PREVIEW_SHOW:
                 if (resultCode == getActivity().RESULT_OK) {
+
+                    licenseNum = data.getStringExtra(BACK_LICENSE_NUM);
                     vehicleColor = data.getStringExtra(BACK_VEHICLE_COLOR);
                     vehicleType = data.getStringExtra(BACK_VEHICLE_TYPE);
                     licenseColor = data.getStringExtra(BACK_LICENSE_COLOR);
-//                    scanQRCode();
+                    printTicket();
+                    takeTicketPictureIntent();
                 } else {
                     backToHome();
                 }
@@ -451,20 +471,18 @@ public class AcquireFragment extends Fragment {
                         day = now.get(Calendar.DAY_OF_MONTH);
                         hour = now.get(Calendar.HOUR_OF_DAY);
                         minute = now.get(Calendar.MINUTE);
-//                        saveTicket();
-                        showPreview();
+                        saveTicket();
+                        showUploadDialog();
                         backToHome();
                     } else {
                         showAlertandRepeat("ticketImgFilePath is null!", REQUEST_TICKET_IMG_CAPTURE);
                     }
                 } else {
-                    Toast.makeText(getActivity(), R.string.toast_null_img_file, Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), R.string.toast_result_code_not_ok, Toast.LENGTH_SHORT).show();
                     backToHome();
                 }
 
                 break;
-
-
 
             case REQUEST_UPDATE_PROFILE:
                 if (resultCode == getActivity().RESULT_OK) {
@@ -476,6 +494,18 @@ public class AcquireFragment extends Fragment {
                 }
                 break;
         }
+    }
+
+    private void printTicket() {
+        // TODO: Print ticket here.
+
+        ticketID = generateTicketID();
+
+    }
+
+    private Long generateTicketID() {
+        // TODO: Generate ticket here.
+        return 123L;
     }
 
     private void backToHome() {
@@ -527,8 +557,8 @@ public class AcquireFragment extends Fragment {
         // 截图，在SnapshotReadyCallback中保存图片到 sd 卡
         mBaiduMap.snapshot(new BaiduMap.SnapshotReadyCallback() {
             public void onSnapshotReady(Bitmap snapshot) {
-                currentMapFilePath = FileUtil.getStorageDir(getActivity()) + "/" + FileUtil.getFileName(MAP_FILE_PREFIX) + JPEG_FILE_SUFFIX;
-                File file = new File(currentMapFilePath);
+                mapFilePath = FileUtil.getStorageDir(getActivity()) + "/" + FileUtil.getFileName(MAP_FILE_PREFIX) + JPEG_FILE_SUFFIX;
+                File file = new File(mapFilePath);
                 FileOutputStream out;
                 try {
                     out = new FileOutputStream(file);
@@ -606,8 +636,8 @@ public class AcquireFragment extends Fragment {
             if (lat != null) {
                 values.put(KEY_LATITUDE, lat);
             }
-            if (currentMapFilePath != null) {
-                values.put(KEY_MAP_URI, currentMapFilePath);
+            if (mapFilePath != null) {
+                values.put(KEY_MAP_URI, mapFilePath);
             }
             if (closeImgFilePath != null) {
                 values.put(KEY_IMG1_URI, closeImgFilePath);
@@ -723,7 +753,7 @@ public class AcquireFragment extends Fragment {
         outState.putString(SAVED_INSTANCE_VEHICLE_COLOR, vehicleColor);
 
         outState.putString(SAVED_INSTANCE_CURR_TIME, currentTime);
-        outState.putString(SAVED_INSTANCE_CURR_MAP_PATH, currentMapFilePath);
+        outState.putString(SAVED_INSTANCE_CURR_MAP_PATH, mapFilePath);
         outState.putString(SAVED_INSTANCE_CURR_IMG1_PATH, closeImgFilePath);
         outState.putString(SAVED_INSTANCE_CURR_IMG2_PATH, farImgFilePath);
         outState.putString(SAVED_INSTANCE_CURR_IMG3_PATH, ticketImgFilePath);
@@ -865,6 +895,125 @@ public class AcquireFragment extends Fragment {
         AlertDialog dialog = builder.create();
         dialog.show();
     }
+
+    private void showUploadDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(getString(R.string.alert_dialog_upload));
+        builder.setPositiveButton(R.string.alert_dialog_license_check_yes, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                recordTicket();
+                dialog.dismiss();
+            }
+        });
+        builder.setNegativeButton(R.string.alert_dialog_license_check_no, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                dialog.dismiss();
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void recordTicket() {
+        new GrpcTask().execute();
+    }
+
+    private class GrpcTask extends AsyncTask<Void, Void, List<String>> {
+        private ManagedChannel mChannel;
+
+        @Override
+        protected void onPreExecute() {
+            if (progressDialog == null) {
+                prepareProgressDialog();
+            }
+            mChannel = ManagedChannelBuilder.forAddress(HOST_IP, PORT)
+                    .usePlaintext(true)
+                    .build();
+        }
+
+        @Override
+        protected List<String> doInBackground(Void... nothing) {
+            if (progressDialog == null) {
+                prepareProgressDialog();
+            }
+            ArrayList<String> resultList = new ArrayList<String>();
+            try {
+                TicketGrpc.TicketBlockingStub blockingStub = TicketGrpc.newBlockingStub(mChannel);
+                TicketRequest ticketRequest = TicketRequest.newBuilder()
+                        .setTicketId(ticketID)
+                        .setUserId(userID)
+                        .setLicenseNum(licenseNum)
+                        .setLicenseColor(licenseColor)
+                        .setLicenseCorrect(licenseCorrect == 1 ? true : false)
+                        .setVehicleType(vehicleType)
+                        .setVehicleColor(vehicleColor)
+                        .setYear(year)
+                        .setMonth(month)
+                        .setDay(day)
+                        .setHour(hour)
+                        .setMinute(minute)
+                        .setAddress(address)
+                        .setLongitude(longitude)
+                        .setLatitude(latitude)
+                        .setMapImage(ByteString.copyFrom(getImageBytesfromPath(mapFilePath)))
+                        .setFarImage(ByteString.copyFrom(getImageBytesfromPath(farImgFilePath)))
+                        .setCloseImage(ByteString.copyFrom(getImageBytesfromPath(closeImgFilePath)))
+                        .setTicketImage(ByteString.copyFrom(getImageBytesfromPath(ticketImgFilePath)))
+                        .build();
+                TicketReply reply = blockingStub.recordTicket(ticketRequest);
+                resultList.add(String.valueOf(reply.getRecordSuccess()));
+                return resultList;
+            } catch (Exception e) {
+                StringWriter sw = new StringWriter();
+                PrintWriter pw = new PrintWriter(sw);
+                e.printStackTrace(pw);
+                pw.flush();
+                resultList.add("Failed... : " + System.getProperty("line.separator") + sw);
+                return resultList;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(List<String> resultList) {
+            try {
+                mChannel.shutdown().awaitTermination(1, TimeUnit.SECONDS);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+            dismissProgressDialog();
+            if (resultList != null) {
+                String createSuccess = resultList.get(0);
+                if (createSuccess != null && createSuccess.equals("true")) {
+                    Toast.makeText(getActivity(), R.string.toast_record_ticket_success, Toast.LENGTH_LONG).show();
+                } else {
+                    Toast.makeText(getActivity(), R.string.toast_record_ticket_failed, Toast.LENGTH_LONG).show();
+                }
+            } else {
+                Toast.makeText(getActivity(), R.string.toast_record_ticket_failed, Toast.LENGTH_LONG).show();
+            }
+            backToHome();
+        }
+    }
+
+    public byte[] getImageBytesfromPath(String filePath) {
+        Bitmap bitmap = BitmapUtil.getScaledBitmap(filePath, TRANS_IMAGE_W, TRANS_IMAGE_H);
+        ByteArrayOutputStream imageOS = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, COMPRESS_RATIO, imageOS);
+        return imageOS.toByteArray();
+    }
+
+    private void prepareProgressDialog() {
+        progressDialog = new ProgressDialog(getActivity());
+        progressDialog.setCanceledOnTouchOutside(false);
+        progressDialog.setMessage(getString(R.string.progress_dialog_recording_ticket));
+        progressDialog.show();
+    }
+
+    private void dismissProgressDialog() {
+        progressDialog.dismiss();
+        progressDialog = null;
+    }
+
 
     private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(getActivity()) {
         @Override

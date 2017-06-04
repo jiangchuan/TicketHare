@@ -1,9 +1,7 @@
 package io.chizi.tickethare.acquire;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.ContentResolver;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
@@ -28,17 +26,18 @@ import io.chizi.tickethare.util.BitmapUtil;
 import io.chizi.tickethare.util.ColorSpinnerAdapter;
 
 import static io.chizi.tickethare.util.AppConstants.BACK_LICENSE_COLOR;
+import static io.chizi.tickethare.util.AppConstants.BACK_LICENSE_NUM;
 import static io.chizi.tickethare.util.AppConstants.BACK_VEHICLE_COLOR;
 import static io.chizi.tickethare.util.AppConstants.BACK_VEHICLE_TYPE;
 import static io.chizi.tickethare.util.AppConstants.CURRENT_ADDRESS;
-import static io.chizi.tickethare.util.AppConstants.CURRENT_IMG1_FILE_PATH;
-import static io.chizi.tickethare.util.AppConstants.CURRENT_IMG2_FILE_PATH;
+import static io.chizi.tickethare.util.AppConstants.FAR_IMG_FILE_PATH;
+import static io.chizi.tickethare.util.AppConstants.CLOSE_IMG_FILE_PATH;
 import static io.chizi.tickethare.util.AppConstants.CURRENT_LATITUDE;
 import static io.chizi.tickethare.util.AppConstants.CURRENT_LICENSE_COLOR;
 import static io.chizi.tickethare.util.AppConstants.CURRENT_LICENSE_CORRECT;
 import static io.chizi.tickethare.util.AppConstants.CURRENT_LICENSE_NUM;
 import static io.chizi.tickethare.util.AppConstants.CURRENT_LONGITUDE;
-import static io.chizi.tickethare.util.AppConstants.CURRENT_MAP_FILE_PATH;
+import static io.chizi.tickethare.util.AppConstants.MAP_FILE_PATH;
 import static io.chizi.tickethare.util.AppConstants.CURRENT_POLICE_CITY;
 import static io.chizi.tickethare.util.AppConstants.CURRENT_POLICE_DEPT;
 import static io.chizi.tickethare.util.AppConstants.CURRENT_POLICE_NAME;
@@ -205,9 +204,9 @@ public class PreviewActivity extends Activity {
                 address = params.getString(CURRENT_ADDRESS);
                 longitude = params.getDouble(CURRENT_LONGITUDE);
                 latitude = params.getDouble(CURRENT_LATITUDE);
-                currentMapFilePath = params.getString(CURRENT_MAP_FILE_PATH);
-                currentImageFilePath1 = params.getString(CURRENT_IMG1_FILE_PATH);
-                currentImageFilePath2 = params.getString(CURRENT_IMG2_FILE_PATH);
+                currentMapFilePath = params.getString(MAP_FILE_PATH);
+                currentImageFilePath1 = params.getString(FAR_IMG_FILE_PATH);
+                currentImageFilePath2 = params.getString(CLOSE_IMG_FILE_PATH);
             }
         }
         Calendar now = Calendar.getInstance();
@@ -354,7 +353,9 @@ public class PreviewActivity extends Activity {
             @Override
             public void onClick(View view) {
                 Intent goingBack = new Intent();
+                licenseNum = licenseEditText.getText().toString();
                 vehicleColor = vehicleColorSpinner.getSelectedItem().toString();
+                goingBack.putExtra(BACK_LICENSE_NUM, licenseNum);
                 goingBack.putExtra(BACK_VEHICLE_COLOR, vehicleColor);
                 goingBack.putExtra(BACK_VEHICLE_TYPE, vehicleType);
                 goingBack.putExtra(BACK_LICENSE_COLOR, licenseColor);
@@ -540,26 +541,6 @@ public class PreviewActivity extends Activity {
 //        }
 
         super.onSaveInstanceState(outState);
-    }
-
-
-    private void showLicenseCheckDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(this);
-        builder.setTitle("\"" + licenseNum + "\" " + getString(R.string.alert_dialog_license_check));
-        builder.setPositiveButton(R.string.alert_dialog_license_check_yes, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                licenseCorrect = 1;
-                dialog.dismiss();
-            }
-        });
-        builder.setNegativeButton(R.string.alert_dialog_license_check_no, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                licenseCorrect = 0;
-                dialog.dismiss();
-            }
-        });
-        AlertDialog dialog = builder.create();
-        dialog.show();
     }
 
 }

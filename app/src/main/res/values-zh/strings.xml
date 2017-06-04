@@ -43,7 +43,10 @@
     <string name="progress_dialog_logining">正在登录 ...</string>
     <string name="progress_dialog_creating_account">正在创建帐户 ...</string>
     <string name="progress_dialog_updating_profile">正在更新账户 ...</string>
+    <string name="progress_dialog_recording_ticket">正在上传罚单 ...</string>
+
     <string name="alert_dialog_license_check">对吗?</string>
+    <string name="alert_dialog_upload">上传罚单到服务器?</string>
     <string name="alert_dialog_license_check_yes">是</string>
     <string name="alert_dialog_license_check_no">否</string>
     <string name="alert_dialog_authenticate">正在登录 ...</string>
@@ -81,7 +84,9 @@
     <string name="request_wrong_police_station">请输入警务站名!</string>
     <string name="toast_update_hint">长按可更改帐户信息</string>
     <string name="toast_no_police_info">数据库里没有警察信息!</string>
-    <string name="toast_null_img_file">返回文件为空!</string>
+    <string name="toast_result_code_not_ok">resultCode not OK!</string>
+    <string name="toast_record_ticket_success">上传罚单成功!</string>
+    <string name="toast_record_ticket_failed">上传罚单失败!</string>
 
     <string name="empty_database">无罚单查看, 请先生成罚单</string>
     <string name="img_file_create_error">创建照片文件错误! 请重新拍照。</string>
@@ -97,8 +102,8 @@
     <string name="camera_hint_ticket">\u2463贴单通告: 驾驶侧贴单并拍照</string>
 
     <string name="proof_address">证据一: 违停地址</string>
-    <string name="proof_vehicle">证据二: 违停车辆</string>
-    <string name="proof_environment">证据三: 违停地点</string>
+    <string name="proof_environment">证据二: 违停地点</string>
+    <string name="proof_vehicle">证据三: 违停车辆</string>
     <string name="proof_notification">证据四: 违停告知</string>
 
     <string name="plate_rect">车牌识别区</string>

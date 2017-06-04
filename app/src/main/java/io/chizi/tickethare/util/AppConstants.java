@@ -46,14 +46,15 @@ public interface AppConstants {
     static final String CURRENT_LONGITUDE = "current_longitude";
     static final String CURRENT_LATITUDE = "current_latitude";
 
-    static final String CURRENT_MAP_FILE_PATH = "current_map_file_path";
-    static final String CURRENT_IMG1_FILE_PATH = "current_img1_file_path";
-    static final String CURRENT_IMG2_FILE_PATH = "current_img2_file_path";
+    static final String MAP_FILE_PATH = "map_file_path";
+    static final String FAR_IMG_FILE_PATH = "far_img_file_path";
+    static final String CLOSE_IMG_FILE_PATH = "close_img_file_path";
     static final String CURRENT_IMG3_FILE_PATH = "current_img3_file_path";
     static final String CURRENT_MAP_LONGITUDE = "current_map_longitude";
     static final String CURRENT_MAP_LATITUDE = "current_map_latitude";
     static final String CURRENT_MAP_ADDRESS = "current_map_address";
 
+    static final String BACK_LICENSE_NUM = "back_license_num";
     static final String BACK_VEHICLE_COLOR = "back_vehicle_color";
     static final String BACK_VEHICLE_TYPE = "back_vehicle_type";
     static final String BACK_LICENSE_COLOR = "back_license_color";

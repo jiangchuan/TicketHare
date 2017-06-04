@@ -43,7 +43,10 @@
     <string name="progress_dialog_logining">Logining ...</string>
     <string name="progress_dialog_creating_account">Creating account ...</string>
     <string name="progress_dialog_updating_profile">Updating profile ...</string>
+    <string name="progress_dialog_recording_ticket">Recording ticket ...</string>
+
     <string name="alert_dialog_license_check"> correct?</string>
+    <string name="alert_dialog_upload">Upload ticket?</string>
     <string name="alert_dialog_license_check_yes">Yes</string>
     <string name="alert_dialog_license_check_no">No</string>
     <string name="alert_dialog_authenticate">Authenticating ...</string>
@@ -81,7 +84,9 @@
     <string name="request_wrong_police_station">Enter a police station please!</string>
     <string name="toast_update_hint">Long press to update the profile</string>
     <string name="toast_no_police_info">No police profile!</string>
-    <string name="toast_null_img_file">No image file returned!</string>
+    <string name="toast_result_code_not_ok">resultCode not OK!</string>
+    <string name="toast_record_ticket_success">Record ticket success!</string>
+    <string name="toast_record_ticket_failed">Record ticket failed!</string>
 
     <string name="empty_database">No ticket saved yet, Please acquire ticket first.</string>
     <string name="img_file_create_error">Fail to create image file! Take picture again.</string>
@@ -97,8 +102,8 @@
     <string name="camera_hint_ticket">\u2463Take notification picture:</string>
 
     <string name="proof_address">Proof 1: Address</string>
-    <string name="proof_vehicle">Proof 2: Vehicle</string>
-    <string name="proof_environment">Proof 3: Environment</string>
+    <string name="proof_environment">Proof 2: Environment</string>
+    <string name="proof_vehicle">Proof 3: Vehicle</string>
     <string name="proof_notification">Proof 4: Notification</string>
 
     <string name="plate_rect">License plate capture rectangle</string>

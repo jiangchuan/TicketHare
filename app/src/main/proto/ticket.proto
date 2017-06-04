@@ -10,7 +10,7 @@ package ticket;
 service Ticket {
   rpc CreateAccount (AccountRequest) returns (AccountReply) {}
   rpc Login (LoginRequest) returns (LoginReply) {}
-  rpc RecordTicket (TicketRequest) returns (TicketSummary) {}
+  rpc RecordTicket (TicketRequest) returns (TicketReply) {}
 }
 
 message AccountRequest {
@@ -49,8 +49,8 @@ message TicketRequest {
   string license_num = 3;
   string license_color = 4;
   bool license_correct = 5;
-  string car_type = 6;
-  string car_color = 7;
+  string vehicle_type = 6;
+  string vehicle_color = 7;
   int32 year = 8;
   int32 month = 9;
   int32 day = 10;
@@ -60,11 +60,11 @@ message TicketRequest {
   double longitude = 14;
   double latitude = 15;
   bytes map_image = 16;
-  bytes car_image1 = 17;
-  bytes car_image2 = 18;
-  bytes car_image3 = 19;
+  bytes far_image = 17;
+  bytes close_image = 18;
+  bytes ticket_image = 19;
 }
 
-message TicketSummary {
-  int32 ticket_count = 1;
+message TicketReply {
+  bool record_success = 1;
 }
