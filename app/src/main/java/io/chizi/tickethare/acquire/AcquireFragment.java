@@ -11,6 +11,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -62,15 +63,16 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
+import java.util.Timer;
+import java.util.TimerTask;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
-import io.chizi.ticket.Location;
 import io.chizi.ticket.MasterOrder;
+import io.chizi.ticket.RecordReply;
 import io.chizi.ticket.SlaveLoc;
+import io.chizi.ticket.TicketDetails;
 import io.chizi.ticket.TicketGrpc;
-import io.chizi.ticket.TicketReply;
-import io.chizi.ticket.TicketRequest;
 import io.chizi.tickethare.R;
 import io.chizi.tickethare.database.DBProvider;
 import io.chizi.tickethare.database.TitlesFragment;
@@ -251,6 +253,9 @@ public class AcquireFragment extends Fragment {
 
     private ProgressDialog progressDialog;
 
+    private ManagedChannel mChannel;
+    private static final long TIME_INTERVAL = 5000; // in ms
+
     private String masterOrder;
 
     @Override
@@ -397,7 +402,24 @@ public class AcquireFragment extends Fragment {
         SCREEN_WIDTH = metric.widthPixels;  // 屏幕宽度(像素)
         SCREEN_HEIGHT = metric.heightPixels;  // 屏幕高度(像素)
 
-//        new SlaveSubmitGrpcTask(new SlaveSubmitRunnable()).execute();
+
+        mChannel = ManagedChannelBuilder.forAddress(HOST_IP, PORT)
+                .usePlaintext(true)
+                .build();
+
+        final Handler handler = new Handler();
+        Timer timer = new Timer();
+        TimerTask task = new TimerTask() {
+            @Override
+            public void run() {
+                handler.post(new Runnable() {
+                    public void run() {
+                        new SlaveSubmitGrpcTask().execute();
+                    }
+                });
+            }
+        };
+        timer.schedule(task, 0, TIME_INTERVAL); //it executes this every 5000ms
 
     }
 
@@ -534,115 +556,44 @@ public class AcquireFragment extends Fragment {
         takePictureButton.setEnabled(true);
     }
 
+    private class SlaveSubmitGrpcTask extends AsyncTask<Void, Void, List<String>> {
 
-    private class SlaveSubmitGrpcTask extends AsyncTask<Void, Void, String> {
-        private ManagedChannel mChannel;
-        private final GrpcRunnable mGrpc;
-        SlaveSubmitGrpcTask(GrpcRunnable grpc) {
-            this.mGrpc = grpc;
-        }
         @Override
         protected void onPreExecute() {
-            mChannel = ManagedChannelBuilder.forAddress(HOST_IP, PORT)
-                    .usePlaintext(true)
-                    .build();
         }
+
         @Override
-        protected String doInBackground(Void... nothing) {
+        protected List<String> doInBackground(Void... nothing) {
+            ArrayList<String> resultList = new ArrayList<String>();
             try {
-                String logs = mGrpc.run(TicketGrpc.newBlockingStub(mChannel),
-                        TicketGrpc.newStub(mChannel));
-                return "Success!" + System.getProperty("line.separator") + logs;
+                TicketGrpc.TicketBlockingStub blockingStub = TicketGrpc.newBlockingStub(mChannel);
+                SlaveLoc request = newSlaveLoc(userID,longitude, latitude);
+                MasterOrder reply = blockingStub.slaveSubmit(request);
+                resultList.add(String.valueOf(reply.getMasterOrder()));
+                return resultList;
             } catch (Exception e) {
                 StringWriter sw = new StringWriter();
                 PrintWriter pw = new PrintWriter(sw);
                 e.printStackTrace(pw);
                 pw.flush();
-                return "Failed... : " + System.getProperty("line.separator") + sw;
+                resultList.add("Failed... : " + System.getProperty("line.separator") + sw);
+                return resultList;
             }
         }
+
         @Override
-        protected void onPostExecute(String result) {
-            showMasterOrderAlert("Officer order: " + result);
-//            searchRoute();
+        protected void onPostExecute(List<String> resultList) {
+            if (resultList != null) {
+                String masterOrder = resultList.get(0);
+                if (masterOrder != null) {
+//                    Toast.makeText(getActivity(), masterOrder, Toast.LENGTH_LONG).show();
+                }
+            }
         }
     }
 
-    private void showMasterOrderAlert(String alertString) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(alertString);
-        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-//                takeCarLicenseImgAIntent();
-                dialog.dismiss();
-            }
-        });
-        AlertDialog dialog = builder.create();
-        dialog.show();
-    }
-
-    private class SlaveSubmitRunnable implements GrpcRunnable {
-        private Throwable failed;
-        @Override
-        public String run(TicketGrpc.TicketBlockingStub blockingStub, TicketGrpc.TicketStub asyncStub)
-                throws Exception {
-            return slaveSubmit(asyncStub);
-        }
-
-        private String slaveSubmit(TicketGrpc.TicketStub asyncStub) throws InterruptedException,
-                RuntimeException {
-            final StringBuffer logs = new StringBuffer();
-            final CountDownLatch finishLatch = new CountDownLatch(1);
-            StreamObserver<MasterOrder> responseObserver = new StreamObserver<MasterOrder>() {
-                @Override
-                public void onNext(MasterOrder locResponse) {
-                    masterOrder = locResponse.getMasterOrder();
-                }
-                @Override
-                public void onError(Throwable t) {
-                    failed = t;
-                    finishLatch.countDown();
-                }
-                @Override
-                public void onCompleted() {
-                    finishLatch.countDown();
-                }
-            };
-
-            StreamObserver<SlaveLoc> requestObserver = asyncStub.slaveSubmit(responseObserver);
-            try {
-                while (true) {
-                    SlaveLoc request = newSlaveLoc(userID, newLocation(longitude, latitude));
-                    requestObserver.onNext(request);
-                    // Sleep for a bit before sending the next one.
-                    Thread.sleep(1000);
-                    if (finishLatch.getCount() == 0) {
-                        // RPC completed or errored before we finished sending.
-                        // Sending further requests won't error, but they will just be thrown away.
-                        break;
-                    }
-                }
-//                HareLoc request = newHareLoc(longitude, latitude);
-//                requestObserver.onNext(request);
-            } catch (RuntimeException e) {
-                requestObserver.onError(e);  // Cancel RPC
-                throw e;
-            }
-            requestObserver.onCompleted();  // Mark the end of requests
-            finishLatch.await();
-            if (failed != null) {
-                throw new RuntimeException(failed);
-            }
-            return logs.toString();
-        }
-    }
-
-    public static Location newLocation(double theLon, double theLat) {
-        return Location.newBuilder().setLongitude(theLon).setLatitude(theLat).build();
-    }
-
-    public static SlaveLoc newSlaveLoc(String theSid, Location theSlaveLoc) {
-        return SlaveLoc.newBuilder().setSid(theSid).setSlaveLocation(theSlaveLoc).build();
+    public static SlaveLoc newSlaveLoc(String theSid, double theLon, double theLat) {
+        return SlaveLoc.newBuilder().setSid(theSid).setLongitude(theLon).setLatitude(theLat).build();
     }
 
     private void refreshTitlesFragment() {
@@ -869,6 +820,9 @@ public class AcquireFragment extends Fragment {
             mMapView.onDestroy();
             mMapView = null;
         }
+
+        mChannel.shutdown();
+
         super.onDestroy();
     }
 
@@ -1052,16 +1006,12 @@ public class AcquireFragment extends Fragment {
     }
 
     private class GrpcTask extends AsyncTask<Void, Void, List<String>> {
-        private ManagedChannel mChannel;
 
         @Override
         protected void onPreExecute() {
             if (progressDialog == null) {
                 prepareProgressDialog();
             }
-            mChannel = ManagedChannelBuilder.forAddress(HOST_IP, PORT)
-                    .usePlaintext(true)
-                    .build();
         }
 
         @Override
@@ -1072,7 +1022,7 @@ public class AcquireFragment extends Fragment {
             ArrayList<String> resultList = new ArrayList<String>();
             try {
                 TicketGrpc.TicketBlockingStub blockingStub = TicketGrpc.newBlockingStub(mChannel);
-                TicketRequest ticketRequest = TicketRequest.newBuilder()
+                TicketDetails ticketDetails = TicketDetails.newBuilder()
                         .setTicketId(ticketID)
                         .setUserId(userID)
                         .setLicenseNum(licenseNum)
@@ -1093,7 +1043,7 @@ public class AcquireFragment extends Fragment {
                         .setCloseImage(ByteString.copyFrom(getImageBytesfromPath(closeImgFilePath)))
                         .setTicketImage(ByteString.copyFrom(getImageBytesfromPath(ticketImgFilePath)))
                         .build();
-                TicketReply reply = blockingStub.recordTicket(ticketRequest);
+                RecordReply reply = blockingStub.recordTicket(ticketDetails);
                 resultList.add(String.valueOf(reply.getRecordSuccess()));
                 return resultList;
             } catch (Exception e) {
@@ -1108,11 +1058,6 @@ public class AcquireFragment extends Fragment {
 
         @Override
         protected void onPostExecute(List<String> resultList) {
-            try {
-                mChannel.shutdown().awaitTermination(1, TimeUnit.SECONDS);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
             dismissProgressDialog();
             if (resultList != null) {
                 String createSuccess = resultList.get(0);

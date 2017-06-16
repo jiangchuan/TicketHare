@@ -1,17 +1,12 @@
 package io.chizi.tickethare;
 
-import android.content.BroadcastReceiver;
-import android.content.Context;
-import android.content.Intent;
-import android.net.wifi.WifiManager;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
-import android.util.Log;
 import android.view.Window;
-import android.view.WindowManager;
 
 
+import io.chizi.tickethare.pager.MyFragmentPagerAdapter;
 import io.chizi.tickethare.pager.SlidingTabLayout;
 
 

@@ -19,7 +19,6 @@ import android.widget.TextView;
 
 public class SlidingTabLayout extends HorizontalScrollView {
 
-
     /**
      * Allows complete control over the colors drawn in the tab layout. Set with
      * {@link #setCustomTabColorizer(TabColorizer)}.

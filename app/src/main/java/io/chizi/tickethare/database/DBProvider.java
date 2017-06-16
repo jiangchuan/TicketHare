@@ -24,7 +24,6 @@ import io.chizi.tickethare.R;
 // Remember to declare the provider in manifest, or your queries might return null!
 public class DBProvider extends ContentProvider {
 
-
     // The Java namespace for the Content Provider
     static final String PROVIDER_NAME = "io.chizi.tickethare.database.DBProvider";
 

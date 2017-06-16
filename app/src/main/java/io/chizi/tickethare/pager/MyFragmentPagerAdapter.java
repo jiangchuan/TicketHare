@@ -1,4 +1,4 @@
-package io.chizi.tickethare;
+package io.chizi.tickethare.pager;
 
 import android.content.Context;
 import android.support.v4.app.Fragment;
@@ -14,7 +14,6 @@ import io.chizi.tickethare.loadmap.LoadmapFragment;
  */
 
 public class MyFragmentPagerAdapter extends FragmentPagerAdapter {
-
 
     // Holds tab titles
     private String tabTitles[] = new String[]{"生成罚单", "查看罚单", "地图下载"};
