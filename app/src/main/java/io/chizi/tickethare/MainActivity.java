@@ -1,13 +1,30 @@
 package io.chizi.tickethare;
 
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
 import android.view.Window;
 
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import io.chizi.ticket.LoginReply;
+import io.chizi.ticket.LoginRequest;
+import io.chizi.ticket.StatsReply;
+import io.chizi.ticket.TicketGrpc;
+import io.chizi.ticket.TicketStats;
 import io.chizi.tickethare.pager.MyFragmentPagerAdapter;
 import io.chizi.tickethare.pager.SlidingTabLayout;
+import io.grpc.ManagedChannel;
+import io.grpc.ManagedChannelBuilder;
+
+import static io.chizi.tickethare.util.AppConstants.HOST_IP;
+import static io.chizi.tickethare.util.AppConstants.PORT;
 
 
 /**

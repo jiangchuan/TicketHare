@@ -48,6 +48,7 @@ public class DBProvider extends ContentProvider {
     public static final String KEY_FAR_IMG_URI = "farImgURI";
     public static final String KEY_CLOSE_IMG_URI = "closeImgURI";
     public static final String KEY_TICKET_IMG_URI = "ticketImgURI";
+    public static final String KEY_IS_UPLOADED = "isUploaded";
 
     public static final String KEY_PASSWORD = "password";
     public static final String KEY_POLICE_NAME = "police_name";
@@ -101,7 +102,8 @@ public class DBProvider extends ContentProvider {
             + KEY_MAP_URI + " TEXT NOT NULL DEFAULT 'NA', "
             + KEY_FAR_IMG_URI + " TEXT NOT NULL DEFAULT 'NA', "
             + KEY_CLOSE_IMG_URI + " TEXT NOT NULL DEFAULT 'NA', "
-            + KEY_TICKET_IMG_URI + " TEXT NOT NULL DEFAULT 'NA');";
+            + KEY_TICKET_IMG_URI + " TEXT NOT NULL DEFAULT 'NA', "
+            + KEY_IS_UPLOADED + " INTEGER NOT NULL DEFAULT -1);";
 
 
     private static final String CREATE_POLICE_TABLE = "CREATE TABLE if not exists " + POLICE_TABLE_NAME

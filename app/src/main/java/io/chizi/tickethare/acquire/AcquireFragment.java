@@ -65,24 +65,23 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.TimeUnit;
 
 import io.chizi.ticket.MasterOrder;
 import io.chizi.ticket.RecordReply;
 import io.chizi.ticket.SlaveLoc;
+import io.chizi.ticket.StatsReply;
 import io.chizi.ticket.TicketDetails;
 import io.chizi.ticket.TicketGrpc;
+import io.chizi.ticket.TicketStats;
 import io.chizi.tickethare.R;
 import io.chizi.tickethare.database.DBProvider;
 import io.chizi.tickethare.database.TitlesFragment;
 import io.chizi.tickethare.login.UpdateProfileActivity;
 import io.chizi.tickethare.util.BitmapUtil;
 import io.chizi.tickethare.util.FileUtil;
-import io.chizi.tickethare.util.GrpcRunnable;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
-import io.grpc.stub.StreamObserver;
 
 import static io.chizi.tickethare.acquire.PlateRecognizer.plateRecognition;
 import static io.chizi.tickethare.database.DBProvider.KEY_ADDRESS;
@@ -93,6 +92,7 @@ import static io.chizi.tickethare.database.DBProvider.KEY_DAY;
 import static io.chizi.tickethare.database.DBProvider.KEY_HOUR;
 import static io.chizi.tickethare.database.DBProvider.KEY_FAR_IMG_URI;
 import static io.chizi.tickethare.database.DBProvider.KEY_CLOSE_IMG_URI;
+import static io.chizi.tickethare.database.DBProvider.KEY_IS_UPLOADED;
 import static io.chizi.tickethare.database.DBProvider.KEY_TICKET_IMG_URI;
 import static io.chizi.tickethare.database.DBProvider.KEY_LATITUDE;
 import static io.chizi.tickethare.database.DBProvider.KEY_LICENSE_COLOR;
@@ -136,6 +136,7 @@ import static io.chizi.tickethare.util.AppConstants.CLOSE_IMG_FILE_PREFIX;
 import static io.chizi.tickethare.util.AppConstants.FAR_IMG_FILE_PREFIX;
 import static io.chizi.tickethare.util.AppConstants.HOST_IP;
 import static io.chizi.tickethare.util.AppConstants.PORT;
+import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_IS_UPLOADED;
 import static io.chizi.tickethare.util.AppConstants.TICKET_IMG_FILE_PREFIX;
 import static io.chizi.tickethare.util.AppConstants.JPEG_FILE_SUFFIX;
 import static io.chizi.tickethare.util.AppConstants.MAP_FILE_PREFIX;
@@ -212,11 +213,15 @@ public class AcquireFragment extends Fragment {
     private String ticketImgFilePath;
     private String mapFilePath;
     private int licenseCorrect = -1;
+    private int isUploaded = -1;
     private int year = -1;
     private int month = -1;
     private int day = -1;
     private int hour = -1;
     private int minute = -1;
+
+    private int numSavedTicket;
+    private int numUploadedTicket;
 
     private File closeImgFile = null;
     private File farImgFile = null;
@@ -254,9 +259,14 @@ public class AcquireFragment extends Fragment {
     private ProgressDialog progressDialog;
 
     private ManagedChannel mChannel;
-    private static final long TIME_INTERVAL = 5000; // in ms
+
+    private Boolean receivedLoc = false;
+    private static final long LOC_TIME_INTERVAL = 5000; // in ms
+    private static final long ANCHOR_TIME_INTERVAL = 10000; // in ms
+    private static final long TICKET_STATS_TIME_INTERVAL = 10000; // in ms
 
     private String masterOrder;
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -377,6 +387,7 @@ public class AcquireFragment extends Fragment {
             licenseNum = savedInstanceState.getString(SAVED_INSTANCE_LICENSE_NUM);
             licenseColor = savedInstanceState.getString(SAVED_INSTANCE_LICENSE_COLOR);
             licenseCorrect = savedInstanceState.getInt(SAVED_INSTANCE_LICENSE_CORRECT, -1);
+            isUploaded = savedInstanceState.getInt(SAVED_INSTANCE_IS_UPLOADED, -1);
             vehicleType = savedInstanceState.getString(SAVED_INSTANCE_VEHICLE_TYPE);
             vehicleColor = savedInstanceState.getString(SAVED_INSTANCE_VEHICLE_COLOR);
 
@@ -402,24 +413,56 @@ public class AcquireFragment extends Fragment {
         SCREEN_WIDTH = metric.widthPixels;  // 屏幕宽度(像素)
         SCREEN_HEIGHT = metric.heightPixels;  // 屏幕高度(像素)
 
-
         mChannel = ManagedChannelBuilder.forAddress(HOST_IP, PORT)
                 .usePlaintext(true)
                 .build();
 
-        final Handler handler = new Handler();
-        Timer timer = new Timer();
-        TimerTask task = new TimerTask() {
+        final Handler locHandler = new Handler();
+        Timer locTimer = new Timer();
+        TimerTask locTask = new TimerTask() {
             @Override
             public void run() {
-                handler.post(new Runnable() {
+                locHandler.post(new Runnable() {
                     public void run() {
-                        new SlaveSubmitGrpcTask().execute();
+                        if (receivedLoc) {
+                            new SlaveLocSubmitGrpcTask().execute();
+                        }
                     }
                 });
             }
         };
-        timer.schedule(task, 0, TIME_INTERVAL); //it executes this every 5000ms
+        locTimer.schedule(locTask, 0, LOC_TIME_INTERVAL); //it executes this every 5s
+
+        final Handler anchorHandler = new Handler();
+        Timer anchorTimer = new Timer();
+        TimerTask anchorTask = new TimerTask() {
+            @Override
+            public void run() {
+                anchorHandler.post(new Runnable() {
+                    public void run() {
+                        if (receivedLoc) {
+                            new SlaveAnchorSubmitGrpcTask().execute();
+                        }
+                    }
+                });
+            }
+        };
+        anchorTimer.schedule(anchorTask, 0, ANCHOR_TIME_INTERVAL); //it executes this every 10s
+
+        final Handler ticketStatsHandler = new Handler();
+        Timer ticketStatsTimer = new Timer();
+        TimerTask ticketStatsTask = new TimerTask() {
+            @Override
+            public void run() {
+                ticketStatsHandler.post(new Runnable() {
+                    public void run() {
+                            new SubmitTicketStatsGrpcTask().execute();
+                    }
+                });
+            }
+        };
+        ticketStatsTimer.schedule(ticketStatsTask, 0, TICKET_STATS_TIME_INTERVAL); //it executes this every 10s
+
 
     }
 
@@ -505,7 +548,6 @@ public class AcquireFragment extends Fragment {
                         day = now.get(Calendar.DAY_OF_MONTH);
                         hour = now.get(Calendar.HOUR_OF_DAY);
                         minute = now.get(Calendar.MINUTE);
-                        saveTicket();
                         showUploadDialog();
                         backToHome();
                     } else {
@@ -548,6 +590,7 @@ public class AcquireFragment extends Fragment {
         licenseNum = null;
         licenseColor = "蓝";
         licenseCorrect = -1;
+        isUploaded = -1;
         vehicleType = "小型客车";
         vehicleColor = "黑";
     }
@@ -556,8 +599,7 @@ public class AcquireFragment extends Fragment {
         takePictureButton.setEnabled(true);
     }
 
-    private class SlaveSubmitGrpcTask extends AsyncTask<Void, Void, List<String>> {
-
+    private class SlaveLocSubmitGrpcTask extends AsyncTask<Void, Void, List<String>> {
         @Override
         protected void onPreExecute() {
         }
@@ -567,8 +609,8 @@ public class AcquireFragment extends Fragment {
             ArrayList<String> resultList = new ArrayList<String>();
             try {
                 TicketGrpc.TicketBlockingStub blockingStub = TicketGrpc.newBlockingStub(mChannel);
-                SlaveLoc request = newSlaveLoc(userID,longitude, latitude);
-                MasterOrder reply = blockingStub.slaveSubmit(request);
+                SlaveLoc request = newSlaveLoc(userID, longitude, latitude);
+                MasterOrder reply = blockingStub.slaveLocSubmit(request);
                 resultList.add(String.valueOf(reply.getMasterOrder()));
                 return resultList;
             } catch (Exception e) {
@@ -591,6 +633,42 @@ public class AcquireFragment extends Fragment {
             }
         }
     }
+
+    private class SlaveAnchorSubmitGrpcTask extends AsyncTask<Void, Void, List<String>> {
+        @Override
+        protected void onPreExecute() {
+        }
+
+        @Override
+        protected List<String> doInBackground(Void... nothing) {
+            ArrayList<String> resultList = new ArrayList<String>();
+            try {
+                TicketGrpc.TicketBlockingStub blockingStub = TicketGrpc.newBlockingStub(mChannel);
+                SlaveLoc request = newSlaveLoc(userID, longitude, latitude);
+                MasterOrder reply = blockingStub.slaveAnchorSubmit(request);
+                resultList.add(String.valueOf(reply.getMasterOrder()));
+                return resultList;
+            } catch (Exception e) {
+                StringWriter sw = new StringWriter();
+                PrintWriter pw = new PrintWriter(sw);
+                e.printStackTrace(pw);
+                pw.flush();
+                resultList.add("Failed... : " + System.getProperty("line.separator") + sw);
+                return resultList;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(List<String> resultList) {
+            if (resultList != null) {
+                String masterOrder = resultList.get(0);
+                if (masterOrder != null) {
+//                    Toast.makeText(getActivity(), masterOrder, Toast.LENGTH_LONG).show();
+                }
+            }
+        }
+    }
+
 
     public static SlaveLoc newSlaveLoc(String theSid, double theLon, double theLat) {
         return SlaveLoc.newBuilder().setSid(theSid).setLongitude(theLon).setLatitude(theLat).build();
@@ -687,6 +765,8 @@ public class AcquireFragment extends Fragment {
             Toast.makeText(getActivity(), R.string.toast_ticket_no_license_color, Toast.LENGTH_SHORT).show();
         } else if (licenseCorrect == -1) {
             showLicenseCheckDialog();
+        } else if (isUploaded == -1) {
+            showUploadDialog();
         } else if (currentTime == null) {
             Toast.makeText(getActivity(), R.string.toast_ticket_no_time, Toast.LENGTH_SHORT).show();
         } else {
@@ -732,6 +812,8 @@ public class AcquireFragment extends Fragment {
             if (ticketImgFilePath != null) {
                 values.put(KEY_TICKET_IMG_URI, ticketImgFilePath);
             }
+            values.put(KEY_IS_UPLOADED, isUploaded);
+
             resolver.insert(DBProvider.TICKET_URL, values);
             Toast.makeText(getActivity(), R.string.toast_ticket_saved, Toast.LENGTH_SHORT).show();
         }
@@ -742,6 +824,8 @@ public class AcquireFragment extends Fragment {
     public class MyLocationListenner implements BDLocationListener {
         @Override
         public void onReceiveLocation(BDLocation location) {
+            receivedLoc = true;
+
             // map view 销毁后不在处理新接收的位置
             if (location == null || mMapView == null) {
                 return;
@@ -758,6 +842,8 @@ public class AcquireFragment extends Fragment {
                 MapStatus.Builder builder = new MapStatus.Builder();
                 builder.target(ll).zoom(18.0f);
                 mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
+
+                new SlaveAnchorSubmitGrpcTask().execute();
             }
 
             mBaiduMap
@@ -836,6 +922,7 @@ public class AcquireFragment extends Fragment {
         outState.putString(SAVED_INSTANCE_LICENSE_NUM, licenseNum);
         outState.putString(SAVED_INSTANCE_LICENSE_COLOR, licenseColor);
         outState.putInt(SAVED_INSTANCE_LICENSE_CORRECT, licenseCorrect);
+        outState.putInt(SAVED_INSTANCE_IS_UPLOADED, isUploaded);
         outState.putString(SAVED_INSTANCE_VEHICLE_TYPE, vehicleType);
         outState.putString(SAVED_INSTANCE_VEHICLE_COLOR, vehicleColor);
 
@@ -988,12 +1075,16 @@ public class AcquireFragment extends Fragment {
         builder.setTitle(getString(R.string.alert_dialog_upload));
         builder.setPositiveButton(R.string.alert_dialog_license_check_yes, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
+                isUploaded = 1;
+                saveTicket();
                 recordTicket();
                 dialog.dismiss();
             }
         });
         builder.setNegativeButton(R.string.alert_dialog_license_check_no, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
+                isUploaded = 0;
+                saveTicket();
                 dialog.dismiss();
             }
         });
@@ -1002,11 +1093,10 @@ public class AcquireFragment extends Fragment {
     }
 
     private void recordTicket() {
-        new GrpcTask().execute();
+        new recordTicketGrpcTask().execute();
     }
 
-    private class GrpcTask extends AsyncTask<Void, Void, List<String>> {
-
+    private class recordTicketGrpcTask extends AsyncTask<Void, Void, List<String>> {
         @Override
         protected void onPreExecute() {
             if (progressDialog == null) {
@@ -1070,6 +1160,45 @@ public class AcquireFragment extends Fragment {
                 Toast.makeText(getActivity(), R.string.toast_record_ticket_failed, Toast.LENGTH_LONG).show();
             }
             backToHome();
+        }
+    }
+
+    private class SubmitTicketStatsGrpcTask extends AsyncTask<Void, Void, List<String>> {
+        private ManagedChannel mChannel;
+
+        @Override
+        protected void onPreExecute() {
+            mChannel = ManagedChannelBuilder.forAddress(HOST_IP, PORT)
+                    .usePlaintext(true)
+                    .build();
+        }
+
+        @Override
+        protected List<String> doInBackground(Void... nothing) {
+            ArrayList<String> resultList = new ArrayList<String>();
+            try {
+                TicketGrpc.TicketBlockingStub blockingStub = TicketGrpc.newBlockingStub(mChannel);
+                TicketStats loginRequest = TicketStats.newBuilder().setSid(userID).setSavedTicketCount(numSavedTicket).setUploadedTicketCount(numUploadedTicket).build();
+                StatsReply reply = blockingStub.submitTicketStats(loginRequest);
+                resultList.add(String.valueOf(reply.getStatsSuccess()));
+                return resultList;
+            } catch (Exception e) {
+                StringWriter sw = new StringWriter();
+                PrintWriter pw = new PrintWriter(sw);
+                e.printStackTrace(pw);
+                pw.flush();
+                resultList.add("Failed... : " + System.getProperty("line.separator") + sw);
+                return resultList;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(List<String> resultList) {
+            try {
+                mChannel.shutdown().awaitTermination(1, TimeUnit.SECONDS);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
         }
     }
 
