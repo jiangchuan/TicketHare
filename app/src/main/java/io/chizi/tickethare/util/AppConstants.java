@@ -24,6 +24,7 @@ public interface AppConstants {
     static final int COMPRESS_RATIO = 80;
 
 //    static final String HOST_IP = "104.154.251.38";
+//    static final String HOST_IP = "192.168.0.17";
     static final String HOST_IP = "192.168.1.100";
     static final int PORT = 50051;
 

@@ -108,6 +108,8 @@ import static io.chizi.tickethare.database.DBProvider.KEY_POLICE_NAME;
 import static io.chizi.tickethare.database.DBProvider.KEY_TICKET_ID;
 import static io.chizi.tickethare.database.DBProvider.KEY_USER_ID;
 import static io.chizi.tickethare.database.DBProvider.KEY_YEAR;
+import static io.chizi.tickethare.database.DBProvider.POLICE_URL;
+import static io.chizi.tickethare.database.DBProvider.TICKET_URL;
 import static io.chizi.tickethare.util.AppConstants.ANDROID_DATA_DIR;
 import static io.chizi.tickethare.util.AppConstants.BACK_LICENSE_COLOR;
 import static io.chizi.tickethare.util.AppConstants.BACK_LICENSE_NUM;
@@ -456,7 +458,8 @@ public class AcquireFragment extends Fragment {
             public void run() {
                 ticketStatsHandler.post(new Runnable() {
                     public void run() {
-                            new SubmitTicketStatsGrpcTask().execute();
+                        getTicketStats(KEY_IS_UPLOADED);
+                        new SubmitTicketStatsGrpcTask().execute();
                     }
                 });
             }
@@ -744,7 +747,7 @@ public class AcquireFragment extends Fragment {
 
     public void getUserInfo(String theUserID) {
         String[] projection = new String[]{KEY_POLICE_NAME, KEY_POLICE_CITY, KEY_POLICE_DEPT};
-        Cursor cursor = resolver.query(DBProvider.POLICE_URL, projection, KEY_USER_ID + "=?", new String[]{theUserID}, null);
+        Cursor cursor = resolver.query(POLICE_URL, projection, KEY_USER_ID + "=?", new String[]{theUserID}, null);
         if (cursor.moveToFirst()) {
             policeName = cursor.getString(cursor.getColumnIndex(KEY_POLICE_NAME));
             policeCity = cursor.getString(cursor.getColumnIndex(KEY_POLICE_CITY));
@@ -814,7 +817,7 @@ public class AcquireFragment extends Fragment {
             }
             values.put(KEY_IS_UPLOADED, isUploaded);
 
-            resolver.insert(DBProvider.TICKET_URL, values);
+            resolver.insert(TICKET_URL, values);
             Toast.makeText(getActivity(), R.string.toast_ticket_saved, Toast.LENGTH_SHORT).show();
         }
         refreshTitlesFragment();
@@ -1199,6 +1202,33 @@ public class AcquireFragment extends Fragment {
             } catch (InterruptedException e) {
                 Thread.currentThread().interrupt();
             }
+        }
+    }
+
+    private void getTicketStats(String columnID) {
+        // Projection contains the columns we want
+        String[] projection = new String[]{columnID};
+        // Pass the URL, projection and I'll cover the other options below
+        Cursor cursor = resolver.query(TICKET_URL, projection, null, null, null);
+
+        numSavedTicket = cursor.getCount();
+
+        int[] ticketDetailsArray = new int[cursor.getCount()];
+        // Cycle through and display every row of data
+        if (cursor.moveToFirst()) {
+            numUploadedTicket = 0;
+            do {
+                int columnValue = cursor.getInt(cursor.getColumnIndex(columnID));
+                if (columnValue == 1) {
+                    numUploadedTicket += columnValue;
+                }
+            } while (cursor.moveToNext());
+        }
+        try {
+            if (cursor != null && !cursor.isClosed())
+                cursor.close();
+        } catch (Exception ex) {
+
         }
     }
 

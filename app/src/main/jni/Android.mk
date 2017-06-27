@@ -65,3 +65,7 @@ LOCAL_MODULE := liblocSDK6a
 LOCAL_SRC_FILES := liblocSDK6a.so
 include $(PREBUILT_SHARED_LIBRARY)
 
+include $(CLEAR_VARS)
+LOCAL_MODULE := libMD5CheckPrinter
+LOCAL_SRC_FILES := libMD5CheckPrinter.so
+include $(PREBUILT_SHARED_LIBRARY)

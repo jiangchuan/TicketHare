@@ -20,6 +20,7 @@ import io.chizi.tickethare.R;
 import static io.chizi.tickethare.database.DBProvider.KEY_DATETIME;
 import static io.chizi.tickethare.database.DBProvider.KEY_LICENSE_NUM;
 import static io.chizi.tickethare.database.DBProvider.KEY_ROW_ID;
+import static io.chizi.tickethare.database.DBProvider.TICKET_URL;
 import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_CURR_INDEX;
 import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_CURR_POS;
 
@@ -28,9 +29,6 @@ import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_CURR_POS;
  */
 
 public class TitlesFragment extends ListFragment {
-
-
-    static final Uri CONTENT_URL = DBProvider.TICKET_URL;
     ContentResolver resolver; // Provides access to other applications Content Providers
 
     private TextView emptyTextView;
@@ -126,7 +124,7 @@ public class TitlesFragment extends ListFragment {
         if (resolver == null) {
             resolver = getActivity().getContentResolver();
         }
-        Cursor cursor = resolver.query(CONTENT_URL, projection, null, null, null);
+        Cursor cursor = resolver.query(TICKET_URL, projection, null, null, null);
         if (cursor.getCount() < 1) {
             result = true;
         }
@@ -141,7 +139,7 @@ public class TitlesFragment extends ListFragment {
 
 
     public void updateListView() {
-        if (CONTENT_URL != null) {
+        if (TICKET_URL != null) {
             setEmptyTextView();
             updateDB();
         }
@@ -151,7 +149,7 @@ public class TitlesFragment extends ListFragment {
         // Projection contains the columns we want
         String[] projection = new String[]{KEY_LICENSE_NUM, KEY_DATETIME};
         // Pass the URL, projection and I'll cover the other options below
-        Cursor cursor = resolver.query(CONTENT_URL, projection, null, null, null);
+        Cursor cursor = resolver.query(TICKET_URL, projection, null, null, null);
 
         String[] ticketTitlesArray = new String[cursor.getCount()];
         // Cycle through and display every row of data

@@ -44,6 +44,7 @@ import static io.chizi.tickethare.database.DBProvider.KEY_ROW_ID;
 import static io.chizi.tickethare.database.DBProvider.KEY_TICKET_ID;
 import static io.chizi.tickethare.database.DBProvider.KEY_USER_ID;
 import static io.chizi.tickethare.database.DBProvider.KEY_YEAR;
+import static io.chizi.tickethare.database.DBProvider.TICKET_URL;
 import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_CURR_INDEX;
 import static io.chizi.tickethare.util.AppConstants.TRANS_IMAGE_H;
 import static io.chizi.tickethare.util.AppConstants.TRANS_IMAGE_W;
@@ -53,9 +54,6 @@ import static io.chizi.tickethare.util.AppConstants.TRANS_IMAGE_W;
  */
 
 public class DetailsFragment extends Fragment {
-
-
-    static final Uri CONTENT_URL = DBProvider.TICKET_URL;
     ContentResolver resolver; // Provides access to other applications Content Providers
 
     private String policeName;
@@ -199,7 +197,7 @@ public class DetailsFragment extends Fragment {
         if (resolver == null) {
             resolver = getActivity().getContentResolver();
         }
-        Cursor cursor = resolver.query(CONTENT_URL, projection, null, null, null);
+        Cursor cursor = resolver.query(TICKET_URL, projection, null, null, null);
         if (cursor.getCount() > 0) {
             int shownIndex = getShownIndex();
             ticketIDTextView.setText(Long.toString(getLongColumnValues(KEY_TICKET_ID)[shownIndex]));
@@ -422,7 +420,7 @@ public class DetailsFragment extends Fragment {
         // Projection contains the columns we want
         String[] projection = new String[]{KEY_ADDRESS, KEY_LONGITUDE, KEY_LATITUDE};
         // Pass the URL, projection and I'll cover the other options below
-        Cursor cursor = resolver.query(CONTENT_URL, projection, null, null, null);
+        Cursor cursor = resolver.query(TICKET_URL, projection, null, null, null);
 
         String[] ticketDetailsArray = new String[cursor.getCount()];
         // Cycle through and display every row of data
@@ -451,7 +449,7 @@ public class DetailsFragment extends Fragment {
         // Projection contains the columns we want
         String[] projection = new String[]{columnID};
         // Pass the URL, projection and I'll cover the other options below
-        Cursor cursor = resolver.query(CONTENT_URL, projection, null, null, null);
+        Cursor cursor = resolver.query(TICKET_URL, projection, null, null, null);
 
         String[] ticketDetailsArray = new String[cursor.getCount()];
         // Cycle through and display every row of data
@@ -478,7 +476,7 @@ public class DetailsFragment extends Fragment {
         // Projection contains the columns we want
         String[] projection = new String[]{columnID};
         // Pass the URL, projection and I'll cover the other options below
-        Cursor cursor = resolver.query(CONTENT_URL, projection, null, null, null);
+        Cursor cursor = resolver.query(TICKET_URL, projection, null, null, null);
 
         int[] ticketDetailsArray = new int[cursor.getCount()];
         // Cycle through and display every row of data
@@ -504,7 +502,7 @@ public class DetailsFragment extends Fragment {
         // Projection contains the columns we want
         String[] projection = new String[]{columnID};
         // Pass the URL, projection and I'll cover the other options below
-        Cursor cursor = resolver.query(CONTENT_URL, projection, null, null, null);
+        Cursor cursor = resolver.query(TICKET_URL, projection, null, null, null);
 
         Long[] ticketDetailsArray = new Long[cursor.getCount()];
         // Cycle through and display every row of data

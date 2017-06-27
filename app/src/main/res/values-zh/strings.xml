@@ -6,6 +6,226 @@
 
     <string name="acquire_start">开始</string>
 
+    <string name="activity_main_printer">打印机:</string>
+    <string name="activity_main_bt">蓝牙设备</string>
+    <string name="activity_main_wifi">WIFI设备</string>
+    <string name="activity_main_usb">USB设备</string>
+    <string name="activity_main_setting">参数设置</string>
+    <string name="activity_main_print_test_page">打印测试页</string>
+    <string name="activity_main_tips">请连接打印机！</string>
+    <string name="activity_main_scan_error">扫描失败！</string>
+    <string name="activity_main_scan_success">扫描成功！</string>
+    <string name="activity_main_connecterr">连接失败！</string>
+    <string name="activity_main_connected">连接成功！</string>
+    <string name="activity_main_connect_usb_printer">请连接USB打印机。</string>
+    <string name="activity_main_close">断开</string>
+    <string name="activity_main_originalsize">原大小:</string>
+    <string name="activity_main_minifront">小字体:</string>
+    <string name="activity_main_heightsize">倍高:</string>
+    <string name="activity_main_widthsize">倍宽:</string>
+    <string name="activity_main_heightwidthsize">倍高倍宽:</string>
+    <string name="activity_main_bold">加粗:</string>
+    <string name="activity_main_underline">下划线:</string>
+
+    <string name="activity_esc_function_btngetprinterstatus">获取打印机状态</string>
+    <string name="activity_esc_function_btnopencashdrawer">纸张类型</string>
+    <string name="activity_esc_function_btnsamplereceipt">打印收据</string>
+    <string name="activity_esc_function_btn1dbarcodes">一维条码</string>
+    <string name="activity_esc_function_btnqrcode">二维码</string>
+    <string name="activity_esc_function_btnpdf417">PDF417</string>
+    <string name="activity_esc_function_btncut">切纸</string>
+    <string name="activity_esc_function_btntextformatting">文本格式</string>
+    <string name="activity_esc_function_btnprintimagefile">打印图片</string>
+    <string name="activity_esc_function_btnprintprnfile">打印Binary文件</string>
+    <string name="activity_esc_function_btnpagemode">页模式</string>
+    <string name="activity_esc_function_btnimagemanage">NV位图管理</string>
+    <string name="activity_esc_function_btngetremainingpower">获取电池余量</string>
+    <string-array name="activity_main_papertype">
+        <item >连续纸</item>
+        <item >标签纸</item>
+    </string-array>
+
+    <string name="activity_devicelist_title_paired_devices">已配对设备</string>
+    <string name="activity_devicelist_title_other_devices">其它设备</string>
+    <string name="activity_devicelist_button_scan">扫描蓝牙</string>
+    <string name="activity_devicelist_none_paired">未配对设备</string>
+    <string name="activity_devicelist_scanning">扫描中......</string>
+    <string name="activity_devicelist_select_device">设备列表</string>
+    <string name="activity_devicelist_connect">连接</string>
+    <string name="activity_devicelist_get_device_err">获取设备失败:</string>
+    <string name="activity_devicelist_bond_error">配对失败!Please bond bluetooth printer in settings panel first.</string>
+
+    <string-array name="activity_main_sample_2inch_receipt">
+        <item>"        厦门汉印电子技术有限公司"</item>
+        <item>"              销售单"</item>
+        <item>"日期：2013-08-20"</item>
+        <item>"客户：厦门普瑞特"</item>
+        <item>"仓库：二楼A仓库"</item>
+        <item>"经手人：小张"</item>
+        <item>"--------------------------------"</item>
+        <item>"名称                                                                       金额"</item>
+        <item>"--------------------------------"</item>
+        <item>"MPT-II                    777.00"</item>
+        <item>"--------------------------------"</item>
+        <item>"MPT-III                   888.00"</item>
+        <item>"--------------------------------"</item>
+        <item>"LPQ58                     999.00"</item>
+        <item>"--------------------------------"</item>
+        <item>"合计金额                                                                     2664.00"</item>
+        <item>"--------------------------------"</item>
+        <item>"操作员：管理员"</item>
+        <item>"时间：2013-08-20 09:30:50"</item>
+        <item>"电话：0592- 5935252"</item>
+        <item>"地址:湖里区高崎南12路8号5楼"</item>
+    </string-array>
+
+    <string name="sdk_type">all</string>
+    <string-array name="printer_list_all">
+        <item>"TP801"</item>
+        <item>"TP805"</item>
+        <item>"TP806"</item>
+        <item>"HTP80A"</item>
+        <item>"HTP80B"</item>
+        <item>"HTP80C"</item>
+        <item>"PPTII-A"</item>
+        <item>"HTP58A"</item>
+        <item>"PPTII-B"</item>
+        <item>"HTP58B"</item>
+        <item>"PPT2-UR"</item>
+        <item>"PPTD3"</item>
+        <item>"MPT-II"</item>
+        <item>"MPT-III"</item>
+        <item>"HMP80A"</item>
+        <item>"MPS3"</item>
+        <item>"MPD2"</item>
+        <item>"MPT-E2"</item>
+        <item>"MLP2"</item>
+        <item>"MPT8"</item>
+        <item>"LPQ58"</item>
+        <item>"LPQ80"</item>
+        <item>"LP106A"</item>
+        <item>"LP106B"</item>
+        <item>"PT541"</item>
+        <item>"PT562"</item>
+        <item>"PT721"</item>
+        <item>"POS80A"</item>
+        <item>"POS80B"</item>
+        <item>"POS80C"</item>
+        <item>"POS58A"</item>
+        <item>"POS58B"</item>
+        <item>"M-1"</item>
+        <item>"M-2"</item>
+        <item>"M-3"</item>
+        <item>"M-4"</item>
+        <item>"M-5"</item>
+        <item>"M-6"</item>
+        <item>"M-8"</item>
+        <item>"L-2"</item>
+        <item>"L-3"</item>
+        <item>"DT-210"</item>
+        <item>"DT-230"</item>
+        <item>"SMP-R381"</item>
+        <item>"SMP-R385"</item>
+        <item>"SMP-R386"</item>
+        <item>"SM-L200"</item>
+        <item>"MPRINT LP58"</item>
+        <item>"MPRINT LP80"</item>
+        <item>"MPRINT G58"</item>
+        <item>"MPRINT G80"</item>
+        <item>"TM-58"</item>
+        <item>"TM-80"</item>
+        <item>"TM-90"</item>
+        <item>"DP-24"</item>
+        <item>"DP-34"</item>
+        <item>"SGPR-300"</item>
+    </string-array>
+    <string-array name="printer_list_hprt">
+        <item>"TP801"</item>
+        <item>"TP805"</item>
+        <item>"TP806"</item>
+        <item>"HTP80A"</item>
+        <item>"HTP80B"</item>
+        <item>"HTP80C"</item>
+        <item>"PPTII-A"</item>
+        <item>"HTP58A"</item>
+        <item>"PPTII-B"</item>
+        <item>"HTP58B"</item>
+        <item>"PPT2-UR"</item>
+        <item>"PPTD3"</item>
+        <item>"MPT-II"</item>
+        <item>"MPT-III"</item>
+        <item>"HMP80A"</item>
+        <item>"MPS3"</item>
+        <item>"MPD2"</item>
+        <item>"MPT-E2"</item>
+        <item>"MLP2"</item>
+        <item>"MPT8"</item>
+        <item>"LPQ58"</item>
+        <item>"LPQ80"</item>
+        <item>"LP106A"</item>
+        <item>"LP106B"</item>
+        <item>"PT541"</item>
+        <item>"PT562"</item>
+        <item>"PT721"</item>
+    </string-array>
+    <string-array name="printer_list_mkt">
+        <item>"POS80A"</item>
+        <item>"POS80B"</item>
+        <item>"POS80C"</item>
+        <item>"POS58A"</item>
+        <item>"POS58B"</item>
+        <item>"M-1"</item>
+        <item>"M-2"</item>
+        <item>"M-3"</item>
+        <item>"M-4"</item>
+        <item>"M-5"</item>
+        <item>"M-6"</item>
+        <item>"M-8"</item>
+        <item>"L-2"</item>
+        <item>"L-3"</item>
+    </string-array>
+    <string-array name="printer_list_mprint">
+        <item>"MPRINT LP58"</item>
+        <item>"MPRINT LP80"</item>
+        <item>"MPRINT G58"</item>
+        <item>"MPRINT G80"</item>
+    </string-array>
+    <string-array name="printer_list_sycrown">
+        <item>"SMP-R381"</item>
+        <item>"SMP-R385"</item>
+        <item>"SMP-R386"</item>
+        <item>"SM-L200"</item>
+    </string-array>
+    <string-array name="printer_list_mgpos">
+        <item>"TM-58"</item>
+        <item>"TM-80"</item>
+        <item>"TM-90"</item>
+    </string-array>
+    <string-array name="printer_list_ds">
+        <item>"DT-210"</item>
+        <item>"DT-230"</item>
+    </string-array>
+    <string-array name="printer_list_cst">
+        <item>"DP-24"</item>
+        <item>"DP-34"</item>
+    </string-array>
+    <string-array name="printer_list_other">
+        <item>"SGPR-300"</item>
+    </string-array>
+    <string-array name="printer_list_tspl">
+        <item>"LPQ58"</item>
+        <item>"LPQ80"</item>
+        <item>"LPQ118"</item>
+        <item>"LPG4"</item>
+        <item>"106B"</item>
+        <item>"108B"</item>
+        <item>"R42"</item>
+    </string-array>
+    <string-array name="printer_list_cpcl">
+        <item>"HM-T300"</item>
+        <item>"HM-A300"</item>
+    </string-array>
+
     <string name="button_submit">生成罚单</string>
     <string name="action_settings">设置</string>
     <string name="cancelBtnTxt">取消</string>

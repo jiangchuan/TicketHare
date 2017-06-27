@@ -6,6 +6,227 @@
 
     <string name="acquire_start">Start</string>
 
+    <string name="activity_main_printer">Printer List:</string>
+    <string name="activity_main_bt">Bluetooth</string>
+    <string name="activity_main_wifi">WIFI</string>
+    <string name="activity_main_usb">USB</string>
+    <string name="activity_main_setting">Setting</string>
+    <string name="activity_main_print_test_page">Print Test Page</string>
+    <string name="activity_main_tips">Please connect to printer!</string>
+    <string name="activity_main_scan_error">Scan Error!</string>
+    <string name="activity_main_scan_success">Scan Success!</string>
+    <string name="activity_main_connecterr">Connect Error!</string>
+    <string name="activity_main_connected">Connect Success!</string>
+    <string name="activity_main_connect_usb_printer">Please connect usb printer.</string>
+    <string name="activity_main_close">Close</string>
+    <string name="activity_main_originalsize">OriginalSize:</string>
+    <string name="activity_main_minifront">MiniFront:</string>
+    <string name="activity_main_heightsize">HeightSize:</string>
+    <string name="activity_main_widthsize">WidthSize:</string>
+    <string name="activity_main_heightwidthsize">HeightWidthSize:</string>
+    <string name="activity_main_bold">Blod:</string>
+    <string name="activity_main_underline">Underline:</string>
+
+    <string name="activity_esc_function_btngetprinterstatus">Get Printer Status</string>
+    <string name="activity_esc_function_btnopencashdrawer">Paper Type</string>
+    <string name="activity_esc_function_btnsamplereceipt">Sample Receipt</string>
+    <string name="activity_esc_function_btn1dbarcodes">1D Barcodes</string>
+    <string name="activity_esc_function_btnqrcode">QR Code</string>
+    <string name="activity_esc_function_btnpdf417">PDF417</string>
+    <string name="activity_esc_function_btncut">Cut</string>
+    <string name="activity_esc_function_btntextformatting">Text Formatting</string>
+    <string name="activity_esc_function_btnprintimagefile">Print Image File</string>
+    <string name="activity_esc_function_btnprintprnfile">Print Binary File</string>
+    <string name="activity_esc_function_btnpagemode">Page Mode</string>
+    <string name="activity_esc_function_btnimagemanage">Manage NV Image</string>
+    <string name="activity_esc_function_btngetremainingpower">Get Remaining Power</string>
+    <string-array name="activity_main_papertype">
+        <item >Continuous paper</item>
+        <item >label paper</item>
+    </string-array>
+
+    <string name="activity_devicelist_title_paired_devices">Paired devices</string>
+    <string name="activity_devicelist_title_other_devices">Other devices</string>
+    <string name="activity_devicelist_button_scan">Scan bluetooth</string>
+    <string name="activity_devicelist_none_paired">None paired Devices</string>
+    <string name="activity_devicelist_scanning">Scanning......</string>
+    <string name="activity_devicelist_select_device"> Devices list</string>
+    <string name="activity_devicelist_connect">connect</string>
+    <string name="activity_devicelist_get_device_err">Get Device Error:</string>
+    <string name="activity_devicelist_bond_error">"Bond error!Please bond bluetooth printer in settings panel first."</string>
+
+    <string-array name="activity_main_sample_2inch_receipt">
+        <item>"   Xiamen Hanin Electronics\n"</item>
+        <item>"     Technology Co., Ltd.\n"</item>
+        <item>"\n"</item>
+        <item>"Room 305A, Ang'ye Buliding\n"</item>
+        <item>",Pioneering Park,Torch High-\n"</item>
+        <item>"tech Zone, Xiamen,China\n"</item>
+        <item>"TEL +86-(0)592-5885991\n"</item>
+        <item>"                             C#2\n"</item>
+        <item>"         2013-08-20\n"</item>
+        <item>"MPT-II                   $333.00\n"</item>
+        <item>"--------------------------------\n"</item>
+        <item>"MPT-III                  $444.00\n"</item>
+        <item>"--------------------------------\n"</item>
+        <item>"LPQ58                    $555.00\n"</item>
+        <item>"--------------------------------\n"</item>
+        <item>"\n"</item>
+        <item>"Before adding tax       $1332.00\n"</item>
+        <item>"tax   5.0%                $66.60\n"</item>
+        <item>"--------------------------------\n"</item>
+        <item>"total                   $1398.60\n"</item>
+        <item>"Customer's payment      $1400.00\n"</item>
+        <item>"Change                     $1.40\n"</item>
+    </string-array>
+
+    <string name="sdk_type">all</string>
+    <string-array name="printer_list_all">
+        <item>"TP801"</item>
+        <item>"TP805"</item>
+        <item>"TP806"</item>
+        <item>"HTP80A"</item>
+        <item>"HTP80B"</item>
+        <item>"HTP80C"</item>
+        <item>"PPTII-A"</item>
+        <item>"HTP58A"</item>
+        <item>"PPTII-B"</item>
+        <item>"HTP58B"</item>
+        <item>"PPT2-UR"</item>
+        <item>"PPTD3"</item>
+        <item>"MPT-II"</item>
+        <item>"MPT-III"</item>
+        <item>"HMP80A"</item>
+        <item>"MPS3"</item>
+        <item>"MPD2"</item>
+        <item>"MPT-E2"</item>
+        <item>"MLP2"</item>
+        <item>"MPT8"</item>
+        <item>"LPQ58"</item>
+        <item>"LPQ80"</item>
+        <item>"LP106A"</item>
+        <item>"LP106B"</item>
+        <item>"PT541"</item>
+        <item>"PT562"</item>
+        <item>"PT721"</item>
+        <item>"POS80A"</item>
+        <item>"POS80B"</item>
+        <item>"POS80C"</item>
+        <item>"POS58A"</item>
+        <item>"POS58B"</item>
+        <item>"M-1"</item>
+        <item>"M-2"</item>
+        <item>"M-3"</item>
+        <item>"M-4"</item>
+        <item>"M-5"</item>
+        <item>"M-6"</item>
+        <item>"M-8"</item>
+        <item>"L-2"</item>
+        <item>"L-3"</item>
+        <item>"DT-210"</item>
+        <item>"DT-230"</item>
+        <item>"SMP-R381"</item>
+        <item>"SMP-R385"</item>
+        <item>"SMP-R386"</item>
+        <item>"SM-L200"</item>
+        <item>"MPRINT LP58"</item>
+        <item>"MPRINT LP80"</item>
+        <item>"MPRINT G58"</item>
+        <item>"MPRINT G80"</item>
+        <item>"TM-58"</item>
+        <item>"TM-80"</item>
+        <item>"TM-90"</item>
+        <item>"DP-24"</item>
+        <item>"DP-34"</item>
+        <item>"SGPR-300"</item>
+    </string-array>
+    <string-array name="printer_list_hprt">
+        <item>"TP801"</item>
+        <item>"TP805"</item>
+        <item>"TP806"</item>
+        <item>"HTP80A"</item>
+        <item>"HTP80B"</item>
+        <item>"HTP80C"</item>
+        <item>"PPTII-A"</item>
+        <item>"HTP58A"</item>
+        <item>"PPTII-B"</item>
+        <item>"HTP58B"</item>
+        <item>"PPT2-UR"</item>
+        <item>"PPTD3"</item>
+        <item>"MPT-II"</item>
+        <item>"MPT-III"</item>
+        <item>"HMP80A"</item>
+        <item>"MPS3"</item>
+        <item>"MPD2"</item>
+        <item>"MPT-E2"</item>
+        <item>"MLP2"</item>
+        <item>"MPT8"</item>
+        <item>"LPQ58"</item>
+        <item>"LPQ80"</item>
+        <item>"LP106A"</item>
+        <item>"LP106B"</item>
+        <item>"PT541"</item>
+        <item>"PT562"</item>
+        <item>"PT721"</item>
+    </string-array>
+    <string-array name="printer_list_mkt">
+        <item>"POS80A"</item>
+        <item>"POS80B"</item>
+        <item>"POS80C"</item>
+        <item>"POS58A"</item>
+        <item>"POS58B"</item>
+        <item>"M-1"</item>
+        <item>"M-2"</item>
+        <item>"M-3"</item>
+        <item>"M-4"</item>
+        <item>"M-5"</item>
+        <item>"M-6"</item>
+        <item>"M-8"</item>
+        <item>"L-2"</item>
+        <item>"L-3"</item>
+    </string-array>
+    <string-array name="printer_list_mprint">
+        <item>"MPRINT LP58"</item>
+        <item>"MPRINT LP80"</item>
+        <item>"MPRINT G58"</item>
+        <item>"MPRINT G80"</item>
+    </string-array>
+    <string-array name="printer_list_sycrown">
+        <item>"SMP-R381"</item>
+        <item>"SMP-R385"</item>
+        <item>"SMP-R386"</item>
+        <item>"SM-L200"</item>
+    </string-array>
+    <string-array name="printer_list_mgpos">
+        <item>"TM-58"</item>
+        <item>"TM-80"</item>
+        <item>"TM-90"</item>
+    </string-array>
+    <string-array name="printer_list_ds">
+        <item>"DT-210"</item>
+        <item>"DT-230"</item>
+    </string-array>
+    <string-array name="printer_list_cst">
+        <item>"DP-24"</item>
+        <item>"DP-34"</item>
+    </string-array>
+    <string-array name="printer_list_other">
+        <item>"SGPR-300"</item>
+    </string-array>
+    <string-array name="printer_list_tspl">
+        <item>"LPQ58"</item>
+        <item>"LPQ80"</item>
+        <item>"LPQ118"</item>
+        <item>"LPG4"</item>
+        <item>"106B"</item>
+        <item>"108B"</item>
+        <item>"R42"</item>
+    </string-array>
+    <string-array name="printer_list_cpcl">
+        <item>"HM-T300"</item>
+        <item>"HM-A300"</item>
+    </string-array>
+
     <string name="button_submit">Generate Ticket</string>
     <string name="action_settings">Settings</string>
     <string name="cancelBtnTxt">Cancel</string>

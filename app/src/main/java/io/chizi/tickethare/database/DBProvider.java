@@ -57,6 +57,8 @@ public class DBProvider extends ContentProvider {
     public static final String KEY_POLICE_STATION = "police_station";
     public static final String KEY_POLICE_PORTRAIT_URI = "police_portrait";
     public static final String KEY_POLICE_CITY = "police_city";
+    public static final String KEY_SAVED_TICKET_COUNT = "saved_ticket_count";
+    public static final String KEY_UPLOADED_TICKET_COUNT = "uploaded_ticket_count";
 
     // Assigned to a content provider so any application can access it
     // tickets is the virtual directory in the provider
@@ -115,7 +117,10 @@ public class DBProvider extends ContentProvider {
             + KEY_POLICE_CITY + " TEXT NOT NULL DEFAULT 'NA', "
             + KEY_POLICE_DEPT + " TEXT NOT NULL DEFAULT 'NA', "
             + KEY_POLICE_STATION + " TEXT NOT NULL DEFAULT 'NA', "
-            + KEY_POLICE_PORTRAIT_URI + " TEXT NOT NULL DEFAULT 'NA');";
+            + KEY_POLICE_PORTRAIT_URI + " TEXT NOT NULL DEFAULT 'NA', "
+            + KEY_SAVED_TICKET_COUNT + " INTEGER NOT NULL DEFAULT -1, "
+            + KEY_UPLOADED_TICKET_COUNT + " INTEGER NOT NULL DEFAULT -1);";
+
 
 
     @Override
@@ -192,7 +197,6 @@ public class DBProvider extends ContentProvider {
 //                long ticketRowID = sqlDB.insert(TICKET_TABLE_NAME, null, values);
                 long ticketRowID = sqlDB.insertWithOnConflict(TICKET_TABLE_NAME, KEY_TICKET_ID, values,
                         SQLiteDatabase.CONFLICT_REPLACE);
-
                 // Verify a row has been added
                 if (ticketRowID > 0) {
                     // Append the given id to the path and return a Builder used to manipulate URI
@@ -207,7 +211,11 @@ public class DBProvider extends ContentProvider {
             case policeUriCode:
 //                long policeRowID = sqlDB.insert(POLICE_TABLE_NAME, null, values);
                 long policeRowID = sqlDB.insertWithOnConflict(POLICE_TABLE_NAME, KEY_USER_ID, values,
-                        SQLiteDatabase.CONFLICT_REPLACE);
+                        SQLiteDatabase.CONFLICT_IGNORE);
+                if (policeRowID == -1L) {
+                    sqlDB.update(POLICE_TABLE_NAME, values, "id = ? ", new String[]{KEY_USER_ID});
+                }
+
                 if (policeRowID > 0) {
                     _uri = ContentUris.withAppendedId(POLICE_URL, policeRowID);
                     getContext().getContentResolver().notifyChange(_uri, null);
