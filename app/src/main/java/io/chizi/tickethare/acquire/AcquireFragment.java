@@ -3,8 +3,10 @@ package io.chizi.tickethare.acquire;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.ProgressDialog;
+import android.bluetooth.BluetoothAdapter;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -12,6 +14,7 @@ import android.graphics.Bitmap;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Message;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
@@ -21,8 +24,11 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -67,15 +73,18 @@ import java.util.Timer;
 import java.util.TimerTask;
 import java.util.concurrent.TimeUnit;
 
+import HPRTAndroidSDK.HPRTPrinterHelper;
+import HPRTAndroidSDK.PublicFunction;
 import io.chizi.ticket.MasterOrder;
 import io.chizi.ticket.RecordReply;
 import io.chizi.ticket.SlaveLoc;
 import io.chizi.ticket.StatsReply;
 import io.chizi.ticket.TicketDetails;
 import io.chizi.ticket.TicketGrpc;
+import io.chizi.ticket.TicketRange;
+import io.chizi.ticket.TicketRangeSid;
 import io.chizi.ticket.TicketStats;
 import io.chizi.tickethare.R;
-import io.chizi.tickethare.database.DBProvider;
 import io.chizi.tickethare.database.TitlesFragment;
 import io.chizi.tickethare.login.UpdateProfileActivity;
 import io.chizi.tickethare.util.BitmapUtil;
@@ -106,6 +115,8 @@ import static io.chizi.tickethare.database.DBProvider.KEY_POLICE_CITY;
 import static io.chizi.tickethare.database.DBProvider.KEY_POLICE_DEPT;
 import static io.chizi.tickethare.database.DBProvider.KEY_POLICE_NAME;
 import static io.chizi.tickethare.database.DBProvider.KEY_TICKET_ID;
+import static io.chizi.tickethare.database.DBProvider.KEY_TICKET_RANGE_END;
+import static io.chizi.tickethare.database.DBProvider.KEY_TICKET_RANGE_START;
 import static io.chizi.tickethare.database.DBProvider.KEY_USER_ID;
 import static io.chizi.tickethare.database.DBProvider.KEY_YEAR;
 import static io.chizi.tickethare.database.DBProvider.POLICE_URL;
@@ -195,6 +206,8 @@ public class AcquireFragment extends Fragment {
     private static int SCREEN_HEIGHT; // 屏幕高度（像素）
 
     private Long ticketID = -1L;
+    private Long ticketIDStart = -1L;
+    private Long ticketIDEnd = -1L;
     private String licenseNum;
     private String licenseColor = "蓝";
     private String vehicleType = "小型客车";
@@ -269,6 +282,19 @@ public class AcquireFragment extends Fragment {
 
     private String masterOrder;
 
+    // HM printer starts here
+    private BluetoothAdapter mBluetoothAdapter;
+    private PublicFunction PFun = null;
+
+    private Spinner spnPrinterList = null;
+
+    private ArrayAdapter arrPrinterList;
+    private static HPRTPrinterHelper HPRTPrinter = new HPRTPrinterHelper();
+    private String PrinterName = "";
+
+    private Handler handler;
+    private ProgressDialog dialog;
+    public static String paper = "0";
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -415,6 +441,29 @@ public class AcquireFragment extends Fragment {
         SCREEN_WIDTH = metric.widthPixels;  // 屏幕宽度(像素)
         SCREEN_HEIGHT = metric.heightPixels;  // 屏幕高度(像素)
 
+        try {
+            PFun = new PublicFunction(getActivity());
+            InitSetting();
+            InitCombox();
+            this.spnPrinterList.setOnItemSelectedListener(new OnItemSelectedPrinter());
+            EnableBluetooth();
+            handler = new Handler() {
+                @Override
+                public void handleMessage(Message msg) {
+                    super.handleMessage(msg);
+                    if (msg.what == 1) {
+                        Toast.makeText(getActivity(), "succeed", Toast.LENGTH_LONG).show();
+                        dialog.cancel();
+                    } else {
+                        Toast.makeText(getActivity(), "failure", Toast.LENGTH_LONG).show();
+                        dialog.cancel();
+                    }
+                }
+            };
+        } catch (Exception e) {
+            Log.e("HPRTSDKSample", (new StringBuilder("AcquireFragment --> onCreate ")).append(e.getMessage()).toString());
+        }
+
         mChannel = ManagedChannelBuilder.forAddress(HOST_IP, PORT)
                 .usePlaintext(true)
                 .build();
@@ -466,8 +515,171 @@ public class AcquireFragment extends Fragment {
         };
         ticketStatsTimer.schedule(ticketStatsTask, 0, TICKET_STATS_TIME_INTERVAL); //it executes this every 10s
 
-
     }
+
+    private void connectToBlueTooth() {
+        if (HPRTPrinter != null) {
+            HPRTPrinterHelper.PortClose();
+        }
+        Intent serverIntent = new Intent(getActivity(), DeviceListActivity.class);
+        startActivityForResult(serverIntent, HPRTPrinterHelper.ACTIVITY_CONNECT_BT);
+        return;
+    }
+
+
+    private void printTicket() {
+        try {
+            HPRTPrinterHelper.printAreaSize("0", "200", "200", "700", "1");
+//            String[] receiptLines = getResources().getStringArray(R.array.activity_main_sample_2inch_receipt);
+            int receiptLen = 16;
+            String[] receiptLines = new String[receiptLen];
+            receiptLines[0] = "成都市道路停车记录告知单";
+            receiptLines[1] = "编号: " + ticketID;
+            receiptLines[2] = "车辆牌号: " + licenseNum + "            车身颜色: " + vehicleColor;
+            receiptLines[3] = "车辆类型: " + vehicleType;
+            receiptLines[4] = "号牌颜色: " + licenseColor;
+            receiptLines[5] = "停车时间: " + year + "年" + month + "月" + day + "日" + hour + "时" + minute + "分";
+            receiptLines[6] = "停车地点: " + address;
+            receiptLines[7] = "该机动车在上述时间、地点未在道路停车泊位或停";
+            receiptLines[8] = "车场内停放，现已对现场道路交通情况进行了图像记录，";
+            receiptLines[9] = "并报告交警" + policeDept + "审核认定是否违法停放。";
+            receiptLines[10] = "你可在七个工作日后登陆http://www.cdjg.gov.cn查询，";
+            receiptLines[11] = "或在收到公安机关交通管理部门通知后前往接受处理。";
+            receiptLines[12] = "交通协管员: " + policeName;
+            receiptLines[13] = year + "年" + month + "月" + day + "日";
+            receiptLines[14] = "----------------------------------------";
+            receiptLines[15] = "备注: ";
+
+            HPRTPrinterHelper.LanguageEncode = "GBK";
+
+            HPRTPrinterHelper.Align(HPRTPrinterHelper.CENTER);
+            HPRTPrinterHelper.Text(HPRTPrinterHelper.TEXT, "8", "0", "0", "0", receiptLines[0]);
+            HPRTPrinterHelper.Align(HPRTPrinterHelper.RIGHT);
+            HPRTPrinterHelper.Text(HPRTPrinterHelper.TEXT, "8", "0", "0", "" + 30, receiptLines[1]);
+
+            HPRTPrinterHelper.Align(HPRTPrinterHelper.LEFT);
+            for (int i = 2; i < 7; i++) {
+                HPRTPrinterHelper.Text(HPRTPrinterHelper.TEXT, "8", "0", "0", "0" + (i * 30), receiptLines[i]);
+            }
+
+            int iLine = 7;
+            HPRTPrinterHelper.Align(HPRTPrinterHelper.RIGHT);
+            HPRTPrinterHelper.Text(HPRTPrinterHelper.TEXT, "8", "0", "0", "" + (iLine * 30), receiptLines[iLine]);
+
+            HPRTPrinterHelper.Align(HPRTPrinterHelper.LEFT);
+            for (int i = 8; i < 13; i++) {
+                HPRTPrinterHelper.Text(HPRTPrinterHelper.TEXT, "8", "0", "0", "" + (i * 30), receiptLines[i]);
+            }
+
+            iLine = 13;
+            HPRTPrinterHelper.Align(HPRTPrinterHelper.RIGHT);
+            HPRTPrinterHelper.Text(HPRTPrinterHelper.TEXT, "8", "0", "0", "" + (iLine * 30), receiptLines[iLine]);
+
+            HPRTPrinterHelper.Align(HPRTPrinterHelper.LEFT);
+            for (int i = receiptLen - 2; i < receiptLen; i++) {
+                HPRTPrinterHelper.Text(HPRTPrinterHelper.TEXT, "8", "0", "0", "" + (i * 30), receiptLines[i]);
+            }
+
+            if ("1".equals(this.paper)) {
+                HPRTPrinterHelper.Form();
+            }
+            HPRTPrinterHelper.Print();
+        } catch (Exception e) {
+            Log.e("HPRTSDKSample", (new StringBuilder("Activity_Main --> PrintSampleReceipt ")).append(e.getMessage()).toString());
+        }
+    }
+
+    private void InitSetting() {
+        String SettingValue = PFun.ReadSharedPreferencesData("Codepage");
+        if (SettingValue.equals(""))
+            PFun.WriteSharedPreferencesData("Codepage", "0,PC437(USA:Standard Europe)");
+
+        SettingValue = PFun.ReadSharedPreferencesData("Cut");
+        if (SettingValue.equals(""))
+            PFun.WriteSharedPreferencesData("Cut", "0");
+
+        SettingValue = PFun.ReadSharedPreferencesData("Cashdrawer");
+        if (SettingValue.equals(""))
+            PFun.WriteSharedPreferencesData("Cashdrawer", "0");
+
+        SettingValue = PFun.ReadSharedPreferencesData("Buzzer");
+        if (SettingValue.equals(""))
+            PFun.WriteSharedPreferencesData("Buzzer", "0");
+
+        SettingValue = PFun.ReadSharedPreferencesData("Feeds");
+        if (SettingValue.equals(""))
+            PFun.WriteSharedPreferencesData("Feeds", "0");
+        String paper = PFun.ReadSharedPreferencesData("papertype");
+        if (!"".equals(paper)) {
+            this.paper = paper;
+        }
+    }
+
+    //add printer list
+    private void InitCombox() {
+        try {
+            arrPrinterList = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item);
+            String strSDKType = getResources().getString(R.string.sdk_type);
+            if (strSDKType.equals("all"))
+                arrPrinterList = ArrayAdapter.createFromResource(getActivity(), R.array.printer_list_cpcl, android.R.layout.simple_spinner_item);
+            if (strSDKType.equals("hprt"))
+                arrPrinterList = ArrayAdapter.createFromResource(getActivity(), R.array.printer_list_hprt, android.R.layout.simple_spinner_item);
+            if (strSDKType.equals("mkt"))
+                arrPrinterList = ArrayAdapter.createFromResource(getActivity(), R.array.printer_list_mkt, android.R.layout.simple_spinner_item);
+            if (strSDKType.equals("mprint"))
+                arrPrinterList = ArrayAdapter.createFromResource(getActivity(), R.array.printer_list_mprint, android.R.layout.simple_spinner_item);
+            if (strSDKType.equals("sycrown"))
+                arrPrinterList = ArrayAdapter.createFromResource(getActivity(), R.array.printer_list_sycrown, android.R.layout.simple_spinner_item);
+            if (strSDKType.equals("mgpos"))
+                arrPrinterList = ArrayAdapter.createFromResource(getActivity(), R.array.printer_list_mgpos, android.R.layout.simple_spinner_item);
+            if (strSDKType.equals("ds"))
+                arrPrinterList = ArrayAdapter.createFromResource(getActivity(), R.array.printer_list_ds, android.R.layout.simple_spinner_item);
+            if (strSDKType.equals("cst"))
+                arrPrinterList = ArrayAdapter.createFromResource(getActivity(), R.array.printer_list_cst, android.R.layout.simple_spinner_item);
+            if (strSDKType.equals("other"))
+                arrPrinterList = ArrayAdapter.createFromResource(getActivity(), R.array.printer_list_other, android.R.layout.simple_spinner_item);
+            arrPrinterList.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            PrinterName = arrPrinterList.getItem(0).toString();
+            spnPrinterList.setAdapter(arrPrinterList);
+        } catch (Exception e) {
+            Log.e("HPRTSDKSample", (new StringBuilder("Activity_Main --> InitCombox ")).append(e.getMessage()).toString());
+        }
+    }
+
+    private class OnItemSelectedPrinter implements AdapterView.OnItemSelectedListener {
+        @Override
+        public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+            PrinterName = arrPrinterList.getItem(arg2).toString();
+            HPRTPrinter = new HPRTPrinterHelper(getActivity(), PrinterName);
+        }
+
+        @Override
+        public void onNothingSelected(AdapterView<?> arg0) {
+        }
+    }
+
+    private boolean EnableBluetooth() {
+        boolean bRet = false;
+        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+        if (mBluetoothAdapter != null) {
+            if (mBluetoothAdapter.isEnabled())
+                return true;
+            mBluetoothAdapter.enable();
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            if (!mBluetoothAdapter.isEnabled()) {
+                bRet = true;
+                Log.d("PRTLIB", "BTO_EnableBluetooth --> Open OK");
+            }
+        } else {
+            Log.d("HPRTSDKSample", (new StringBuilder("Activity_Main --> EnableBluetooth ").append("Bluetooth Adapter is null.")).toString());
+        }
+        return bRet;
+    }
+
 
     public void showPreview() {
         Intent goToPreviewActivityIntent = new Intent(getActivity(), PreviewActivity.class);
@@ -534,23 +746,30 @@ public class AcquireFragment extends Fragment {
                     vehicleColor = data.getStringExtra(BACK_VEHICLE_COLOR);
                     vehicleType = data.getStringExtra(BACK_VEHICLE_TYPE);
                     licenseColor = data.getStringExtra(BACK_LICENSE_COLOR);
-                    printTicket();
-                    takeTicketPictureIntent();
+                    ticketID = getTicketID();
+                    getCurrentTime();
+                    connectToBlueTooth();
+
                 } else {
-                    backToHome();
+                    Toast.makeText(getActivity(), R.string.toast_result_code_not_ok, Toast.LENGTH_SHORT).show();
                 }
                 break;
+
+            case HPRTPrinterHelper.ACTIVITY_CONNECT_BT:
+                String strIsConnected = data.getExtras().getString("is_connected");
+                if (strIsConnected.equals("NO")) {
+                    Toast.makeText(getActivity(), getResources().getString(R.string.activity_main_scan_error), Toast.LENGTH_LONG).show();
+                } else {
+                    printTicket();
+                    Toast.makeText(getActivity(), getResources().getString(R.string.activity_main_connected), Toast.LENGTH_LONG).show();
+                    takeTicketPictureIntent();
+                }
+                break;
+
 
             case REQUEST_TICKET_IMG_CAPTURE:
                 if (resultCode == getActivity().RESULT_OK) {
                     if (ticketImgFilePath != null) {
-                        Calendar now = Calendar.getInstance();
-                        currentTime = dateFormatf.format(now.getTime());
-                        year = now.get(Calendar.YEAR);
-                        month = now.get(Calendar.MONTH) + 1; // Note: zero based!
-                        day = now.get(Calendar.DAY_OF_MONTH);
-                        hour = now.get(Calendar.HOUR_OF_DAY);
-                        minute = now.get(Calendar.MINUTE);
                         showUploadDialog();
                         backToHome();
                     } else {
@@ -575,16 +794,39 @@ public class AcquireFragment extends Fragment {
         }
     }
 
-    private void printTicket() {
-        // TODO: Print ticket here.
-
-        ticketID = generateTicketID();
-
+    private void getCurrentTime() {
+        Calendar now = Calendar.getInstance();
+        currentTime = dateFormatf.format(now.getTime());
+        year = now.get(Calendar.YEAR);
+        month = now.get(Calendar.MONTH) + 1; // Note: zero based!
+        day = now.get(Calendar.DAY_OF_MONTH);
+        hour = now.get(Calendar.HOUR_OF_DAY);
+        minute = now.get(Calendar.MINUTE);
     }
 
-    private Long generateTicketID() {
-        // TODO: Generate ticket here.
-        return 1234L;
+    private Long getTicketID() {
+        String[] projection = new String[]{KEY_TICKET_RANGE_START, KEY_TICKET_RANGE_END};
+        Cursor cursor = resolver.query(POLICE_URL, projection, KEY_USER_ID + "=?", new String[]{userID}, null);
+        if (cursor.moveToFirst()) {
+            ticketIDStart = cursor.getLong(cursor.getColumnIndex(KEY_TICKET_RANGE_START));
+            ticketIDEnd = cursor.getLong(cursor.getColumnIndex(KEY_TICKET_RANGE_END));
+            if (ticketIDStart < 0 || ticketIDEnd < 0 || ticketIDStart > ticketIDEnd) { // No ticket range or out of range
+                new TicketRangeGrpcTask().execute();
+            }
+            ticketIDStart++;
+            updateTicketRangeDB();
+            return (ticketIDStart - 1);
+        }
+        Toast.makeText(getActivity(), R.string.toast_no_police_info, Toast.LENGTH_SHORT).show();
+        return -1L;
+    }
+
+    private void updateTicketRangeDB() {
+        ContentValues values = new ContentValues();
+        values.put(KEY_USER_ID, userID);
+        values.put(KEY_TICKET_RANGE_START, ticketIDStart);
+        values.put(KEY_TICKET_RANGE_END, ticketIDEnd);
+        resolver.insert(POLICE_URL, values);
     }
 
     private void initFields() {
@@ -600,6 +842,36 @@ public class AcquireFragment extends Fragment {
 
     private void backToHome() {
         takePictureButton.setEnabled(true);
+    }
+
+    private class TicketRangeGrpcTask extends AsyncTask<Void, Void, List<String>> {
+        @Override
+        protected void onPreExecute() {
+        }
+
+        @Override
+        protected List<String> doInBackground(Void... nothing) {
+            ArrayList<String> resultList = new ArrayList<String>();
+            try {
+                TicketGrpc.TicketBlockingStub blockingStub = TicketGrpc.newBlockingStub(mChannel);
+                TicketRangeSid request = TicketRangeSid.newBuilder().setSid(userID).build();
+                TicketRange reply = blockingStub.pullTicketRange(request);
+                ticketIDStart = reply.getTicketIdStart();
+                ticketIDEnd = reply.getTicketIdEnd();
+                return resultList;
+            } catch (Exception e) {
+                StringWriter sw = new StringWriter();
+                PrintWriter pw = new PrintWriter(sw);
+                e.printStackTrace(pw);
+                pw.flush();
+                resultList.add("Failed... : " + System.getProperty("line.separator") + sw);
+                return resultList;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(List<String> resultList) {
+        }
     }
 
     private class SlaveLocSubmitGrpcTask extends AsyncTask<Void, Void, List<String>> {
@@ -893,6 +1165,11 @@ public class AcquireFragment extends Fragment {
             Log.d(LOG_TAG, "OpenCV library found inside package. Using it!");
             mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
         }
+
+        String paper = PFun.ReadSharedPreferencesData("papertype");
+        if (!"".equals(paper)) {
+            this.paper = paper;
+        }
     }
 
     @Override
@@ -911,6 +1188,10 @@ public class AcquireFragment extends Fragment {
         }
 
         mChannel.shutdown();
+
+        if (HPRTPrinter != null) {
+            HPRTPrinterHelper.PortClose();
+        }
 
         super.onDestroy();
     }

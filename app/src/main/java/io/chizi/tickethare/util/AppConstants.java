@@ -5,19 +5,19 @@ package io.chizi.tickethare.util;
  */
 
 public interface AppConstants {
-    static final int REQUEST_SIGNUP = 0;
-    static final int REQUEST_UPDATE_PROFILE = 1;
-    static final int REQUEST_CLOSE_IMG_CAPTURE = 2;
-    static final int REQUEST_FAR_IMG_CAPTURE = 3;
-    static final int REQUEST_TICKET_IMG_CAPTURE = 4;
-    static final int REQUEST_QRCODE_SCAN = 5;
-    static final int REQUEST_LOCATION_SHOW = 6;
-    static final int REQUEST_PREVIEW_SHOW = 7;
-    static final int REQUEST_DATABASE_SHOW = 8;
+    static final int REQUEST_SIGNUP = 20;
+    static final int REQUEST_UPDATE_PROFILE = 21;
+    static final int REQUEST_CLOSE_IMG_CAPTURE = 22;
+    static final int REQUEST_FAR_IMG_CAPTURE = 23;
+    static final int REQUEST_TICKET_IMG_CAPTURE = 24;
+    static final int REQUEST_QRCODE_SCAN = 25;
+    static final int REQUEST_LOCATION_SHOW = 26;
+    static final int REQUEST_PREVIEW_SHOW = 27;
+    static final int REQUEST_DATABASE_SHOW = 28;
 
-    static final int TYPE_NOT_CONNECTED = 10;
-    static final int TYPE_WIFI = 11;
-    static final int TYPE_MOBILE = 12;
+    static final int TYPE_NOT_CONNECTED = 30;
+    static final int TYPE_WIFI = 31;
+    static final int TYPE_MOBILE = 32;
 
     static final int TRANS_IMAGE_W = 800;
     static final int TRANS_IMAGE_H = 800;

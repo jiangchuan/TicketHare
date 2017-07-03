@@ -276,7 +276,7 @@
     <string name="checkbox_torch">On/Off flashlight</string>
     <string name="toast_ticket_saved">Ticket saved</string>
     <string name="toast_insert_db_failed">Row Insert Failed</string>
-    <string name="toast_no_ticket_id">No ticket QR code scanned!</string>
+    <string name="toast_no_ticket_id">No ticket ID!</string>
     <string name="toast_no_user">No user login!</string>
     <string name="toast_ticket_no_license">No license number captured!</string>
     <string name="toast_ticket_no_license_color">No license color captured!</string>

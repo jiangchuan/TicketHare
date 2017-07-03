@@ -275,7 +275,7 @@
     <string name="checkbox_torch">开/关 手电</string>
     <string name="toast_ticket_saved">罚单已保存</string>
     <string name="toast_insert_db_failed">插入数据库失败</string>
-    <string name="toast_no_ticket_id">还没扫描罚单二维码!</string>
+    <string name="toast_no_ticket_id">没有罚单号!</string>
     <string name="toast_no_user">没有用户登录!</string>
     <string name="toast_ticket_no_license">没有提取到牌照!</string>
     <string name="toast_ticket_no_license_color">没有提取到牌照颜色!</string>

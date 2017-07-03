@@ -59,6 +59,8 @@ public class DBProvider extends ContentProvider {
     public static final String KEY_POLICE_CITY = "police_city";
     public static final String KEY_SAVED_TICKET_COUNT = "saved_ticket_count";
     public static final String KEY_UPLOADED_TICKET_COUNT = "uploaded_ticket_count";
+    public static final String KEY_TICKET_RANGE_START = "ticket_range_start";
+    public static final String KEY_TICKET_RANGE_END = "ticket_range_end";
 
     // Assigned to a content provider so any application can access it
     // tickets is the virtual directory in the provider
@@ -119,7 +121,9 @@ public class DBProvider extends ContentProvider {
             + KEY_POLICE_STATION + " TEXT NOT NULL DEFAULT 'NA', "
             + KEY_POLICE_PORTRAIT_URI + " TEXT NOT NULL DEFAULT 'NA', "
             + KEY_SAVED_TICKET_COUNT + " INTEGER NOT NULL DEFAULT -1, "
-            + KEY_UPLOADED_TICKET_COUNT + " INTEGER NOT NULL DEFAULT -1);";
+            + KEY_UPLOADED_TICKET_COUNT + " INTEGER NOT NULL DEFAULT -1, "
+            + KEY_TICKET_RANGE_START + " INTEGER NOT NULL DEFAULT -1, "
+            + KEY_TICKET_RANGE_END + " INTEGER NOT NULL DEFAULT -1);";
 
 
 

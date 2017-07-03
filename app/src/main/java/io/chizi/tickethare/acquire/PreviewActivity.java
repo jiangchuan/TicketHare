@@ -162,42 +162,20 @@ public class PreviewActivity extends Activity {
     private ImageView photo1DetailsImageView;
     private ImageView photo2DetailsImageView;
 
-    // HM printer starts here
-
-    private Context thisCon = null;
-    private BluetoothAdapter mBluetoothAdapter;
-    private PublicFunction PFun = null;
-
-    private Button btnWIFI = null;
-    private Button btnBT = null;
-    private Button btnUSB = null;
-
-    private Spinner spnPrinterList = null;
-    private Button btnOpenCashDrawer = null;
-    private Button btnSampleReceipt = null;
-    private Button btn1DBarcodes = null;
-    private Button btnQRCode = null;
-    private Button btnPDF417 = null;
-    private Button btnCut = null;
-    private Button btnPageMode = null;
-    private Button btnImageManage = null;
-    private Button btnGetRemainingPower = null;
-
-    private EditText edtTimes = null;
-
-    private ArrayAdapter arrPrinterList;
-    private static HPRTPrinterHelper HPRTPrinter = new HPRTPrinterHelper();
-    private String PrinterName = "";
-    private String PortParam = "";
-
-    private UsbManager mUsbManager = null;
-    private UsbDevice device = null;
-    private static final String ACTION_USB_PERMISSION = "com.HPRTSDKSample";
-    private PendingIntent mPermissionIntent = null;
-    private static IPort Printer = null;
-    private Handler handler;
-    private ProgressDialog dialog;
-    public static String paper = "0";
+//    // HM printer starts here
+//    private Context thisCon = null;
+//    private BluetoothAdapter mBluetoothAdapter;
+//    private PublicFunction PFun = null;
+//
+//    private Spinner spnPrinterList = null;
+//
+//    private ArrayAdapter arrPrinterList;
+//    private static HPRTPrinterHelper HPRTPrinter = new HPRTPrinterHelper();
+//    private String PrinterName = "";
+//
+//    private Handler handler;
+//    private ProgressDialog dialog;
+//    public static String paper = "0";
 
 
     @Override
@@ -210,33 +188,29 @@ public class PreviewActivity extends Activity {
 
         setContentView(R.layout.activity_preview);
 
-        try {
-            thisCon = this.getApplicationContext();
-            mPermissionIntent = PendingIntent.getBroadcast(thisCon, 0, new Intent(ACTION_USB_PERMISSION), 0);
-            IntentFilter filter = new IntentFilter(ACTION_USB_PERMISSION);
-            thisCon.registerReceiver(mUsbReceiver, filter);
-
-            PFun = new PublicFunction(thisCon);
-            InitSetting();
-            InitCombox();
-            this.spnPrinterList.setOnItemSelectedListener(new OnItemSelectedPrinter());
-            EnableBluetooth();
-            handler = new Handler() {
-                @Override
-                public void handleMessage(Message msg) {
-                    super.handleMessage(msg);
-                    if (msg.what == 1) {
-                        Toast.makeText(PreviewActivity.this, "succeed", Toast.LENGTH_LONG).show();
-                        dialog.cancel();
-                    } else {
-                        Toast.makeText(PreviewActivity.this, "failure", Toast.LENGTH_LONG).show();
-                        dialog.cancel();
-                    }
-                }
-            };
-        } catch (Exception e) {
-            Log.e("HPRTSDKSample", (new StringBuilder("PreviewActivity --> onCreate ")).append(e.getMessage()).toString());
-        }
+//        try {
+//            thisCon = this.getApplicationContext();
+//            PFun = new PublicFunction(thisCon);
+//            InitSetting();
+//            InitCombox();
+//            this.spnPrinterList.setOnItemSelectedListener(new OnItemSelectedPrinter());
+//            EnableBluetooth();
+//            handler = new Handler() {
+//                @Override
+//                public void handleMessage(Message msg) {
+//                    super.handleMessage(msg);
+//                    if (msg.what == 1) {
+//                        Toast.makeText(PreviewActivity.this, "succeed", Toast.LENGTH_LONG).show();
+//                        dialog.cancel();
+//                    } else {
+//                        Toast.makeText(PreviewActivity.this, "failure", Toast.LENGTH_LONG).show();
+//                        dialog.cancel();
+//                    }
+//                }
+//            };
+//        } catch (Exception e) {
+//            Log.e("HPRTSDKSample", (new StringBuilder("PreviewActivity --> onCreate ")).append(e.getMessage()).toString());
+//        }
 
         if (savedInstanceState != null) {
             ticketID = savedInstanceState.getLong(SAVED_INSTANCE_TICKET_ID);
@@ -432,8 +406,9 @@ public class PreviewActivity extends Activity {
         generateTicketButton.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                backToPreviousActivity();
-                connectToBlueTooth();
+                updateVehicleInfo();
+                backToPreviousActivity();
+//                connectToBlueTooth();
             }
         });
 
@@ -568,122 +543,104 @@ public class PreviewActivity extends Activity {
         });
     }
 
-    @Override
-    protected void onResume() {
-        super.onResume();
-        String paper = PFun.ReadSharedPreferencesData("papertype");
-        if (!"".equals(paper)) {
-            PreviewActivity.paper = paper;
-        }
-    }
-
-    @Override
-    protected void onDestroy() {
-        if (HPRTPrinter != null) {
-            HPRTPrinterHelper.PortClose();
-        }
-        super.onDestroy();
-    }
-
-    private void connectToBlueTooth() {
-        if (HPRTPrinter != null) {
-            HPRTPrinterHelper.PortClose();
-        }
-        Intent serverIntent = new Intent(PreviewActivity.this, DeviceListActivity.class);
-        startActivityForResult(serverIntent, HPRTPrinterHelper.ACTIVITY_CONNECT_BT);
-        return;
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        switch (resultCode) {
-            case HPRTPrinterHelper.ACTIVITY_CONNECT_BT:
-                String strBTAddress = "";
-                String strIsConnected = data.getExtras().getString("is_connected");
-                if (strIsConnected.equals("NO")) {
-                    Toast.makeText(PreviewActivity.this, getResources().getString(R.string.activity_main_scan_error), Toast.LENGTH_LONG).show();
-                    return;
-                } else {
-                    updateVehicleInfo();
-                    printTicket();
-                    Toast.makeText(PreviewActivity.this, getResources().getString(R.string.activity_main_connected), Toast.LENGTH_LONG).show();
-                    return;
-                }
-        }
-        super.onActivityResult(requestCode, resultCode, data);
-    }
-
-    private void printTicket() {
-        try {
-            HPRTPrinterHelper.printAreaSize("0", "200", "200", "700", "1");
-//            String[] receiptLines = getResources().getStringArray(R.array.activity_main_sample_2inch_receipt);
-            int receiptLen = 16;
-            String[] receiptLines = new String[receiptLen];
-            receiptLines[0] = "成都市道路停车记录告知单";
-            receiptLines[1] = "编号: 5104312681";
-            receiptLines[2] = "车辆牌号: " + licenseNum + "            车身颜色: " + vehicleColor;
-            receiptLines[3] = "车辆类型: " + vehicleType;
-            receiptLines[4] = "号牌颜色: " + licenseColor;
-            receiptLines[5] = "停车时间: " + year + "年" + month + "月" + day + "日" + hour + "时" + minute + "分";
-            receiptLines[6] = "停车地点: " + address;
-            receiptLines[7] = "该机动车在上述时间、地点未在道路停车泊位或停";
-            receiptLines[8] = "车场内停放，现已对现场道路交通情况进行了图像记录，";
-            receiptLines[9] = "并报告交警" + policeDept + "审核认定是否违法停放。";
-            receiptLines[10] = "你可在七个工作日后登陆http://www.cdjg.gov.cn查询，";
-            receiptLines[11] = "或在收到公安机关交通管理部门通知后前往接受处理。";
-            receiptLines[12] = "交通协管员: " + policeName;
-            receiptLines[13] = year + "年" + month + "月" + day + "日";
-            receiptLines[14] = "----------------------------------------";
-            receiptLines[15] = "备注: ";
-
-            HPRTPrinterHelper.LanguageEncode = "GBK";
-
-            HPRTPrinterHelper.Align(HPRTPrinterHelper.CENTER);
-            HPRTPrinterHelper.Text(HPRTPrinterHelper.TEXT, "16", "0", "0", "0", receiptLines[0]);
-            HPRTPrinterHelper.Align(HPRTPrinterHelper.RIGHT);
-            HPRTPrinterHelper.Text(HPRTPrinterHelper.TEXT, "8", "0", "0", "" + 30, receiptLines[1]);
-
-            HPRTPrinterHelper.Align(HPRTPrinterHelper.LEFT);
-            for (int i = 2; i < 7; i++) {
-                HPRTPrinterHelper.Text(HPRTPrinterHelper.TEXT, "8", "0", "0", "0" + (i * 30), receiptLines[i]);
-            }
-
-            int iLine = 7;
-            HPRTPrinterHelper.Align(HPRTPrinterHelper.RIGHT);
-            HPRTPrinterHelper.Text(HPRTPrinterHelper.TEXT, "8", "0", "0", "" + (iLine * 30), receiptLines[iLine]);
-
-            HPRTPrinterHelper.Align(HPRTPrinterHelper.LEFT);
-            for (int i = 8; i < 13; i++) {
-                HPRTPrinterHelper.Text(HPRTPrinterHelper.TEXT, "8", "0", "0", "" + (i * 30), receiptLines[i]);
-            }
-
-            iLine = 13;
-            HPRTPrinterHelper.Align(HPRTPrinterHelper.RIGHT);
-            HPRTPrinterHelper.Text(HPRTPrinterHelper.TEXT, "8", "0", "0", "" + (iLine * 30), receiptLines[iLine]);
-
-            HPRTPrinterHelper.Align(HPRTPrinterHelper.LEFT);
-            for (int i = receiptLen - 2; i < receiptLen; i++) {
-                HPRTPrinterHelper.Text(HPRTPrinterHelper.TEXT, "8", "0", "0", "" + (i * 30), receiptLines[i]);
-            }
-
-            if ("1".equals(PreviewActivity.paper)) {
-                HPRTPrinterHelper.Form();
-            }
-            HPRTPrinterHelper.Print();
-        } catch (Exception e) {
-            Log.e("HPRTSDKSample", (new StringBuilder("Activity_Main --> PrintSampleReceipt ")).append(e.getMessage()).toString());
-        }
-    }
-
-    //    private void printTicket() {
+//    @Override
+//    protected void onResume() {
+//        super.onResume();
+//        String paper = PFun.ReadSharedPreferencesData("papertype");
+//        if (!"".equals(paper)) {
+//            PreviewActivity.paper = paper;
+//        }
+//    }
+//
+//    @Override
+//    protected void onDestroy() {
+//        if (HPRTPrinter != null) {
+//            HPRTPrinterHelper.PortClose();
+//        }
+//        super.onDestroy();
+//    }
+//
+//    private void connectToBlueTooth() {
+//        if (HPRTPrinter != null) {
+//            HPRTPrinterHelper.PortClose();
+//        }
+//        Intent serverIntent = new Intent(PreviewActivity.this, DeviceListActivity.class);
+//        startActivityForResult(serverIntent, HPRTPrinterHelper.ACTIVITY_CONNECT_BT);
+//        return;
+//    }
+//
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        switch (resultCode) {
+//            case HPRTPrinterHelper.ACTIVITY_CONNECT_BT:
+//                String strIsConnected = data.getExtras().getString("is_connected");
+//                if (strIsConnected.equals("NO")) {
+//                    Toast.makeText(PreviewActivity.this, getResources().getString(R.string.activity_main_scan_error), Toast.LENGTH_LONG).show();
+//                    return;
+//                } else {
+//                    updateVehicleInfo();
+//                    printTicket();
+//                    Toast.makeText(PreviewActivity.this, getResources().getString(R.string.activity_main_connected), Toast.LENGTH_LONG).show();
+//                    backToPreviousActivity();
+//                    return;
+//                }
+//        }
+//        super.onActivityResult(requestCode, resultCode, data);
+//    }
+//
+//    private void printTicket() {
 //        try {
 //            HPRTPrinterHelper.printAreaSize("0", "200", "200", "700", "1");
-//            String[] ReceiptLines = getResources().getStringArray(R.array.activity_main_sample_2inch_receipt);
+////            String[] receiptLines = getResources().getStringArray(R.array.activity_main_sample_2inch_receipt);
+//            int receiptLen = 16;
+//            String[] receiptLines = new String[receiptLen];
+//            receiptLines[0] = "成都市道路停车记录告知单";
+//            receiptLines[1] = "编号: 5104312681";
+//            receiptLines[2] = "车辆牌号: " + licenseNum + "            车身颜色: " + vehicleColor;
+//            receiptLines[3] = "车辆类型: " + vehicleType;
+//            receiptLines[4] = "号牌颜色: " + licenseColor;
+//            receiptLines[5] = "停车时间: " + year + "年" + month + "月" + day + "日" + hour + "时" + minute + "分";
+//            receiptLines[6] = "停车地点: " + address;
+//            receiptLines[7] = "该机动车在上述时间、地点未在道路停车泊位或停";
+//            receiptLines[8] = "车场内停放，现已对现场道路交通情况进行了图像记录，";
+//            receiptLines[9] = "并报告交警" + policeDept + "审核认定是否违法停放。";
+//            receiptLines[10] = "你可在七个工作日后登陆http://www.cdjg.gov.cn查询，";
+//            receiptLines[11] = "或在收到公安机关交通管理部门通知后前往接受处理。";
+//            receiptLines[12] = "交通协管员: " + policeName;
+//            receiptLines[13] = year + "年" + month + "月" + day + "日";
+//            receiptLines[14] = "----------------------------------------";
+//            receiptLines[15] = "备注: ";
+//
 //            HPRTPrinterHelper.LanguageEncode = "GBK";
+//
 //            HPRTPrinterHelper.Align(HPRTPrinterHelper.CENTER);
-//            for (int i = 0; i < ReceiptLines.length; i++) {
-//                HPRTPrinterHelper.Text(HPRTPrinterHelper.TEXT, "8", "0", "0", "" + (i * 30), ReceiptLines[i]);
+//            HPRTPrinterHelper.Text(HPRTPrinterHelper.TEXT, "8", "0", "0", "0", receiptLines[0]);
+//            HPRTPrinterHelper.Align(HPRTPrinterHelper.RIGHT);
+//            HPRTPrinterHelper.Text(HPRTPrinterHelper.TEXT, "8", "0", "0", "" + 30, receiptLines[1]);
+//
+//            HPRTPrinterHelper.Align(HPRTPrinterHelper.LEFT);
+//            for (int i = 2; i < 7; i++) {
+//                HPRTPrinterHelper.Text(HPRTPrinterHelper.TEXT, "8", "0", "0", "0" + (i * 30), receiptLines[i]);
 //            }
+//
+//            int iLine = 7;
+//            HPRTPrinterHelper.Align(HPRTPrinterHelper.RIGHT);
+//            HPRTPrinterHelper.Text(HPRTPrinterHelper.TEXT, "8", "0", "0", "" + (iLine * 30), receiptLines[iLine]);
+//
+//            HPRTPrinterHelper.Align(HPRTPrinterHelper.LEFT);
+//            for (int i = 8; i < 13; i++) {
+//                HPRTPrinterHelper.Text(HPRTPrinterHelper.TEXT, "8", "0", "0", "" + (i * 30), receiptLines[i]);
+//            }
+//
+//            iLine = 13;
+//            HPRTPrinterHelper.Align(HPRTPrinterHelper.RIGHT);
+//            HPRTPrinterHelper.Text(HPRTPrinterHelper.TEXT, "8", "0", "0", "" + (iLine * 30), receiptLines[iLine]);
+//
+//            HPRTPrinterHelper.Align(HPRTPrinterHelper.LEFT);
+//            for (int i = receiptLen - 2; i < receiptLen; i++) {
+//                HPRTPrinterHelper.Text(HPRTPrinterHelper.TEXT, "8", "0", "0", "" + (i * 30), receiptLines[i]);
+//            }
+//
 //            if ("1".equals(PreviewActivity.paper)) {
 //                HPRTPrinterHelper.Form();
 //            }
@@ -692,129 +649,97 @@ public class PreviewActivity extends Activity {
 //            Log.e("HPRTSDKSample", (new StringBuilder("Activity_Main --> PrintSampleReceipt ")).append(e.getMessage()).toString());
 //        }
 //    }
-
-    private void InitSetting() {
-        String SettingValue = PFun.ReadSharedPreferencesData("Codepage");
-        if (SettingValue.equals(""))
-            PFun.WriteSharedPreferencesData("Codepage", "0,PC437(USA:Standard Europe)");
-
-        SettingValue = PFun.ReadSharedPreferencesData("Cut");
-        if (SettingValue.equals(""))
-            PFun.WriteSharedPreferencesData("Cut", "0");
-
-        SettingValue = PFun.ReadSharedPreferencesData("Cashdrawer");
-        if (SettingValue.equals(""))
-            PFun.WriteSharedPreferencesData("Cashdrawer", "0");
-
-        SettingValue = PFun.ReadSharedPreferencesData("Buzzer");
-        if (SettingValue.equals(""))
-            PFun.WriteSharedPreferencesData("Buzzer", "0");
-
-        SettingValue = PFun.ReadSharedPreferencesData("Feeds");
-        if (SettingValue.equals(""))
-            PFun.WriteSharedPreferencesData("Feeds", "0");
-        String paper = PFun.ReadSharedPreferencesData("papertype");
-        if (!"".equals(paper)) {
-            PreviewActivity.paper = paper;
-        }
-    }
-
-    //add printer list
-    private void InitCombox() {
-        try {
-            arrPrinterList = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
-            String strSDKType = getResources().getString(R.string.sdk_type);
-            if (strSDKType.equals("all"))
-                arrPrinterList = ArrayAdapter.createFromResource(this, R.array.printer_list_cpcl, android.R.layout.simple_spinner_item);
-            if (strSDKType.equals("hprt"))
-                arrPrinterList = ArrayAdapter.createFromResource(this, R.array.printer_list_hprt, android.R.layout.simple_spinner_item);
-            if (strSDKType.equals("mkt"))
-                arrPrinterList = ArrayAdapter.createFromResource(this, R.array.printer_list_mkt, android.R.layout.simple_spinner_item);
-            if (strSDKType.equals("mprint"))
-                arrPrinterList = ArrayAdapter.createFromResource(this, R.array.printer_list_mprint, android.R.layout.simple_spinner_item);
-            if (strSDKType.equals("sycrown"))
-                arrPrinterList = ArrayAdapter.createFromResource(this, R.array.printer_list_sycrown, android.R.layout.simple_spinner_item);
-            if (strSDKType.equals("mgpos"))
-                arrPrinterList = ArrayAdapter.createFromResource(this, R.array.printer_list_mgpos, android.R.layout.simple_spinner_item);
-            if (strSDKType.equals("ds"))
-                arrPrinterList = ArrayAdapter.createFromResource(this, R.array.printer_list_ds, android.R.layout.simple_spinner_item);
-            if (strSDKType.equals("cst"))
-                arrPrinterList = ArrayAdapter.createFromResource(this, R.array.printer_list_cst, android.R.layout.simple_spinner_item);
-            if (strSDKType.equals("other"))
-                arrPrinterList = ArrayAdapter.createFromResource(this, R.array.printer_list_other, android.R.layout.simple_spinner_item);
-            arrPrinterList.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-            PrinterName = arrPrinterList.getItem(0).toString();
-            spnPrinterList.setAdapter(arrPrinterList);
-        } catch (Exception e) {
-            Log.e("HPRTSDKSample", (new StringBuilder("Activity_Main --> InitCombox ")).append(e.getMessage()).toString());
-        }
-    }
-
-    private class OnItemSelectedPrinter implements AdapterView.OnItemSelectedListener {
-        @Override
-        public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-            PrinterName = arrPrinterList.getItem(arg2).toString();
-            HPRTPrinter = new HPRTPrinterHelper(thisCon, PrinterName);
-//            CapturePrinterFunction();
-        }
-
-        @Override
-        public void onNothingSelected(AdapterView<?> arg0) {
-        }
-    }
-
-    private boolean EnableBluetooth() {
-        boolean bRet = false;
-        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
-        if (mBluetoothAdapter != null) {
-            if (mBluetoothAdapter.isEnabled())
-                return true;
-            mBluetoothAdapter.enable();
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
-            if (!mBluetoothAdapter.isEnabled()) {
-                bRet = true;
-                Log.d("PRTLIB", "BTO_EnableBluetooth --> Open OK");
-            }
-        } else {
-            Log.d("HPRTSDKSample", (new StringBuilder("Activity_Main --> EnableBluetooth ").append("Bluetooth Adapter is null.")).toString());
-        }
-        return bRet;
-    }
-
-    private BroadcastReceiver mUsbReceiver = new BroadcastReceiver() {
-        public void onReceive(Context context, Intent intent) {
-            try {
-                String action = intent.getAction();
-                if (ACTION_USB_PERMISSION.equals(action)) {
-                    synchronized (this) {
-                        device = (UsbDevice) intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
-                        if (intent.getBooleanExtra(UsbManager.EXTRA_PERMISSION_GRANTED, false)) {
-                            if (HPRTPrinterHelper.PortOpen(device) != 0) {
-                                HPRTPrinter = null;
-                                Toast.makeText(PreviewActivity.this, getResources().getString(R.string.activity_main_connecterr), Toast.LENGTH_LONG).show();
-                                return;
-                            } else
-                                Toast.makeText(PreviewActivity.this, getResources().getString(R.string.activity_main_connected), Toast.LENGTH_LONG).show();
-                        } else {
-                            return;
-                        }
-                    }
-                }
-                if (UsbManager.ACTION_USB_DEVICE_DETACHED.equals(action)) {
-                    device = (UsbDevice) intent.getParcelableExtra(UsbManager.EXTRA_DEVICE);
-                    if (device != null) {
-                        HPRTPrinterHelper.PortClose();
-                    }
-                }
-            } catch (Exception e) {
-                Log.e("HPRTSDKSample", (new StringBuilder("Activity_Main --> mUsbReceiver ")).append(e.getMessage()).toString());
-            }
-        }
-    };
+//
+//    private void InitSetting() {
+//        String SettingValue = PFun.ReadSharedPreferencesData("Codepage");
+//        if (SettingValue.equals(""))
+//            PFun.WriteSharedPreferencesData("Codepage", "0,PC437(USA:Standard Europe)");
+//
+//        SettingValue = PFun.ReadSharedPreferencesData("Cut");
+//        if (SettingValue.equals(""))
+//            PFun.WriteSharedPreferencesData("Cut", "0");
+//
+//        SettingValue = PFun.ReadSharedPreferencesData("Cashdrawer");
+//        if (SettingValue.equals(""))
+//            PFun.WriteSharedPreferencesData("Cashdrawer", "0");
+//
+//        SettingValue = PFun.ReadSharedPreferencesData("Buzzer");
+//        if (SettingValue.equals(""))
+//            PFun.WriteSharedPreferencesData("Buzzer", "0");
+//
+//        SettingValue = PFun.ReadSharedPreferencesData("Feeds");
+//        if (SettingValue.equals(""))
+//            PFun.WriteSharedPreferencesData("Feeds", "0");
+//        String paper = PFun.ReadSharedPreferencesData("papertype");
+//        if (!"".equals(paper)) {
+//            PreviewActivity.paper = paper;
+//        }
+//    }
+//
+//    //add printer list
+//    private void InitCombox() {
+//        try {
+//            arrPrinterList = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item);
+//            String strSDKType = getResources().getString(R.string.sdk_type);
+//            if (strSDKType.equals("all"))
+//                arrPrinterList = ArrayAdapter.createFromResource(this, R.array.printer_list_cpcl, android.R.layout.simple_spinner_item);
+//            if (strSDKType.equals("hprt"))
+//                arrPrinterList = ArrayAdapter.createFromResource(this, R.array.printer_list_hprt, android.R.layout.simple_spinner_item);
+//            if (strSDKType.equals("mkt"))
+//                arrPrinterList = ArrayAdapter.createFromResource(this, R.array.printer_list_mkt, android.R.layout.simple_spinner_item);
+//            if (strSDKType.equals("mprint"))
+//                arrPrinterList = ArrayAdapter.createFromResource(this, R.array.printer_list_mprint, android.R.layout.simple_spinner_item);
+//            if (strSDKType.equals("sycrown"))
+//                arrPrinterList = ArrayAdapter.createFromResource(this, R.array.printer_list_sycrown, android.R.layout.simple_spinner_item);
+//            if (strSDKType.equals("mgpos"))
+//                arrPrinterList = ArrayAdapter.createFromResource(this, R.array.printer_list_mgpos, android.R.layout.simple_spinner_item);
+//            if (strSDKType.equals("ds"))
+//                arrPrinterList = ArrayAdapter.createFromResource(this, R.array.printer_list_ds, android.R.layout.simple_spinner_item);
+//            if (strSDKType.equals("cst"))
+//                arrPrinterList = ArrayAdapter.createFromResource(this, R.array.printer_list_cst, android.R.layout.simple_spinner_item);
+//            if (strSDKType.equals("other"))
+//                arrPrinterList = ArrayAdapter.createFromResource(this, R.array.printer_list_other, android.R.layout.simple_spinner_item);
+//            arrPrinterList.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//            PrinterName = arrPrinterList.getItem(0).toString();
+//            spnPrinterList.setAdapter(arrPrinterList);
+//        } catch (Exception e) {
+//            Log.e("HPRTSDKSample", (new StringBuilder("Activity_Main --> InitCombox ")).append(e.getMessage()).toString());
+//        }
+//    }
+//
+//    private class OnItemSelectedPrinter implements AdapterView.OnItemSelectedListener {
+//        @Override
+//        public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
+//            PrinterName = arrPrinterList.getItem(arg2).toString();
+//            HPRTPrinter = new HPRTPrinterHelper(thisCon, PrinterName);
+//        }
+//
+//        @Override
+//        public void onNothingSelected(AdapterView<?> arg0) {
+//        }
+//    }
+//
+//    private boolean EnableBluetooth() {
+//        boolean bRet = false;
+//        mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
+//        if (mBluetoothAdapter != null) {
+//            if (mBluetoothAdapter.isEnabled())
+//                return true;
+//            mBluetoothAdapter.enable();
+//            try {
+//                Thread.sleep(500);
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
+//            if (!mBluetoothAdapter.isEnabled()) {
+//                bRet = true;
+//                Log.d("PRTLIB", "BTO_EnableBluetooth --> Open OK");
+//            }
+//        } else {
+//            Log.d("HPRTSDKSample", (new StringBuilder("Activity_Main --> EnableBluetooth ").append("Bluetooth Adapter is null.")).toString());
+//        }
+//        return bRet;
+//    }
 
     private void updateVehicleInfo() {
         licenseNum = licenseEditText.getText().toString();
