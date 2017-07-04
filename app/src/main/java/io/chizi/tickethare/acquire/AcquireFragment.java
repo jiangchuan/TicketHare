@@ -356,11 +356,12 @@ public class AcquireFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
+        takePictureButton.setEnabled(false);
+
         Activity activity = getActivity();
         resolver = activity.getContentResolver();
 
         Intent intentFrom = activity.getIntent(); // Get the Intent that called for this Activity to open
-
         userID = intentFrom.getExtras().getString(POLICE_USER_ID); // Get the data that was sent
         getUserInfo(userID); // Get policeName policeDept, and policeCity
         policeNameTextView.setText(policeName);
@@ -715,9 +716,6 @@ public class AcquireFragment extends Fragment {
                     } else {
                         showAlertandRepeat("farImgFilePath is null!", REQUEST_FAR_IMG_CAPTURE);
                     }
-                } else {
-                    Toast.makeText(getActivity(), R.string.toast_result_code_not_ok, Toast.LENGTH_SHORT).show();
-                    backToHome();
                 }
                 break;
 
@@ -733,9 +731,6 @@ public class AcquireFragment extends Fragment {
                     } else {
                         showAlertandRepeat("closeImgFilePath is null!", REQUEST_CLOSE_IMG_CAPTURE);
                     }
-                } else {
-                    Toast.makeText(getActivity(), R.string.toast_result_code_not_ok, Toast.LENGTH_SHORT).show();
-                    backToHome();
                 }
                 break;
 
@@ -748,8 +743,6 @@ public class AcquireFragment extends Fragment {
                     getTicketID();
                     getCurrentTime();
                     connectToBlueTooth();
-                } else {
-                    Toast.makeText(getActivity(), R.string.toast_result_code_not_ok, Toast.LENGTH_SHORT).show();
                 }
                 break;
 
@@ -773,11 +766,7 @@ public class AcquireFragment extends Fragment {
                     } else {
                         showAlertandRepeat("ticketImgFilePath is null!", REQUEST_TICKET_IMG_CAPTURE);
                     }
-                } else {
-                    Toast.makeText(getActivity(), R.string.toast_result_code_not_ok, Toast.LENGTH_SHORT).show();
-                    backToHome();
                 }
-
                 break;
 
             case REQUEST_UPDATE_PROFILE:
@@ -1119,6 +1108,8 @@ public class AcquireFragment extends Fragment {
                 MapStatus.Builder builder = new MapStatus.Builder();
                 builder.target(ll).zoom(18.0f);
                 mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
+
+                takePictureButton.setEnabled(true);
 
                 new SlaveAnchorSubmitGrpcTask().execute();
             }

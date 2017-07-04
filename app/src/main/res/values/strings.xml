@@ -15,8 +15,8 @@
     <string name="activity_main_tips">Please connect to printer!</string>
     <string name="activity_main_scan_error">Scan Error!</string>
     <string name="activity_main_scan_success">Scan Success!</string>
-    <string name="activity_main_connecterr">Connect Error!</string>
-    <string name="activity_main_connected">Connect Success!</string>
+    <string name="activity_main_connecterr">Connect Printer Error!</string>
+    <string name="activity_main_connected">Connect Printer Success!</string>
     <string name="activity_main_connect_usb_printer">Please connect usb printer.</string>
     <string name="activity_main_close">Close</string>
     <string name="activity_main_originalsize">OriginalSize:</string>

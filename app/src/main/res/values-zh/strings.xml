@@ -15,8 +15,8 @@
     <string name="activity_main_tips">请连接打印机！</string>
     <string name="activity_main_scan_error">扫描失败！</string>
     <string name="activity_main_scan_success">扫描成功！</string>
-    <string name="activity_main_connecterr">连接失败！</string>
-    <string name="activity_main_connected">连接成功！</string>
+    <string name="activity_main_connecterr">连接打印机失败！</string>
+    <string name="activity_main_connected">连接打印机成功！</string>
     <string name="activity_main_connect_usb_printer">请连接USB打印机。</string>
     <string name="activity_main_close">断开</string>
     <string name="activity_main_originalsize">原大小:</string>
