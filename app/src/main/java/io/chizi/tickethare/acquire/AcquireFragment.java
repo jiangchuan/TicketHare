@@ -6,7 +6,6 @@ import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.content.ContentResolver;
 import android.content.ContentValues;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
@@ -120,6 +119,7 @@ import static io.chizi.tickethare.database.DBProvider.KEY_TICKET_RANGE_START;
 import static io.chizi.tickethare.database.DBProvider.KEY_USER_ID;
 import static io.chizi.tickethare.database.DBProvider.KEY_YEAR;
 import static io.chizi.tickethare.database.DBProvider.POLICE_URL;
+import static io.chizi.tickethare.database.DBProvider.RANGE_URL;
 import static io.chizi.tickethare.database.DBProvider.TICKET_URL;
 import static io.chizi.tickethare.util.AppConstants.ANDROID_DATA_DIR;
 import static io.chizi.tickethare.util.AppConstants.BACK_LICENSE_COLOR;
@@ -741,15 +741,13 @@ public class AcquireFragment extends Fragment {
 
             case REQUEST_PREVIEW_SHOW:
                 if (resultCode == getActivity().RESULT_OK) {
-
                     licenseNum = data.getStringExtra(BACK_LICENSE_NUM);
                     vehicleColor = data.getStringExtra(BACK_VEHICLE_COLOR);
                     vehicleType = data.getStringExtra(BACK_VEHICLE_TYPE);
                     licenseColor = data.getStringExtra(BACK_LICENSE_COLOR);
-                    ticketID = getTicketID();
+                    getTicketID();
                     getCurrentTime();
                     connectToBlueTooth();
-
                 } else {
                     Toast.makeText(getActivity(), R.string.toast_result_code_not_ok, Toast.LENGTH_SHORT).show();
                 }
@@ -804,29 +802,32 @@ public class AcquireFragment extends Fragment {
         minute = now.get(Calendar.MINUTE);
     }
 
-    private Long getTicketID() {
+    private void getTicketID() {
         String[] projection = new String[]{KEY_TICKET_RANGE_START, KEY_TICKET_RANGE_END};
-        Cursor cursor = resolver.query(POLICE_URL, projection, KEY_USER_ID + "=?", new String[]{userID}, null);
+        Cursor cursor = resolver.query(RANGE_URL, projection, KEY_USER_ID + "=?", new String[]{userID}, null);
         if (cursor.moveToFirst()) {
             ticketIDStart = cursor.getLong(cursor.getColumnIndex(KEY_TICKET_RANGE_START));
             ticketIDEnd = cursor.getLong(cursor.getColumnIndex(KEY_TICKET_RANGE_END));
+
             if (ticketIDStart < 0 || ticketIDEnd < 0 || ticketIDStart > ticketIDEnd) { // No ticket range or out of range
                 new TicketRangeGrpcTask().execute();
+            } else {
+                updateTicketIDandRange();
             }
-            ticketIDStart++;
-            updateTicketRangeDB();
-            return (ticketIDStart - 1);
+        } else {
+            new TicketRangeGrpcTask().execute();
         }
-        Toast.makeText(getActivity(), R.string.toast_no_police_info, Toast.LENGTH_SHORT).show();
-        return -1L;
     }
 
-    private void updateTicketRangeDB() {
+    private void updateTicketIDandRange() {
+        ticketID = ticketIDStart;
+        ticketIDStart++;
+
         ContentValues values = new ContentValues();
         values.put(KEY_USER_ID, userID);
         values.put(KEY_TICKET_RANGE_START, ticketIDStart);
         values.put(KEY_TICKET_RANGE_END, ticketIDEnd);
-        resolver.insert(POLICE_URL, values);
+        resolver.insert(RANGE_URL, values);
     }
 
     private void initFields() {
@@ -871,6 +872,7 @@ public class AcquireFragment extends Fragment {
 
         @Override
         protected void onPostExecute(List<String> resultList) {
+            updateTicketIDandRange();
         }
     }
 

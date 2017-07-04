@@ -57,8 +57,7 @@ public class DBProvider extends ContentProvider {
     public static final String KEY_POLICE_STATION = "police_station";
     public static final String KEY_POLICE_PORTRAIT_URI = "police_portrait";
     public static final String KEY_POLICE_CITY = "police_city";
-    public static final String KEY_SAVED_TICKET_COUNT = "saved_ticket_count";
-    public static final String KEY_UPLOADED_TICKET_COUNT = "uploaded_ticket_count";
+
     public static final String KEY_TICKET_RANGE_START = "ticket_range_start";
     public static final String KEY_TICKET_RANGE_END = "ticket_range_end";
 
@@ -66,8 +65,10 @@ public class DBProvider extends ContentProvider {
     // tickets is the virtual directory in the provider
     public static final Uri TICKET_URL = Uri.parse("content://" + PROVIDER_NAME + "/tickets");
     public static final Uri POLICE_URL = Uri.parse("content://" + PROVIDER_NAME + "/polices");
+    public static final Uri RANGE_URL = Uri.parse("content://" + PROVIDER_NAME + "/ranges");
     static final int ticketUriCode = 1;
     static final int policeUriCode = 2;
+    static final int rangeUriCode = 3;
 
     private static HashMap<String, String> values;
 
@@ -78,12 +79,14 @@ public class DBProvider extends ContentProvider {
         uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
         uriMatcher.addURI(PROVIDER_NAME, "tickets", ticketUriCode);
         uriMatcher.addURI(PROVIDER_NAME, "polices", policeUriCode);
+        uriMatcher.addURI(PROVIDER_NAME, "ranges", rangeUriCode);
     }
 
     private SQLiteDatabase sqlDB;
     private static final String DATABASE_NAME = "Transportation";
     private static final String TICKET_TABLE_NAME = "tickets";
     private static final String POLICE_TABLE_NAME = "polices";
+    private static final String RANGE_TABLE_NAME = "ranges";
     private static final int DATABASE_VERSION = 1;
     private static final String CREATE_TICKET_TABLE = "CREATE TABLE if not exists " + TICKET_TABLE_NAME
             + " (" + KEY_ROW_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
@@ -119,9 +122,11 @@ public class DBProvider extends ContentProvider {
             + KEY_POLICE_CITY + " TEXT NOT NULL DEFAULT 'NA', "
             + KEY_POLICE_DEPT + " TEXT NOT NULL DEFAULT 'NA', "
             + KEY_POLICE_STATION + " TEXT NOT NULL DEFAULT 'NA', "
-            + KEY_POLICE_PORTRAIT_URI + " TEXT NOT NULL DEFAULT 'NA', "
-            + KEY_SAVED_TICKET_COUNT + " INTEGER NOT NULL DEFAULT -1, "
-            + KEY_UPLOADED_TICKET_COUNT + " INTEGER NOT NULL DEFAULT -1, "
+            + KEY_POLICE_PORTRAIT_URI + " TEXT NOT NULL DEFAULT 'NA');";
+
+    private static final String CREATE_RANGE_TABLE = "CREATE TABLE if not exists " + RANGE_TABLE_NAME
+            + " (" + KEY_ROW_ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
+            + KEY_USER_ID + " TEXT NOT NULL DEFAULT 'NA' UNIQUE ON CONFLICT REPLACE, "
             + KEY_TICKET_RANGE_START + " INTEGER NOT NULL DEFAULT -1, "
             + KEY_TICKET_RANGE_END + " INTEGER NOT NULL DEFAULT -1);";
 
@@ -160,6 +165,10 @@ public class DBProvider extends ContentProvider {
                 queryBuilder.setTables(POLICE_TABLE_NAME);
                 queryBuilder.setProjectionMap(values);
                 break;
+            case rangeUriCode:
+                queryBuilder.setTables(RANGE_TABLE_NAME);
+                queryBuilder.setProjectionMap(values);
+                break;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
         }
@@ -183,6 +192,8 @@ public class DBProvider extends ContentProvider {
                 return "vnd.android.cursor.dir/tickets";
             case policeUriCode:
                 return "vnd.android.cursor.dir/polices";
+            case rangeUriCode:
+                return "vnd.android.cursor.dir/ranges";
             default:
                 throw new IllegalArgumentException("Unsupported URI: " + uri);
         }
@@ -201,6 +212,7 @@ public class DBProvider extends ContentProvider {
 //                long ticketRowID = sqlDB.insert(TICKET_TABLE_NAME, null, values);
                 long ticketRowID = sqlDB.insertWithOnConflict(TICKET_TABLE_NAME, KEY_TICKET_ID, values,
                         SQLiteDatabase.CONFLICT_REPLACE);
+
                 // Verify a row has been added
                 if (ticketRowID > 0) {
                     // Append the given id to the path and return a Builder used to manipulate URI
@@ -213,15 +225,19 @@ public class DBProvider extends ContentProvider {
                 }
                 break;
             case policeUriCode:
-//                long policeRowID = sqlDB.insert(POLICE_TABLE_NAME, null, values);
                 long policeRowID = sqlDB.insertWithOnConflict(POLICE_TABLE_NAME, KEY_USER_ID, values,
-                        SQLiteDatabase.CONFLICT_IGNORE);
-                if (policeRowID == -1L) {
-                    sqlDB.update(POLICE_TABLE_NAME, values, "id = ? ", new String[]{KEY_USER_ID});
-                }
-
+                        SQLiteDatabase.CONFLICT_REPLACE);
                 if (policeRowID > 0) {
                     _uri = ContentUris.withAppendedId(POLICE_URL, policeRowID);
+                    getContext().getContentResolver().notifyChange(_uri, null);
+                    return _uri;
+                }
+                break;
+            case rangeUriCode:
+                long rangeRowID = sqlDB.insertWithOnConflict(RANGE_TABLE_NAME, KEY_USER_ID, values,
+                        SQLiteDatabase.CONFLICT_REPLACE);
+                if (rangeRowID > 0) {
+                    _uri = ContentUris.withAppendedId(RANGE_URL, rangeRowID);
                     getContext().getContentResolver().notifyChange(_uri, null);
                     return _uri;
                 }
@@ -247,6 +263,9 @@ public class DBProvider extends ContentProvider {
             case policeUriCode:
                 rowsDeleted = sqlDB.delete(POLICE_TABLE_NAME, selection, selectionArgs);
                 break;
+            case rangeUriCode:
+                rowsDeleted = sqlDB.delete(RANGE_TABLE_NAME, selection, selectionArgs);
+                break;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
         }
@@ -271,6 +290,9 @@ public class DBProvider extends ContentProvider {
             case policeUriCode:
                 rowsUpdated = sqlDB.update(POLICE_TABLE_NAME, values, selection, selectionArgs);
                 break;
+            case rangeUriCode:
+                rowsUpdated = sqlDB.update(RANGE_TABLE_NAME, values, selection, selectionArgs);
+                break;
             default:
                 throw new IllegalArgumentException("Unknown URI " + uri);
         }
@@ -291,6 +313,7 @@ public class DBProvider extends ContentProvider {
         public void onCreate(SQLiteDatabase sqlDB) {
             sqlDB.execSQL(CREATE_TICKET_TABLE);
             sqlDB.execSQL(CREATE_POLICE_TABLE);
+            sqlDB.execSQL(CREATE_RANGE_TABLE);
         }
 
         // Recreates the table when the database needs to be upgraded
@@ -298,6 +321,7 @@ public class DBProvider extends ContentProvider {
         public void onUpgrade(SQLiteDatabase sqlDB, int oldVersion, int newVersion) {
             sqlDB.execSQL("DROP TABLE IF EXISTS " + TICKET_TABLE_NAME);
             sqlDB.execSQL("DROP TABLE IF EXISTS " + POLICE_TABLE_NAME);
+            sqlDB.execSQL("DROP TABLE IF EXISTS " + RANGE_TABLE_NAME);
             onCreate(sqlDB);
         }
     }
