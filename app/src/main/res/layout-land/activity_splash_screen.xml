@@ -18,7 +18,7 @@
         <ImageView
             android:id="@+id/ginkgo_logo"
             android:layout_width="wrap_content"
-            android:layout_height="300dp"
+            android:layout_height="200dp"
             android:layout_marginBottom="20dp"
             android:src="@drawable/chizi_logo" />
 
@@ -32,12 +32,35 @@
         android:orientation="vertical">
 
         <TextView
-            android:id="@+id/app_name"
+            android:id="@+id/app_name1"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_margin="20dp"
+            android:layout_marginTop="10dp"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
             android:layout_gravity="center_horizontal"
-            android:text="@string/app_name"
+            android:text="@string/splash_name1"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/app_name2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/splash_name2"
+            android:textSize="30sp" />
+
+        <TextView
+            android:id="@+id/app_name3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginBottom="30dp"
+            android:layout_gravity="center_horizontal"
+            android:text="@string/splash_name3"
             android:textSize="30sp" />
 
         <TextView

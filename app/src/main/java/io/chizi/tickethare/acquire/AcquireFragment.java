@@ -1114,16 +1114,17 @@ public class AcquireFragment extends Fragment {
                 new SlaveAnchorSubmitGrpcTask().execute();
             }
 
-            mBaiduMap
-                    .setMyLocationConfigeration(new MyLocationConfiguration(
+            mBaiduMap.setMyLocationConfigeration(new MyLocationConfiguration(
                             MyLocationConfiguration.LocationMode.FOLLOWING, true, null));
 
             // Receive Location
             longitude = location.getLongitude();
             latitude = location.getLatitude();
+            String streetName = null;
             if (location.getLocType() == BDLocation.TypeGpsLocation || location.getLocType() == BDLocation.TypeNetWorkLocation || location.getLocType() == BDLocation.TypeOffLineLocation) {// GPS或网络定位结果
                 String locDesc = location.getLocationDescribe();
                 address = location.getAddrStr();
+                streetName = location.getAddress().street;
                 if (locDesc != null) {
                     address = address + " (" + location.getLocationDescribe() + ")";
                 }
@@ -1134,7 +1135,7 @@ public class AcquireFragment extends Fragment {
             } else if (location.getLocType() == BDLocation.TypeCriteriaException) {
                 address = "无定位依据，手机可能处于飞行模式，试试重启手机";
             }
-            addressLonLatTextView.setText(getString(R.string.ticket_address_header) + address + "\n经纬度: (" + longitude + ", " + latitude + ")");
+            addressLonLatTextView.setText(getString(R.string.ticket_address_header) + streetName);
         }
 
         public void onReceivePoi(BDLocation poiLocation) {

@@ -72,24 +72,6 @@
                         android:imeOptions="flagNoExtractUi"
                         android:hint="@string/hint_password"/>
                 </android.support.design.widget.TextInputLayout>
-
-                <!--&lt;!&ndash;  Police Department Label &ndash;&gt;-->
-                <!--<android.support.design.widget.TextInputLayout-->
-                <!--android:layout_width="0dp"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:layout_weight="1"-->
-                <!--android:layout_marginTop="8dp"-->
-                <!--android:layout_marginBottom="8dp">-->
-
-                <!--<EditText android:id="@+id/input_police_department"-->
-                <!--android:layout_width="match_parent"-->
-                <!--android:layout_height="wrap_content"-->
-                <!--android:hint="@string/hint_police_department"-->
-                <!--android:digits="0123456789."-->
-                <!--android:imeOptions="flagNoExtractUi"-->
-                <!--android:text="6"-->
-                <!--android:inputType="number|numberDecimal" />-->
-                <!--</android.support.design.widget.TextInputLayout>-->
             </LinearLayout>
 
 
@@ -98,7 +80,7 @@
                 android:id="@+id/btn_login"
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="24dp"
+                android:layout_marginTop="48dp"
                 android:layout_marginBottom="24dp"
                 android:padding="12dp"
                 android:text="@string/login_btn_label"/>
@@ -107,6 +89,7 @@
                 android:layout_width="fill_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="24dp"
+                android:visibility="gone"
                 android:text="@string/new_account_label"
                 android:gravity="center"
                 android:textSize="16sp"/>

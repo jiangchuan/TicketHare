@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">罚单野兔</string>
+    <string name="app_name">智能交通客户端</string>
+    <string name="splash_name1">成都交警</string>
+    <string name="splash_name2">智能交通系统</string>
+    <string name="splash_name3">移动客户端</string>
 
     <string name="copy_right">赤子科技 2016\u00a9</string>
 
-    <string name="acquire_start">开始</string>
+    <string name="acquire_start">开始取证</string>
+    <string name="current_time">系统时间: </string>
 
     <string name="activity_main_printer">打印机:</string>
     <string name="activity_main_bt">蓝牙设备</string>
@@ -328,7 +332,7 @@
 
     <string name="plate_rect">车牌识别区</string>
     <string name="ticket_address_label">正在定位 ... </string>
-    <string name="ticket_address_header">违停地址: </string>
+    <string name="ticket_address_header">当前地址: </string>
 
     <string name="tab_acquire">生成罚单</string>
     <string name="tab_database">查看罚单</string>

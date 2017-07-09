@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">TicketHare</string>
+    <string name="app_name">智能交通客户端</string>
+    <string name="splash_name1">成都交警</string>
+    <string name="splash_name2">智能交通系统</string>
+    <string name="splash_name3">移动客户端</string>
 
     <string name="copy_right">ChiziTech 2016\u00a9</string>
 
     <string name="acquire_start">Start</string>
+    <string name="current_time">Current time: </string>
 
     <string name="activity_main_printer">Printer List:</string>
     <string name="activity_main_bt">Bluetooth</string>
