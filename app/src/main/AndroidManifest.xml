@@ -55,7 +55,7 @@
         <activity android:name=".login.SignupActivity"
             android:theme="@style/AppTheme.Dark" />
 
-        <activity android:name=".login.UpdateProfileActivity"
+        <activity android:name=".login.ChangePasswordActivity"
             android:theme="@style/AppTheme.Dark" />
 
         <activity android:name=".MainActivity"

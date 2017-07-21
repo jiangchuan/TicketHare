@@ -18,7 +18,7 @@
         <ImageView
             android:id="@+id/ginkgo_logo"
             android:layout_width="wrap_content"
-            android:layout_height="200dp"
+            android:layout_height="260dp"
             android:layout_marginBottom="20dp"
             android:src="@drawable/chizi_logo" />
 

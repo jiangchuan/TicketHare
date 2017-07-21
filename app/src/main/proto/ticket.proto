@@ -10,6 +10,7 @@ package ticket;
 service Ticket {
   rpc HareCreateAccount (AccountRequest) returns (AccountReply) {}
   rpc HareLogin (LoginRequest) returns (LoginReply) {}
+  rpc HareChangePassword (PasswordRequest) returns (PasswordReply) {}
   rpc RecordTicket (TicketDetails) returns (RecordReply) {}
   rpc SubmitTicketStats (TicketStats) returns (StatsReply) {}
 
@@ -47,6 +48,16 @@ message LoginReply {
   string police_dept = 5;
   string police_station = 6;
   bytes police_portrait = 7;
+}
+
+message PasswordRequest {
+  string user_id = 1;
+  string password = 2;
+  string new_password = 3;
+}
+
+message PasswordReply {
+  bool change_success = 1;
 }
 
 message TicketDetails {

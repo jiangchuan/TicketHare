@@ -85,7 +85,7 @@ import io.chizi.ticket.TicketRangeSid;
 import io.chizi.ticket.TicketStats;
 import io.chizi.tickethare.R;
 import io.chizi.tickethare.database.TitlesFragment;
-import io.chizi.tickethare.login.UpdateProfileActivity;
+import io.chizi.tickethare.login.ChangePasswordActivity;
 import io.chizi.tickethare.util.BitmapUtil;
 import io.chizi.tickethare.util.FileUtil;
 import io.grpc.ManagedChannel;
@@ -400,7 +400,7 @@ public class AcquireFragment extends Fragment {
             @Override
             public boolean onLongClick(View v) {
                 // Start the Signup activity
-                Intent updateProfileIntent = new Intent(getActivity(), UpdateProfileActivity.class);
+                Intent updateProfileIntent = new Intent(getActivity(), ChangePasswordActivity.class);
                 updateProfileIntent.putExtra(POLICE_USER_ID, userID);
                 startActivityForResult(updateProfileIntent, REQUEST_UPDATE_PROFILE);
                 return true;

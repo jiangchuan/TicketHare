@@ -83,6 +83,7 @@
         <item>"地址:湖里区高崎南12路8号5楼"</item>
     </string-array>
 
+
     <string name="sdk_type">all</string>
     <string-array name="printer_list_all">
         <item>"TP801"</item>
@@ -245,6 +246,10 @@
     <string name="hint_police_department">交警分局</string>
     <string name="hint_email">电子邮件</string>
     <string name="hint_password">密码</string>
+    <string name="hint_current_password">当前密码</string>
+    <string name="hint_re_password">确认密码</string>
+    <string name="hint_new_password">新密码</string>
+    <string name="hint_re_new_password">确认新密码</string>
 
     <string name="scan_no_result">无扫描结果!请重新扫描。</string>
     <string name="scan_result">扫描结果: </string>
@@ -253,8 +258,11 @@
     <string name="login_btn_label">登录</string>
     <string name="create_account_btn_label">创建账户</string>
     <string name="update_account_btn_label">更新账户</string>
+    <string name="change_password_btn_label">更改密码</string>
     <string name="new_account_label">没有账户? 创建一个</string>
+    <string name="go_change_password_label">更改密码</string>
     <string name="login_label">已有账户? 登录</string>
+    <string name="password_to_login_label">返回登录页面</string>
     <string name="save_btn_label">保存</string>
     <string name="take_picture_btn_label">拍摄车牌相片</string>
     <string name="show_map_btn_label">定位地图</string>
@@ -290,12 +298,16 @@
     <string name="toast_login_success">登录成功!</string>
     <string name="toast_signup_failed">新建账户失败!</string>
     <string name="toast_signup_success">新建账户成功!</string>
+    <string name="toast_change_password_failed">更改密码失败!</string>
+    <string name="toast_change_password_success">更改密码成功!</string>
     <string name="toast_update_failed">更新账户失败!</string>
     <string name="toast_update_success">更新账户成功!</string>
     <string name="toast_wrong_userid">用户名不能为空!</string>
     <string name="request_wrong_userid">请输入用户名!</string>
     <string name="toast_wrong_password">密码不能为空!</string>
     <string name="request_wrong_password">请输入密码!</string>
+    <string name="toast_wrong_new_password">新密码不能为空!</string>
+    <string name="request_wrong_new_password">请输入新密码!</string>
     <string name="toast_wrong_repassword">重输密码和密码不匹配!</string>
     <string name="request_wrong_repassword">请输入相同的密码!</string>
     <string name="toast_wrong_police_name">姓名不能为空!</string>

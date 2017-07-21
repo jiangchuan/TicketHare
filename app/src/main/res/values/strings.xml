@@ -246,16 +246,23 @@
     <string name="hint_police_department">Police department</string>
     <string name="hint_email">Email</string>
     <string name="hint_password">Password</string>
+    <string name="hint_current_password">Current password</string>
+    <string name="hint_re_password">Re-enter password</string>
+    <string name="hint_new_password">New password</string>
+    <string name="hint_re_new_password">Re-enter new password</string>
 
     <string name="scan_no_result">No scan result! Please scan again.</string>
     <string name="scan_result">Scan result: </string>
     <string name="scan_info_text">Place the QR code inside the view finder</string>
 
-    <string name="login_btn_label">LOGIN</string>
+    <string name="login_btn_label">Login</string>
     <string name="create_account_btn_label">Create Account</string>
     <string name="update_account_btn_label">Update Account</string>
+    <string name="change_password_btn_label">Change Password</string>
     <string name="new_account_label">No account yet? Create one</string>
+    <string name="go_change_password_label">Change Password</string>
     <string name="login_label">Already a member? Login</string>
+    <string name="password_to_login_label">Back to Login</string>
     <string name="save_btn_label">Save</string>
     <string name="take_picture_btn_label">Take picture</string>
     <string name="show_map_btn_label">Show map</string>
@@ -291,12 +298,16 @@
     <string name="toast_login_success">Login success!</string>
     <string name="toast_signup_failed">Create account failed!</string>
     <string name="toast_signup_success">Create account success!</string>
+    <string name="toast_change_password_failed">Change password failed!</string>
+    <string name="toast_change_password_success">Change password success!</string>
     <string name="toast_update_failed">Update account failed!</string>
     <string name="toast_update_success">Update account success!</string>
     <string name="toast_wrong_userid">Empty user ID!</string>
     <string name="request_wrong_userid">Enter a user ID please!</string>
     <string name="toast_wrong_password">Empty password!</string>
     <string name="request_wrong_password">Enter a password please!</string>
+    <string name="toast_wrong_new_password">Empty new password!</string>
+    <string name="request_wrong_new_password">Enter a new password please!</string>
     <string name="toast_wrong_repassword">Password does not match!</string>
     <string name="request_wrong_repassword">Enter the same password please!</string>
     <string name="toast_wrong_police_name">Empty name!</string>
