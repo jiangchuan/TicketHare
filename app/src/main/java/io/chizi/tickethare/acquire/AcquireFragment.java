@@ -385,27 +385,27 @@ public class AcquireFragment extends Fragment {
                 takeFarPictureIntent();
             }
         });
-        profileImageView.setOnClickListener(new ImageView.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                String contentDesc = getString(R.string.toast_update_hint);
-                int[] pos = new int[2];
-                profileImageView.getLocationInWindow(pos);
-                Toast t = Toast.makeText(getActivity(), contentDesc, Toast.LENGTH_SHORT);
-                t.setGravity(Gravity.TOP | Gravity.LEFT, pos[0] - ((contentDesc.length() / 2) * 12), pos[1] - 128);
-                t.show();
-            }
-        });
-        profileImageView.setOnLongClickListener(new ImageView.OnLongClickListener() {
-            @Override
-            public boolean onLongClick(View v) {
-                // Start the Signup activity
-                Intent updateProfileIntent = new Intent(getActivity(), ChangePasswordActivity.class);
-                updateProfileIntent.putExtra(POLICE_USER_ID, userID);
-                startActivityForResult(updateProfileIntent, REQUEST_UPDATE_PROFILE);
-                return true;
-            }
-        });
+//        profileImageView.setOnClickListener(new ImageView.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                String contentDesc = getString(R.string.toast_update_hint);
+//                int[] pos = new int[2];
+//                profileImageView.getLocationInWindow(pos);
+//                Toast t = Toast.makeText(getActivity(), contentDesc, Toast.LENGTH_SHORT);
+//                t.setGravity(Gravity.TOP | Gravity.LEFT, pos[0] - ((contentDesc.length() / 2) * 12), pos[1] - 128);
+//                t.show();
+//            }
+//        });
+//        profileImageView.setOnLongClickListener(new ImageView.OnLongClickListener() {
+//            @Override
+//            public boolean onLongClick(View v) {
+//                // Start the Signup activity
+//                Intent updateProfileIntent = new Intent(getActivity(), ChangePasswordActivity.class);
+//                updateProfileIntent.putExtra(POLICE_USER_ID, userID);
+//                startActivityForResult(updateProfileIntent, REQUEST_UPDATE_PROFILE);
+//                return true;
+//            }
+//        });
 
         if (savedInstanceState != null) {
             ticketID = savedInstanceState.getLong(SAVED_INSTANCE_TICKET_ID);

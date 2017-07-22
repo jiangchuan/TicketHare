@@ -21,7 +21,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 
-import io.chizi.ticket.PasswordReply;
+import io.chizi.ticket.LoginReply;
 import io.chizi.ticket.PasswordRequest;
 import io.chizi.ticket.TicketGrpc;
 import io.chizi.tickethare.MainActivity;
@@ -31,6 +31,11 @@ import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 
 import static io.chizi.tickethare.database.DBProvider.KEY_PASSWORD;
+import static io.chizi.tickethare.database.DBProvider.KEY_POLICE_CITY;
+import static io.chizi.tickethare.database.DBProvider.KEY_POLICE_DEPT;
+import static io.chizi.tickethare.database.DBProvider.KEY_POLICE_NAME;
+import static io.chizi.tickethare.database.DBProvider.KEY_POLICE_STATION;
+import static io.chizi.tickethare.database.DBProvider.KEY_POLICE_TYPE;
 import static io.chizi.tickethare.database.DBProvider.KEY_USER_ID;
 import static io.chizi.tickethare.util.AppConstants.HOST_IP;
 import static io.chizi.tickethare.util.AppConstants.POLICE_USER_ID;
@@ -41,14 +46,19 @@ import static io.chizi.tickethare.util.AppConstants.PORT;
  */
 
 public class ChangePasswordActivity extends AppCompatActivity {
-
-
     private static final String LOG_TAG = ChangePasswordActivity.class.getName();
 
     private String userID;
     private String password;
     private String newPassword;
     private String reNewPassword;
+
+    private String policeName;
+    private String policeType;
+    private String policeCity;
+    private String policeDept;
+    private String policeStation;
+
 
     private EditText userIDEditText;
     private EditText passwordEditText;
@@ -136,8 +146,13 @@ public class ChangePasswordActivity extends AppCompatActivity {
                         .setPassword(password)
                         .setNewPassword(newPassword)
                         .build();
-                PasswordReply reply = blockingStub.hareChangePassword(request);
-                resultList.add(String.valueOf(reply.getChangeSuccess()));
+                LoginReply reply = blockingStub.hareChangePassword(request);
+                resultList.add(String.valueOf(reply.getLoginSuccess()));
+                resultList.add(reply.getPoliceName());
+                resultList.add(reply.getPoliceType());
+                resultList.add(reply.getPoliceCity());
+                resultList.add(reply.getPoliceDept());
+                resultList.add(reply.getPoliceStation());
                 return resultList;
             } catch (Exception e) {
                 StringWriter sw = new StringWriter();
@@ -157,9 +172,15 @@ public class ChangePasswordActivity extends AppCompatActivity {
                 Thread.currentThread().interrupt();
             }
             dismissProgressDialog();
+
             if (resultList != null) {
-                String createSuccess = resultList.get(0);
-                if (createSuccess != null && createSuccess.equals("true")) {
+                String mSuccess = resultList.get(0);
+                if (mSuccess != null && mSuccess.equals("true")) {
+                    policeName = resultList.get(1);
+                    policeType = resultList.get(2);
+                    policeCity = resultList.get(3);
+                    policeDept = resultList.get(4);
+                    policeStation = resultList.get(5);
                     onChangePasswordSuccess();
                 } else {
                     onChangePasswordFailed();
@@ -177,6 +198,11 @@ public class ChangePasswordActivity extends AppCompatActivity {
         ContentValues values = new ContentValues();
         values.put(KEY_USER_ID, userID);
         values.put(KEY_PASSWORD, password);
+        values.put(KEY_POLICE_NAME, policeName);
+        values.put(KEY_POLICE_TYPE, policeType);
+        values.put(KEY_POLICE_CITY, policeCity);
+        values.put(KEY_POLICE_DEPT, policeDept);
+        values.put(KEY_POLICE_STATION, policeStation);
         resolver.insert(DBProvider.POLICE_URL, values);
 
         Intent intent = new Intent(ChangePasswordActivity.this, MainActivity.class);

@@ -50,7 +50,6 @@ public class LoginActivity extends AppCompatActivity {
 
     private String userID;
     private String password;
-    private String reEnterPassword;
     private String policeName;
     private String policeType;
     private String policeCity;
@@ -132,8 +131,11 @@ public class LoginActivity extends AppCompatActivity {
             ArrayList<String> resultList = new ArrayList<String>();
             try {
                 TicketGrpc.TicketBlockingStub blockingStub = TicketGrpc.newBlockingStub(mChannel);
-                LoginRequest loginRequest = LoginRequest.newBuilder().setUserId(userID).setPassword(password).build();
-                LoginReply reply = blockingStub.hareLogin(loginRequest);
+                LoginRequest request = LoginRequest.newBuilder()
+                        .setUserId(userID)
+                        .setPassword(password)
+                        .build();
+                LoginReply reply = blockingStub.hareLogin(request);
                 resultList.add(String.valueOf(reply.getLoginSuccess()));
                 resultList.add(reply.getPoliceName());
                 resultList.add(reply.getPoliceType());
@@ -161,8 +163,8 @@ public class LoginActivity extends AppCompatActivity {
             dismissProgressDialog();
 
             if (resultList != null) {
-                String loginSuccess = resultList.get(0);
-                if (loginSuccess != null && loginSuccess.equals("true")) {
+                String mSuccess = resultList.get(0);
+                if (mSuccess != null && mSuccess.equals("true")) {
                     policeName = resultList.get(1);
                     policeType = resultList.get(2);
                     policeCity = resultList.get(3);
@@ -241,4 +243,5 @@ public class LoginActivity extends AppCompatActivity {
         progressDialog.dismiss();
         progressDialog = null;
     }
+
 }
