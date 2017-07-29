@@ -35,7 +35,7 @@ import static io.chizi.tickethare.database.DBProvider.KEY_PASSWORD;
 import static io.chizi.tickethare.database.DBProvider.KEY_POLICE_CITY;
 import static io.chizi.tickethare.database.DBProvider.KEY_POLICE_DEPT;
 import static io.chizi.tickethare.database.DBProvider.KEY_POLICE_NAME;
-import static io.chizi.tickethare.database.DBProvider.KEY_POLICE_STATION;
+import static io.chizi.tickethare.database.DBProvider.KEY_POLICE_SQUAD;
 import static io.chizi.tickethare.database.DBProvider.KEY_POLICE_TYPE;
 import static io.chizi.tickethare.database.DBProvider.KEY_USER_ID;
 import static io.chizi.tickethare.util.AppConstants.HOST_IP;
@@ -206,7 +206,7 @@ public class SignupActivity extends AppCompatActivity {
         values.put(KEY_POLICE_TYPE, policeType);
         values.put(KEY_POLICE_CITY, policeCity);
         values.put(KEY_POLICE_DEPT, policeDept);
-        values.put(KEY_POLICE_STATION, policeStation);
+        values.put(KEY_POLICE_SQUAD, policeStation);
         resolver.insert(DBProvider.POLICE_URL, values);
 
         Intent intent = new Intent(SignupActivity.this, MainActivity.class);

@@ -19,10 +19,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.util.DisplayMetrics;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -85,7 +85,6 @@ import io.chizi.ticket.TicketRangeSid;
 import io.chizi.ticket.TicketStats;
 import io.chizi.tickethare.R;
 import io.chizi.tickethare.database.TitlesFragment;
-import io.chizi.tickethare.login.ChangePasswordActivity;
 import io.chizi.tickethare.util.BitmapUtil;
 import io.chizi.tickethare.util.FileUtil;
 import io.grpc.ManagedChannel;
@@ -101,6 +100,7 @@ import static io.chizi.tickethare.database.DBProvider.KEY_HOUR;
 import static io.chizi.tickethare.database.DBProvider.KEY_FAR_IMG_URI;
 import static io.chizi.tickethare.database.DBProvider.KEY_CLOSE_IMG_URI;
 import static io.chizi.tickethare.database.DBProvider.KEY_IS_UPLOADED;
+import static io.chizi.tickethare.database.DBProvider.KEY_POLICE_PORTRAIT_URI;
 import static io.chizi.tickethare.database.DBProvider.KEY_TICKET_IMG_URI;
 import static io.chizi.tickethare.database.DBProvider.KEY_LATITUDE;
 import static io.chizi.tickethare.database.DBProvider.KEY_LICENSE_COLOR;
@@ -128,6 +128,7 @@ import static io.chizi.tickethare.util.AppConstants.BACK_VEHICLE_COLOR;
 import static io.chizi.tickethare.util.AppConstants.BACK_VEHICLE_TYPE;
 import static io.chizi.tickethare.util.AppConstants.COMPRESS_RATIO;
 import static io.chizi.tickethare.util.AppConstants.CURRENT_ADDRESS;
+import static io.chizi.tickethare.util.AppConstants.CURRENT_POLICE_PORTRAIT_PATH;
 import static io.chizi.tickethare.util.AppConstants.FAR_IMG_FILE_PATH;
 import static io.chizi.tickethare.util.AppConstants.CLOSE_IMG_FILE_PATH;
 import static io.chizi.tickethare.util.AppConstants.CURRENT_LATITUDE;
@@ -150,6 +151,7 @@ import static io.chizi.tickethare.util.AppConstants.FAR_IMG_FILE_PREFIX;
 import static io.chizi.tickethare.util.AppConstants.HOST_IP;
 import static io.chizi.tickethare.util.AppConstants.PORT;
 import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_IS_UPLOADED;
+import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_POLICE_PORTRAIT_PATH;
 import static io.chizi.tickethare.util.AppConstants.TICKET_IMG_FILE_PREFIX;
 import static io.chizi.tickethare.util.AppConstants.JPEG_FILE_SUFFIX;
 import static io.chizi.tickethare.util.AppConstants.MAP_FILE_PREFIX;
@@ -217,6 +219,7 @@ public class AcquireFragment extends Fragment {
     private String policeName;
     private String policeCity;
     private String policeDept;
+    private String policePortraitPath;
 
     private TextView policeNameTextView;
     private TextView policeUserIDTextView;
@@ -356,7 +359,6 @@ public class AcquireFragment extends Fragment {
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        takePictureButton.setEnabled(false);
 
         Activity activity = getActivity();
         resolver = activity.getContentResolver();
@@ -413,6 +415,7 @@ public class AcquireFragment extends Fragment {
             policeName = savedInstanceState.getString(SAVED_INSTANCE_POLICE_NAME);
             policeCity = savedInstanceState.getString(SAVED_INSTANCE_POLICE_CITY);
             policeDept = savedInstanceState.getString(SAVED_INSTANCE_POLICE_DEPT);
+            policePortraitPath = savedInstanceState.getString(SAVED_INSTANCE_POLICE_PORTRAIT_PATH);
             licenseNum = savedInstanceState.getString(SAVED_INSTANCE_LICENSE_NUM);
             licenseColor = savedInstanceState.getString(SAVED_INSTANCE_LICENSE_COLOR);
             licenseCorrect = savedInstanceState.getInt(SAVED_INSTANCE_LICENSE_CORRECT, -1);
@@ -441,6 +444,24 @@ public class AcquireFragment extends Fragment {
         activity.getWindowManager().getDefaultDisplay().getMetrics(metric);
         SCREEN_WIDTH = metric.widthPixels;  // 屏幕宽度(像素)
         SCREEN_HEIGHT = metric.heightPixels;  // 屏幕高度(像素)
+
+        ViewTreeObserver profileImgVTO = profileImageView.getViewTreeObserver();
+        profileImgVTO.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
+            public boolean onPreDraw() {
+                profileImageView.getViewTreeObserver().removeOnPreDrawListener(this);
+                if (policePortraitPath != null) {
+                    Bitmap bitmap = BitmapUtil.getScaledBitmap(policePortraitPath, TRANS_IMAGE_W, TRANS_IMAGE_H);
+                    if (bitmap != null) {
+                        int finalWidth = profileImageView.getMeasuredWidth();
+                        int finalHeight = profileImageView.getMeasuredHeight();
+                        int finalSize = finalWidth > finalHeight ? finalWidth : finalHeight;
+                        BitmapUtil.setBitmapToImageView(profileImageView, finalSize, finalSize, bitmap);
+                    }
+                }
+                return true;
+            }
+        });
+
 
         try {
             PFun = new PublicFunction(getActivity());
@@ -543,7 +564,7 @@ public class AcquireFragment extends Fragment {
             receiptLines[6] = "停车地点: " + address;
             receiptLines[7] = "该机动车在上述时间、地点未在道路停车泊位或停";
             receiptLines[8] = "车场内停放，现已对现场道路交通情况进行了图像记录，";
-            receiptLines[9] = "并报告交警" + policeDept + "审核认定是否违法停放。";
+            receiptLines[9] = "并报告" + policeDept + "审核认定是否违法停放。";
             receiptLines[10] = "你可在七个工作日后登陆http://www.cdjg.gov.cn查询，";
             receiptLines[11] = "或在收到公安机关交通管理部门通知后前往接受处理。";
             receiptLines[12] = "交通协管员: " + policeName;
@@ -689,6 +710,7 @@ public class AcquireFragment extends Fragment {
         params.putString(CURRENT_POLICE_NAME, policeName);
         params.putString(CURRENT_POLICE_CITY, policeCity);
         params.putString(CURRENT_POLICE_DEPT, policeDept);
+        params.putString(CURRENT_POLICE_PORTRAIT_PATH, policePortraitPath);
         params.putLong(CURRENT_TICKET_ID, ticketID);
         params.putString(CURRENT_LICENSE_NUM, licenseNum);
         params.putString(CURRENT_LICENSE_COLOR, licenseColor);
@@ -1009,12 +1031,13 @@ public class AcquireFragment extends Fragment {
     }
 
     public void getUserInfo(String theUserID) {
-        String[] projection = new String[]{KEY_POLICE_NAME, KEY_POLICE_CITY, KEY_POLICE_DEPT};
+        String[] projection = new String[]{KEY_POLICE_NAME, KEY_POLICE_CITY, KEY_POLICE_DEPT, KEY_POLICE_PORTRAIT_URI};
         Cursor cursor = resolver.query(POLICE_URL, projection, KEY_USER_ID + "=?", new String[]{theUserID}, null);
         if (cursor.moveToFirst()) {
             policeName = cursor.getString(cursor.getColumnIndex(KEY_POLICE_NAME));
             policeCity = cursor.getString(cursor.getColumnIndex(KEY_POLICE_CITY));
             policeDept = cursor.getString(cursor.getColumnIndex(KEY_POLICE_DEPT));
+            policePortraitPath = cursor.getString(cursor.getColumnIndex(KEY_POLICE_PORTRAIT_URI));
         } else {
             Toast.makeText(getActivity(), R.string.toast_no_police_info, Toast.LENGTH_SHORT).show();
         }
@@ -1109,8 +1132,6 @@ public class AcquireFragment extends Fragment {
                 builder.target(ll).zoom(18.0f);
                 mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
 
-                takePictureButton.setEnabled(true);
-
                 new SlaveAnchorSubmitGrpcTask().execute();
             }
 
@@ -1197,6 +1218,7 @@ public class AcquireFragment extends Fragment {
         outState.putString(SAVED_INSTANCE_POLICE_NAME, policeName);
         outState.putString(SAVED_INSTANCE_POLICE_CITY, policeCity);
         outState.putString(SAVED_INSTANCE_POLICE_DEPT, policeDept);
+        outState.putString(SAVED_INSTANCE_POLICE_PORTRAIT_PATH, policePortraitPath);
         outState.putString(SAVED_INSTANCE_LICENSE_NUM, licenseNum);
         outState.putString(SAVED_INSTANCE_LICENSE_COLOR, licenseColor);
         outState.putInt(SAVED_INSTANCE_LICENSE_CORRECT, licenseCorrect);

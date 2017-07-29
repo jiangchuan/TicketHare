@@ -37,6 +37,7 @@ public interface AppConstants {
     static final String CURRENT_POLICE_NAME = "current_police_name";
     static final String CURRENT_POLICE_CITY = "current_police_city";
     static final String CURRENT_POLICE_DEPT = "current_police_dept";
+    static final String CURRENT_POLICE_PORTRAIT_PATH = "current_police_portrait_path";
     static final String CURRENT_TICKET_ID = "current_ticket_id";
     static final String CURRENT_LICENSE_NUM = "current_license_num";
     static final String CURRENT_LICENSE_COLOR = "current_license_color";
@@ -73,6 +74,7 @@ public interface AppConstants {
     static final String SAVED_INSTANCE_POLICE_NAME = "saved_instance_police_name";
     static final String SAVED_INSTANCE_POLICE_CITY = "saved_instance_police_city";
     static final String SAVED_INSTANCE_POLICE_DEPT = "saved_instance_police_dept";
+    static final String SAVED_INSTANCE_POLICE_PORTRAIT_PATH = "saved_instance_police_portrait_path";
     static final String SAVED_INSTANCE_LICENSE_NUM = "saved_instance_license_num";
     static final String SAVED_INSTANCE_LICENSE_COLOR = "saved_instance_license_color";
     static final String SAVED_INSTANCE_LICENSE_CORRECT = "saved_instance_license_correct";

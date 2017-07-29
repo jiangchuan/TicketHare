@@ -97,4 +97,10 @@ public class FileUtil {
         }
     }
 
+    public static void writeFile(byte[] data, String fileName) throws IOException{
+        FileOutputStream out = new FileOutputStream(fileName);
+        out.write(data);
+        out.close();
+    }
+
 }

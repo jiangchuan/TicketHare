@@ -18,6 +18,7 @@ public class BitmapUtil {
 		/* Get the size of the image */
         BitmapFactory.Options bmOptions = new BitmapFactory.Options();
         bmOptions.inJustDecodeBounds = true;
+
         BitmapFactory.decodeFile(imageFilePath, bmOptions);
         int photoW = bmOptions.outWidth;
         int photoH = bmOptions.outHeight;
@@ -35,6 +36,7 @@ public class BitmapUtil {
 
 		/* Decode the JPEG file into a Bitmap */
         Bitmap imageBitmap = BitmapFactory.decodeFile(imageFilePath, bmOptions);
+
         return imageBitmap;
     }
 

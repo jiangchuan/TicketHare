@@ -6,6 +6,7 @@ import android.content.ContentValues;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Environment;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -15,6 +16,9 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.protobuf.ByteString;
+
+import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -27,6 +31,7 @@ import io.chizi.ticket.TicketGrpc;
 import io.chizi.tickethare.MainActivity;
 import io.chizi.tickethare.R;
 import io.chizi.tickethare.database.DBProvider;
+import io.chizi.tickethare.util.FileUtil;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 
@@ -34,10 +39,14 @@ import static io.chizi.tickethare.database.DBProvider.KEY_PASSWORD;
 import static io.chizi.tickethare.database.DBProvider.KEY_POLICE_CITY;
 import static io.chizi.tickethare.database.DBProvider.KEY_POLICE_DEPT;
 import static io.chizi.tickethare.database.DBProvider.KEY_POLICE_NAME;
-import static io.chizi.tickethare.database.DBProvider.KEY_POLICE_STATION;
+import static io.chizi.tickethare.database.DBProvider.KEY_POLICE_PORTRAIT_URI;
+import static io.chizi.tickethare.database.DBProvider.KEY_POLICE_SECTION;
+import static io.chizi.tickethare.database.DBProvider.KEY_POLICE_SQUAD;
 import static io.chizi.tickethare.database.DBProvider.KEY_POLICE_TYPE;
 import static io.chizi.tickethare.database.DBProvider.KEY_USER_ID;
 import static io.chizi.tickethare.util.AppConstants.HOST_IP;
+import static io.chizi.tickethare.util.AppConstants.JPEG_FILE_SUFFIX;
+import static io.chizi.tickethare.util.AppConstants.MAP_FILE_PREFIX;
 import static io.chizi.tickethare.util.AppConstants.POLICE_USER_ID;
 import static io.chizi.tickethare.util.AppConstants.PORT;
 
@@ -46,6 +55,7 @@ import static io.chizi.tickethare.util.AppConstants.PORT;
  */
 
 public class LoginActivity extends AppCompatActivity {
+    private static String PACKAGE_NAME;
     private static final String LOG_TAG = LoginActivity.class.getName();
 
     private String userID;
@@ -54,7 +64,9 @@ public class LoginActivity extends AppCompatActivity {
     private String policeType;
     private String policeCity;
     private String policeDept;
-    private String policeStation;
+    private String policeSquad;
+    private String policeSection;
+    private String policePortraitPath;
 
     private EditText userIDEditText;
     private EditText passwordEditText;
@@ -69,6 +81,8 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
+
+        PACKAGE_NAME = getApplicationContext().getPackageName();
 
         userIDEditText = (EditText) findViewById(R.id.user_id);
         passwordEditText = (EditText) findViewById(R.id.input_password);
@@ -136,12 +150,22 @@ public class LoginActivity extends AppCompatActivity {
                         .setPassword(password)
                         .build();
                 LoginReply reply = blockingStub.hareLogin(request);
-                resultList.add(String.valueOf(reply.getLoginSuccess()));
+                Boolean theSucess = reply.getLoginSuccess();
+                resultList.add(String.valueOf(theSucess));
                 resultList.add(reply.getPoliceName());
                 resultList.add(reply.getPoliceType());
                 resultList.add(reply.getPoliceCity());
                 resultList.add(reply.getPoliceDept());
-                resultList.add(reply.getPoliceStation());
+                resultList.add(reply.getPoliceSquad());
+                resultList.add(reply.getPoliceSection());
+                if (theSucess) {
+                    ByteString portraitByteString = reply.getPolicePortrait();
+                    byte[] portraitByte = new byte[portraitByteString.size()];
+                    portraitByteString.copyTo(portraitByte, 0);
+                    policePortraitPath = FileUtil.getStorageDir(LoginActivity.this) + "/" + userID + JPEG_FILE_SUFFIX;
+                    FileUtil.writeFile(portraitByte, policePortraitPath);
+                }
+
                 return resultList;
             } catch (Exception e) {
                 StringWriter sw = new StringWriter();
@@ -169,7 +193,8 @@ public class LoginActivity extends AppCompatActivity {
                     policeType = resultList.get(2);
                     policeCity = resultList.get(3);
                     policeDept = resultList.get(4);
-                    policeStation = resultList.get(5);
+                    policeSquad = resultList.get(5);
+                    policeSection = resultList.get(6);
                     onLoginSuccess();
                 } else {
                     onLoginFailed();
@@ -197,7 +222,9 @@ public class LoginActivity extends AppCompatActivity {
         values.put(KEY_POLICE_TYPE, policeType);
         values.put(KEY_POLICE_CITY, policeCity);
         values.put(KEY_POLICE_DEPT, policeDept);
-        values.put(KEY_POLICE_STATION, policeStation);
+        values.put(KEY_POLICE_SQUAD, policeSquad);
+        values.put(KEY_POLICE_SECTION, policeSection);
+        values.put(KEY_POLICE_PORTRAIT_URI, policePortraitPath);
         resolver.insert(DBProvider.POLICE_URL, values);
 
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);

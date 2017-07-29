@@ -54,7 +54,7 @@
                         android:layout_height="wrap_content"
                         android:inputType="text"
                         android:imeOptions="flagNoExtractUi"
-                        android:text="X0003"
+                        android:text="X285301"
                         android:hint="@string/hint_user" />
                 </android.support.design.widget.TextInputLayout>
 

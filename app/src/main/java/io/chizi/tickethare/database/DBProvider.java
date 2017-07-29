@@ -54,7 +54,8 @@ public class DBProvider extends ContentProvider {
     public static final String KEY_POLICE_NAME = "police_name";
     public static final String KEY_POLICE_TYPE = "police_type";
     public static final String KEY_POLICE_DEPT = "police_dept";
-    public static final String KEY_POLICE_STATION = "police_station";
+    public static final String KEY_POLICE_SQUAD = "police_squad";
+    public static final String KEY_POLICE_SECTION = "police_section";
     public static final String KEY_POLICE_PORTRAIT_URI = "police_portrait";
     public static final String KEY_POLICE_CITY = "police_city";
 
@@ -121,7 +122,8 @@ public class DBProvider extends ContentProvider {
             + KEY_POLICE_TYPE + " TEXT NOT NULL DEFAULT 'NA', "
             + KEY_POLICE_CITY + " TEXT NOT NULL DEFAULT 'NA', "
             + KEY_POLICE_DEPT + " TEXT NOT NULL DEFAULT 'NA', "
-            + KEY_POLICE_STATION + " TEXT NOT NULL DEFAULT 'NA', "
+            + KEY_POLICE_SQUAD + " TEXT NOT NULL DEFAULT 'NA', "
+            + KEY_POLICE_SECTION + " TEXT NOT NULL DEFAULT 'NA', "
             + KEY_POLICE_PORTRAIT_URI + " TEXT NOT NULL DEFAULT 'NA');";
 
     private static final String CREATE_RANGE_TABLE = "CREATE TABLE if not exists " + RANGE_TABLE_NAME

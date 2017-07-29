@@ -34,7 +34,7 @@
                 android:layout_height="wrap_content"
                 android:hint="@string/hint_user"
                 android:inputType="text"
-                android:text="X0003" />
+                android:text="X285301" />
         </android.support.design.widget.TextInputLayout>
 
         <!--  Password Label -->
