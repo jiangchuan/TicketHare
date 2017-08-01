@@ -360,6 +360,37 @@ public class AcquireFragment extends Fragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        if (savedInstanceState != null) {
+            ticketID = savedInstanceState.getLong(SAVED_INSTANCE_TICKET_ID);
+            userID = savedInstanceState.getString(SAVED_INSTANCE_USER_ID);
+            policeName = savedInstanceState.getString(SAVED_INSTANCE_POLICE_NAME);
+            policeCity = savedInstanceState.getString(SAVED_INSTANCE_POLICE_CITY);
+            policeDept = savedInstanceState.getString(SAVED_INSTANCE_POLICE_DEPT);
+            policePortraitPath = savedInstanceState.getString(SAVED_INSTANCE_POLICE_PORTRAIT_PATH);
+            licenseNum = savedInstanceState.getString(SAVED_INSTANCE_LICENSE_NUM);
+            licenseColor = savedInstanceState.getString(SAVED_INSTANCE_LICENSE_COLOR);
+            licenseCorrect = savedInstanceState.getInt(SAVED_INSTANCE_LICENSE_CORRECT, -1);
+            isUploaded = savedInstanceState.getInt(SAVED_INSTANCE_IS_UPLOADED, -1);
+            vehicleType = savedInstanceState.getString(SAVED_INSTANCE_VEHICLE_TYPE);
+            vehicleColor = savedInstanceState.getString(SAVED_INSTANCE_VEHICLE_COLOR);
+
+            currentTime = savedInstanceState.getString(SAVED_INSTANCE_CURR_TIME);
+            mapFilePath = savedInstanceState.getString(SAVED_INSTANCE_CURR_MAP_PATH);
+            closeImgFilePath = savedInstanceState.getString(SAVED_INSTANCE_CURR_IMG1_PATH);
+            farImgFilePath = savedInstanceState.getString(SAVED_INSTANCE_CURR_IMG2_PATH);
+            ticketImgFilePath = savedInstanceState.getString(SAVED_INSTANCE_CURR_IMG3_PATH);
+
+            address = savedInstanceState.getString(SAVED_INSTANCE_ADDRESS);
+            longitude = savedInstanceState.getDouble(SAVED_INSTANCE_LONGITUDE);
+            latitude = savedInstanceState.getDouble(SAVED_INSTANCE_LATITUDE);
+
+            year = savedInstanceState.getInt(SAVED_INSTANCE_YEAR, -1);
+            month = savedInstanceState.getInt(SAVED_INSTANCE_MONTH, -1);
+            day = savedInstanceState.getInt(SAVED_INSTANCE_DAY, -1);
+            hour = savedInstanceState.getInt(SAVED_INSTANCE_HOUR, -1);
+            minute = savedInstanceState.getInt(SAVED_INSTANCE_MINUTE, -1);
+        }
+
         Activity activity = getActivity();
         resolver = activity.getContentResolver();
 
@@ -409,36 +440,6 @@ public class AcquireFragment extends Fragment {
 //            }
 //        });
 
-        if (savedInstanceState != null) {
-            ticketID = savedInstanceState.getLong(SAVED_INSTANCE_TICKET_ID);
-            userID = savedInstanceState.getString(SAVED_INSTANCE_USER_ID);
-            policeName = savedInstanceState.getString(SAVED_INSTANCE_POLICE_NAME);
-            policeCity = savedInstanceState.getString(SAVED_INSTANCE_POLICE_CITY);
-            policeDept = savedInstanceState.getString(SAVED_INSTANCE_POLICE_DEPT);
-            policePortraitPath = savedInstanceState.getString(SAVED_INSTANCE_POLICE_PORTRAIT_PATH);
-            licenseNum = savedInstanceState.getString(SAVED_INSTANCE_LICENSE_NUM);
-            licenseColor = savedInstanceState.getString(SAVED_INSTANCE_LICENSE_COLOR);
-            licenseCorrect = savedInstanceState.getInt(SAVED_INSTANCE_LICENSE_CORRECT, -1);
-            isUploaded = savedInstanceState.getInt(SAVED_INSTANCE_IS_UPLOADED, -1);
-            vehicleType = savedInstanceState.getString(SAVED_INSTANCE_VEHICLE_TYPE);
-            vehicleColor = savedInstanceState.getString(SAVED_INSTANCE_VEHICLE_COLOR);
-
-            currentTime = savedInstanceState.getString(SAVED_INSTANCE_CURR_TIME);
-            mapFilePath = savedInstanceState.getString(SAVED_INSTANCE_CURR_MAP_PATH);
-            closeImgFilePath = savedInstanceState.getString(SAVED_INSTANCE_CURR_IMG1_PATH);
-            farImgFilePath = savedInstanceState.getString(SAVED_INSTANCE_CURR_IMG2_PATH);
-            ticketImgFilePath = savedInstanceState.getString(SAVED_INSTANCE_CURR_IMG3_PATH);
-
-            address = savedInstanceState.getString(SAVED_INSTANCE_ADDRESS);
-            longitude = savedInstanceState.getDouble(SAVED_INSTANCE_LONGITUDE);
-            latitude = savedInstanceState.getDouble(SAVED_INSTANCE_LATITUDE);
-
-            year = savedInstanceState.getInt(SAVED_INSTANCE_YEAR, -1);
-            month = savedInstanceState.getInt(SAVED_INSTANCE_MONTH, -1);
-            day = savedInstanceState.getInt(SAVED_INSTANCE_DAY, -1);
-            hour = savedInstanceState.getInt(SAVED_INSTANCE_HOUR, -1);
-            minute = savedInstanceState.getInt(SAVED_INSTANCE_MINUTE, -1);
-        }
 
         DisplayMetrics metric = new DisplayMetrics();
         activity.getWindowManager().getDefaultDisplay().getMetrics(metric);

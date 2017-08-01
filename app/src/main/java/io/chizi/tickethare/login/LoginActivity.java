@@ -55,7 +55,6 @@ import static io.chizi.tickethare.util.AppConstants.PORT;
  */
 
 public class LoginActivity extends AppCompatActivity {
-    private static String PACKAGE_NAME;
     private static final String LOG_TAG = LoginActivity.class.getName();
 
     private String userID;
@@ -81,8 +80,6 @@ public class LoginActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
-
-        PACKAGE_NAME = getApplicationContext().getPackageName();
 
         userIDEditText = (EditText) findViewById(R.id.user_id);
         passwordEditText = (EditText) findViewById(R.id.input_password);

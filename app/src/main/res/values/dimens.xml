@@ -11,8 +11,10 @@
     <dimen name="submit_button_margin_bottom">30dp</dimen>
 
     <dimen name="profile_image_margin">20dp</dimen>
+    <dimen name="profile_margin_large">40dp</dimen>
     <dimen name="profile_margin">20dp</dimen>
     <dimen name="profile_text_margin">15dp</dimen>
+    <dimen name="profile_text_margin_small">10dp</dimen>
     <dimen name="profile_button_margin">40dp</dimen>
 
     <dimen name="ticket_details_font_size">13sp</dimen>

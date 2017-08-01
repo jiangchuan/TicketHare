@@ -52,7 +52,6 @@ import static io.chizi.tickethare.util.AppConstants.PORT;
  */
 
 public class ChangePasswordActivity extends AppCompatActivity {
-    private static String PACKAGE_NAME;
     private static final String LOG_TAG = ChangePasswordActivity.class.getName();
 
     private String userID;
@@ -67,7 +66,6 @@ public class ChangePasswordActivity extends AppCompatActivity {
     private String policeSquad;
     private String policeSection;
     private String policePortraitPath;
-
 
     private EditText userIDEditText;
     private EditText passwordEditText;
@@ -85,8 +83,6 @@ public class ChangePasswordActivity extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_password);
-
-        PACKAGE_NAME = getApplicationContext().getPackageName();
 
         userIDEditText = (EditText) findViewById(R.id.user_id);
         passwordEditText = (EditText) findViewById(R.id.edittext_password);
