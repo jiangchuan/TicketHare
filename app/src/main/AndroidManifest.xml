@@ -42,6 +42,7 @@
         <activity
             android:name=".SplashScreen"
             android:label="@string/app_name"
+            android:screenOrientation="landscape"
             android:theme="@android:style/Theme.Black.NoTitleBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -50,32 +51,40 @@
         </activity>
 
         <activity android:name=".login.LoginActivity"
+            android:screenOrientation="landscape"
             android:theme="@style/AppTheme.Dark" />
 
         <activity android:name=".login.SignupActivity"
+            android:screenOrientation="landscape"
             android:theme="@style/AppTheme.Dark" />
 
         <activity android:name=".login.ChangePasswordActivity"
+            android:screenOrientation="landscape"
             android:theme="@style/AppTheme.Dark" />
 
         <activity android:name=".MainActivity"
+            android:screenOrientation="landscape"
             android:theme="@style/AppTheme">
         </activity>
 
         <activity android:name=".acquire.PreviewActivity"
+            android:screenOrientation="landscape"
             android:theme="@style/AppTheme">
         </activity>
 
         <activity android:name=".acquire.DeviceListActivity"
+            android:screenOrientation="landscape"
             android:theme="@android:style/Theme.Dialog">
         </activity>
 
         <activity
             android:name="com.commonsware.cwac.cam2.CameraActivity"
             android:process=":cwac_cam2"
+            android:screenOrientation="landscape"
             android:theme="@style/android:Theme.DeviceDefault"/>
 
-        <activity android:name=".database.DetailsActivity">
+        <activity android:name=".database.DetailsActivity"
+            android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
             </intent-filter>
