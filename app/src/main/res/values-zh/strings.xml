@@ -231,6 +231,11 @@
         <item>"HM-A300"</item>
     </string-array>
 
+    <string name="license_num_prompt">请输入车辆牌号: </string>
+    <string name="license_color_prompt">请输入号牌颜色: </string>
+    <string name="vehicle_type_prompt">请输入车辆类型: </string>
+    <string name="vehicle_color_prompt">请输入车身颜色: </string>
+
     <string name="button_submit">生成罚单</string>
     <string name="action_settings">设置</string>
     <string name="cancelBtnTxt">取消</string>

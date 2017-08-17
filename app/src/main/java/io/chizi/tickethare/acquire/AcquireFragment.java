@@ -26,6 +26,7 @@ import android.view.ViewTreeObserver;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -412,7 +413,6 @@ public class AcquireFragment extends Fragment {
         takePictureButton.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
-                takePictureButton.setEnabled(false);
                 initFields();
                 saveScreen();
                 takeFarPictureIntent();
@@ -537,6 +537,48 @@ public class AcquireFragment extends Fragment {
             }
         };
         ticketStatsTimer.schedule(ticketStatsTask, 0, TICKET_STATS_TIME_INTERVAL); //it executes this every 10s
+
+    }
+
+
+    private void showLiscenseNumPrompt() {
+        // get prompts.xml view
+        LayoutInflater li = LayoutInflater.from(getActivity());
+        View promptsView = li.inflate(R.layout.prompt_license_num, null);
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                getActivity());
+
+        // set prompts.xml to alertdialog builder
+        alertDialogBuilder.setView(promptsView);
+
+        final EditText userInput = (EditText) promptsView
+                .findViewById(R.id.edittext_license_num_prompt);
+
+        // set dialog message
+        alertDialogBuilder
+                .setCancelable(false)
+                .setPositiveButton(android.R.string.ok,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog,int id) {
+                                licenseNum = userInput.getText().toString();
+                                licenseCorrect = 1;
+                                showPreview();
+                            }
+                        })
+                .setNegativeButton(android.R.string.cancel,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog,int id) {
+                                licenseCorrect = -1;
+                                dialog.cancel();
+                            }
+                        });
+
+        // create alert dialog
+        AlertDialog alertDialog = alertDialogBuilder.create();
+
+        // show it
+        alertDialog.show();
 
     }
 
@@ -1363,7 +1405,8 @@ public class AcquireFragment extends Fragment {
         builder.setNegativeButton(R.string.alert_dialog_license_check_no, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 licenseCorrect = 0;
-                showPreview();
+                showLiscenseNumPrompt();
+//                showPreview();
                 dialog.dismiss();
             }
         });
@@ -1585,7 +1628,8 @@ public class AcquireFragment extends Fragment {
                 showLicenseCheckDialog();
             } else {
                 licenseCorrect = 0;
-                showPreview();
+                showLiscenseNumPrompt();
+//                showPreview();
             }
         }
     }

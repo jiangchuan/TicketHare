@@ -231,6 +231,11 @@
         <item>"HM-A300"</item>
     </string-array>
 
+    <string name="license_num_prompt">Input the license number please: </string>
+    <string name="license_color_prompt">Input the license color please: </string>
+    <string name="vehicle_type_prompt">Input the vehicle type please: </string>
+    <string name="vehicle_color_prompt">Input the vehicle color please: </string>
+
     <string name="button_submit">Generate Ticket</string>
     <string name="action_settings">Settings</string>
     <string name="cancelBtnTxt">Cancel</string>
