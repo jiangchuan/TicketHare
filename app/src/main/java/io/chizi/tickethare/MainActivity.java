@@ -1,53 +1,26 @@
 package io.chizi.tickethare;
 
-import android.os.AsyncTask;
+import android.Manifest;
 import android.os.Bundle;
-import android.support.v4.app.FragmentActivity;
 import android.support.v4.view.ViewPager;
-import android.view.Window;
+import android.widget.Toast;
 
 
-import java.io.PrintWriter;
-import java.io.StringWriter;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.concurrent.TimeUnit;
-
-import io.chizi.ticket.LoginReply;
-import io.chizi.ticket.LoginRequest;
-import io.chizi.ticket.StatsReply;
-import io.chizi.ticket.TicketGrpc;
-import io.chizi.ticket.TicketStats;
 import io.chizi.tickethare.pager.MyFragmentPagerAdapter;
 import io.chizi.tickethare.pager.SlidingTabLayout;
-import io.grpc.ManagedChannel;
-import io.grpc.ManagedChannelBuilder;
 
-import static io.chizi.tickethare.util.AppConstants.HOST_IP;
-import static io.chizi.tickethare.util.AppConstants.PORT;
+import static io.chizi.tickethare.util.AppConstants.REQUEST_PERMISSIONS;
 
 
 /**
  * Created by Jiangchuan on 9/4/16.
  */
 
-public class MainActivity extends FragmentActivity {
-
-//    ActionBar.Tab acquireTab, databaseTab;
-
-//    // Fragments that will load when the tabs are clicked
-//    Fragment acquireFragment = new AcquireFragment();
-//    Fragment databaseFragment = new DatabaseFragment();
-
+//public class MainActivity extends FragmentActivity {
+public class MainActivity extends RuntimePermissionsActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        //Remove title bar
-        this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-//        //Remove notification bar
-//        this.getWindow().setFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN, WindowManager.LayoutParams.FLAG_FULLSCREEN);
-
         setContentView(R.layout.activity_main);
 
         // Layout manager that allows the user to flip through the pages
@@ -63,6 +36,22 @@ public class MainActivity extends FragmentActivity {
 
         // Connect the viewPager with the sliding tab layout
         slidingTabLayout.setViewPager(viewPager);
+
+        MainActivity.super.requestAppPermissions(new
+                        String[]{Manifest.permission.CAMERA,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.ACCESS_COARSE_LOCATION,
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.READ_PHONE_STATE,
+
+                }, R.string
+                        .snackbar_permission_text
+                , REQUEST_PERMISSIONS);
+
     }
 
+    @Override
+    public void onPermissionsGranted(int requestCode) {
+        Toast.makeText(MainActivity.this, getResources().getString(R.string.toast_permission_received), Toast.LENGTH_LONG).show();
+    }
 }

@@ -5,6 +5,8 @@ package io.chizi.tickethare.util;
  */
 
 public interface AppConstants {
+    static final int REQUEST_PERMISSIONS = 401;
+
     static final int REQUEST_SIGNUP = 20;
     static final int REQUEST_UPDATE_PROFILE = 21;
     static final int REQUEST_CLOSE_IMG_CAPTURE = 22;

@@ -2,25 +2,25 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="io.chizi.tickethare">
 
-    <uses-permission android:name="android.permission.CAMERA" />
-    <uses-permission android:name="android.permission.RECORD_AUDIO"/>
+    <!-- Normal permissions -->
     <uses-permission android:name="android.permission.INTERNET" /> <!-- 访问网络-->
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- 写入扩展存储，向扩展卡写入数据，用于写入离线定位数据-->
     <uses-permission android:name="android.permission.WRITE_INTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- 这个权限用于进行网络定位-->
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- 这个权限用于访问GPS定位-->
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" /> <!-- 用于访问wifi网络信息，wifi信息会用于进行网络定位-->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" /> <!-- 获取运营商信息，用于支持提供运营商信息相关的接口-->
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" /> <!-- 这个权限用于获取wifi的获取权限，wifi信息会用来进行网络定位-->
     <uses-permission android:name="android.permission.CHANGE_NETWORK_STATE" /> <!-- 访问网络的变化, 需要某些信息用于网络定位 -->
-    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.BLUETOOTH" />
-    <uses-permission android:name="android.permission.READ_PHONE_STATE" /> <!-- 用于读取手机当前的状态, 需要某些信息用于网络定位-->
-    <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" />
     <uses-permission android:name="android.permission.WAKE_LOCK"/>
-    <uses-permission android:name="android.permission.GET_TASKS" />
-    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <uses-permission android:name="com.android.launcher.permission.READ_SETTINGS" />
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" /> <!-- SD卡读取权限，用户写入离线定位数据-->
+
+    <!-- Dangerous permissions -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- 写入扩展存储，向扩展卡写入数据，用于写入离线定位数据-->
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" /> <!-- 这个权限用于进行网络定位-->
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" /> <!-- 这个权限用于访问GPS定位-->
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" /> <!-- 用于读取手机当前的状态, 需要某些信息用于网络定位-->
 
     <application
         android:name=".TicketApplication"
@@ -63,13 +63,11 @@
             android:theme="@style/AppTheme.Dark" />
 
         <activity android:name=".MainActivity"
-            android:screenOrientation="landscape"
-            android:theme="@style/AppTheme">
+            android:screenOrientation="landscape">
         </activity>
 
         <activity android:name=".acquire.PreviewActivity"
-            android:screenOrientation="landscape"
-            android:theme="@style/AppTheme">
+            android:screenOrientation="landscape">
         </activity>
 
         <activity android:name=".acquire.DeviceListActivity"

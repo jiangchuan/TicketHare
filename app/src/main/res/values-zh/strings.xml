@@ -5,6 +5,10 @@
     <string name="splash_name2">智能交通系统</string>
     <string name="splash_name3">移动客户端</string>
 
+    <string name="snackbar_permission_text">请允许权限.</string>
+    <string name="snackbar_permission_grant">设置</string>
+    <string name="snackbar_permission_enable">应用权限</string>
+
     <string name="copy_right">赤子科技 2016\u00a9</string>
 
     <string name="acquire_start">开始取证</string>
@@ -291,6 +295,7 @@
     <string name="alert_dialog_dbresponse">已上传罚单数: </string>
 
     <string name="checkbox_torch">开/关 手电</string>
+    <string name="toast_permission_received">已获取权限</string>
     <string name="toast_ticket_saved">罚单已保存</string>
     <string name="toast_insert_db_failed">插入数据库失败</string>
     <string name="toast_no_ticket_id">没有罚单号!</string>
