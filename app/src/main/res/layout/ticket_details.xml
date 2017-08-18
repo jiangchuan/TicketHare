@@ -54,8 +54,6 @@
             android:layout_height="wrap_content"
             android:layout_weight="0.7"
             android:prompt="@string/car_color_prompt" />
-
-
     </LinearLayout>
 
     <LinearLayout
@@ -138,8 +136,6 @@
             </RadioGroup>
 
         </LinearLayout>
-
-
     </LinearLayout>
 
     <LinearLayout

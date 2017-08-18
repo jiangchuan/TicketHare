@@ -28,6 +28,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -87,6 +89,7 @@ import io.chizi.ticket.TicketStats;
 import io.chizi.tickethare.R;
 import io.chizi.tickethare.database.TitlesFragment;
 import io.chizi.tickethare.util.BitmapUtil;
+import io.chizi.tickethare.util.ColorSpinnerAdapter;
 import io.chizi.tickethare.util.FileUtil;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
@@ -545,6 +548,72 @@ public class AcquireFragment extends Fragment {
         // get prompts.xml view
         LayoutInflater li = LayoutInflater.from(getActivity());
         View promptsView = li.inflate(R.layout.prompt_license_num, null);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                getActivity());
+        // set prompts.xml to alertdialog builder
+        alertDialogBuilder.setView(promptsView);
+        final TextView promptTitle = (TextView) promptsView
+                .findViewById(R.id.textview_license_num_prompt);
+        final EditText userInput = (EditText) promptsView
+                .findViewById(R.id.edittext_license_num_prompt);
+        if (licenseNum == null || licenseNum.isEmpty()) {
+            promptTitle.setText(getResources().getString(R.string.license_num_input_prompt));
+        } else {
+            promptTitle.setText(getResources().getString(R.string.license_num_correct_prompt));
+            userInput.setText(licenseNum);
+        }
+
+        // set dialog message
+        alertDialogBuilder
+                .setCancelable(false)
+                .setPositiveButton(android.R.string.ok,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+//                                licenseNum = userInput.getText().toString();
+//                                if (licenseNum.isEmpty()) {
+//                                    Toast.makeText(getActivity(), R.string.toast_wrong_userid, Toast.LENGTH_LONG).show();
+//                                    userInput.setError(getString(R.string.request_wrong_userid));
+//                                } else {
+//                                    userInput.setError(null);
+//                                    licenseCorrect = 1;
+//                                    showLiscenseColorPrompt();
+//                                }
+                            }
+                        })
+                .setNegativeButton(android.R.string.cancel,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                licenseCorrect = -1;
+                                dialog.cancel();
+                            }
+                        });
+
+        final AlertDialog alertDialog = alertDialogBuilder.create(); // create alert dialog
+        alertDialog.show(); // show it
+
+        //Overriding the handler immediately after show is probably a better approach than OnShowListener as described below
+        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                licenseNum = userInput.getText().toString();
+                if (licenseNum.isEmpty()) {
+                    Toast.makeText(getActivity(), R.string.toast_wrong_license_num, Toast.LENGTH_LONG).show();
+                    userInput.setError(getString(R.string.request_wrong_license_num));
+                } else {
+                    userInput.setError(null);
+                    licenseCorrect = 1;
+                    alertDialog.dismiss();
+                    showLiscenseColorPrompt();
+                }
+            }
+        });
+
+    }
+
+    private void showLiscenseColorPrompt() {
+        // get prompts.xml view
+        LayoutInflater li = LayoutInflater.from(getActivity());
+        View promptsView = li.inflate(R.layout.prompt_license_color, null);
 
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                 getActivity());
@@ -552,34 +621,182 @@ public class AcquireFragment extends Fragment {
         // set prompts.xml to alertdialog builder
         alertDialogBuilder.setView(promptsView);
 
-        final EditText userInput = (EditText) promptsView
-                .findViewById(R.id.edittext_license_num_prompt);
+        final RadioGroup licenseColorRadioGroup = (RadioGroup) promptsView
+                .findViewById(R.id.radiogroup_license_color);
+        final RadioButton yellowRadioButton = (RadioButton) promptsView
+                .findViewById(R.id.radiobutton_yellow);
+        final RadioButton blueRadioButton = (RadioButton) promptsView
+                .findViewById(R.id.radiobutton_blue);
+        final RadioButton blackRadioButton = (RadioButton) promptsView
+                .findViewById(R.id.radiobutton_black);
+        final RadioButton otherColorRadioButton = (RadioButton) promptsView
+                .findViewById(R.id.radiobutton_other_license_color);
+        blueRadioButton.setChecked(true);
+
+        licenseColorRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if (yellowRadioButton.isChecked()) {
+                    licenseColor = getString(R.string.radiobutton_yellow).substring(0, 1);
+                }
+                if (blueRadioButton.isChecked()) {
+                    licenseColor = getString(R.string.radiobutton_blue).substring(0, 1);
+                }
+                if (blackRadioButton.isChecked()) {
+                    licenseColor = getString(R.string.radiobutton_black).substring(0, 1);
+                }
+                if (otherColorRadioButton.isChecked()) {
+                    licenseColor = getString(R.string.radiobutton_other_license_color);
+                }
+            }
+        });
 
         // set dialog message
         alertDialogBuilder
                 .setCancelable(false)
                 .setPositiveButton(android.R.string.ok,
                         new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,int id) {
-                                licenseNum = userInput.getText().toString();
-                                licenseCorrect = 1;
+                            public void onClick(DialogInterface dialog, int id) {
+                                showVehicleTypePrompt();
+                            }
+                        })
+                .setNegativeButton(android.R.string.cancel,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+        AlertDialog alertDialog = alertDialogBuilder.create(); // create alert dialog
+        alertDialog.show(); // show it
+    }
+
+    private void showVehicleTypePrompt() {
+        // get prompts.xml view
+        LayoutInflater li = LayoutInflater.from(getActivity());
+        View promptsView = li.inflate(R.layout.prompt_vehicle_type, null);
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                getActivity());
+
+        // set prompts.xml to alertdialog builder
+        alertDialogBuilder.setView(promptsView);
+
+        final RadioGroup vehicleTypeRadioGroup1 = (RadioGroup) promptsView
+                .findViewById(R.id.radiogroup_vehicle_type1);
+        vehicleTypeRadioGroup1.clearCheck();
+        final RadioGroup vehicleTypeRadioGroup2 = (RadioGroup) promptsView
+                .findViewById(R.id.radiogroup_vehicle_type2);
+        vehicleTypeRadioGroup2.clearCheck();
+
+        final RadioButton bigBusRadioButton = (RadioButton) promptsView
+                .findViewById(R.id.radiobutton_big_bus);
+        final RadioButton smallBusRadioButton = (RadioButton) promptsView
+                .findViewById(R.id.radiobutton_small_bus);
+        final RadioButton bigTruckRadioButton = (RadioButton) promptsView
+                .findViewById(R.id.radiobutton_big_truck);
+        final RadioButton smallTruckRadioButton = (RadioButton) promptsView
+                .findViewById(R.id.radiobutton_small_truck);
+        final RadioButton motorCycleRadioButton = (RadioButton) promptsView
+                .findViewById(R.id.radiobutton_motorcycle);
+        final RadioButton otherCarTypeRadioButton = (RadioButton) promptsView
+                .findViewById(R.id.radiobutton_other_car_type);
+        smallBusRadioButton.setChecked(true);
+
+        vehicleTypeRadioGroup1.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if (bigBusRadioButton.isChecked()) {
+                    vehicleTypeRadioGroup2.clearCheck();
+                    vehicleType = getString(R.string.radiobutton_big_bus);
+                }
+                if (smallBusRadioButton.isChecked()) {
+                    vehicleTypeRadioGroup2.clearCheck();
+                    vehicleType = getString(R.string.radiobutton_small_bus);
+                }
+                if (bigTruckRadioButton.isChecked()) {
+                    vehicleTypeRadioGroup2.clearCheck();
+                    vehicleType = getString(R.string.radiobutton_big_truck);
+                }
+            }
+        });
+
+        vehicleTypeRadioGroup2.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if (smallTruckRadioButton.isChecked()) {
+                    vehicleTypeRadioGroup1.clearCheck();
+                    vehicleType = getString(R.string.radiobutton_small_truck);
+                }
+                if (motorCycleRadioButton.isChecked()) {
+                    vehicleTypeRadioGroup1.clearCheck();
+                    vehicleType = getString(R.string.radiobutton_motorcycle);
+                }
+                if (otherCarTypeRadioButton.isChecked()) {
+                    vehicleTypeRadioGroup1.clearCheck();
+                    vehicleType = getString(R.string.radiobutton_other_car_type);
+                }
+            }
+        });
+
+        // set dialog message
+        alertDialogBuilder
+                .setCancelable(false)
+                .setPositiveButton(android.R.string.ok,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                showVehicleColorPrompt();
+                            }
+                        })
+                .setNegativeButton(android.R.string.cancel,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.cancel();
+                            }
+                        });
+
+        AlertDialog alertDialog = alertDialogBuilder.create(); // create alert dialog
+        alertDialog.show(); // show it
+    }
+
+    private void showVehicleColorPrompt() {
+        // get prompts.xml view
+        LayoutInflater li = LayoutInflater.from(getActivity());
+        View promptsView = li.inflate(R.layout.prompt_vehicle_color, null);
+
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                getActivity());
+
+        // set prompts.xml to alertdialog builder
+        alertDialogBuilder.setView(promptsView);
+
+        final Spinner vehicleColorSpinner = (Spinner) promptsView
+                .findViewById(R.id.car_color);
+        String[] vehicleColorNames = getResources().getStringArray(R.array.car_color_arrays);
+        int[] vehicleColorBackgroundInts = getResources().getIntArray(R.array.vehicle_color_int_arrays);
+        int[] vehicleColorTextInts = getResources().getIntArray(R.array.vehicle_text_color_int_arrays);
+        ColorSpinnerAdapter spinnerArrayAdapter = new ColorSpinnerAdapter(
+                getActivity(), vehicleColorNames, vehicleColorTextInts, vehicleColorBackgroundInts);
+        spinnerArrayAdapter.setDropDownViewResource(R.layout.spinner_item);
+        vehicleColorSpinner.setAdapter(spinnerArrayAdapter);
+        vehicleColorSpinner.setSelection(0);
+
+        // set dialog message
+        alertDialogBuilder
+                .setCancelable(false)
+                .setPositiveButton(android.R.string.ok,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                vehicleColor = vehicleColorSpinner.getSelectedItem().toString();
                                 showPreview();
                             }
                         })
                 .setNegativeButton(android.R.string.cancel,
                         new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog,int id) {
-                                licenseCorrect = -1;
+                            public void onClick(DialogInterface dialog, int id) {
                                 dialog.cancel();
                             }
                         });
 
-        // create alert dialog
-        AlertDialog alertDialog = alertDialogBuilder.create();
-
-        // show it
-        alertDialog.show();
-
+        AlertDialog alertDialog = alertDialogBuilder.create(); // create alert dialog
+        alertDialog.show(); // show it
     }
 
     private void connectToBlueTooth() {
@@ -1179,7 +1396,7 @@ public class AcquireFragment extends Fragment {
             }
 
             mBaiduMap.setMyLocationConfigeration(new MyLocationConfiguration(
-                            MyLocationConfiguration.LocationMode.FOLLOWING, true, null));
+                    MyLocationConfiguration.LocationMode.FOLLOWING, true, null));
 
             // Receive Location
             longitude = location.getLongitude();
@@ -1398,7 +1615,7 @@ public class AcquireFragment extends Fragment {
         builder.setPositiveButton(R.string.alert_dialog_license_check_yes, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 licenseCorrect = 1;
-                showPreview();
+                showLiscenseColorPrompt();
                 dialog.dismiss();
             }
         });
@@ -1406,7 +1623,6 @@ public class AcquireFragment extends Fragment {
             public void onClick(DialogInterface dialog, int id) {
                 licenseCorrect = 0;
                 showLiscenseNumPrompt();
-//                showPreview();
                 dialog.dismiss();
             }
         });
@@ -1629,7 +1845,6 @@ public class AcquireFragment extends Fragment {
             } else {
                 licenseCorrect = 0;
                 showLiscenseNumPrompt();
-//                showPreview();
             }
         }
     }

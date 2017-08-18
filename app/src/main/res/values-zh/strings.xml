@@ -231,10 +231,11 @@
         <item>"HM-A300"</item>
     </string-array>
 
-    <string name="license_num_prompt">请输入车辆牌号: </string>
-    <string name="license_color_prompt">请输入号牌颜色: </string>
-    <string name="vehicle_type_prompt">请输入车辆类型: </string>
-    <string name="vehicle_color_prompt">请输入车身颜色: </string>
+    <string name="license_num_input_prompt">请输入车辆牌号: </string>
+    <string name="license_num_correct_prompt">请更正车辆牌号: </string>
+    <string name="license_color_prompt">请选择号牌颜色: </string>
+    <string name="vehicle_type_prompt">请选择车辆类型: </string>
+    <string name="vehicle_color_prompt">请选择车身颜色: </string>
 
     <string name="button_submit">生成罚单</string>
     <string name="action_settings">设置</string>
@@ -309,6 +310,8 @@
     <string name="toast_update_success">更新账户成功!</string>
     <string name="toast_wrong_userid">用户名不能为空!</string>
     <string name="request_wrong_userid">请输入用户名!</string>
+    <string name="toast_wrong_license_num">车辆牌号不能为空!</string>
+    <string name="request_wrong_license_num">请输入车辆牌号!</string>
     <string name="toast_wrong_password">密码不能为空!</string>
     <string name="request_wrong_password">请输入密码!</string>
     <string name="toast_wrong_new_password">新密码不能为空!</string>

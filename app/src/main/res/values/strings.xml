@@ -231,10 +231,11 @@
         <item>"HM-A300"</item>
     </string-array>
 
-    <string name="license_num_prompt">Input the license number please: </string>
-    <string name="license_color_prompt">Input the license color please: </string>
-    <string name="vehicle_type_prompt">Input the vehicle type please: </string>
-    <string name="vehicle_color_prompt">Input the vehicle color please: </string>
+    <string name="license_num_input_prompt">Input the license number please: </string>
+    <string name="license_num_correct_prompt">Correct the license number please: </string>
+    <string name="license_color_prompt">Select the license color please: </string>
+    <string name="vehicle_type_prompt">Select the vehicle type please: </string>
+    <string name="vehicle_color_prompt">Select the vehicle color please: </string>
 
     <string name="button_submit">Generate Ticket</string>
     <string name="action_settings">Settings</string>
@@ -309,8 +310,10 @@
     <string name="toast_update_success">Update account success!</string>
     <string name="toast_wrong_userid">Empty user ID!</string>
     <string name="request_wrong_userid">Enter a user ID please!</string>
+    <string name="toast_wrong_license_num">Empty license number!</string>
+    <string name="request_wrong_license_num">Enter the license number please!</string>
     <string name="toast_wrong_password">Empty password!</string>
-    <string name="request_wrong_password">Enter a password please!</string>
+    <string name="request_wrong_password">Enter the password please!</string>
     <string name="toast_wrong_new_password">Empty new password!</string>
     <string name="request_wrong_new_password">Enter a new password please!</string>
     <string name="toast_wrong_repassword">Password does not match!</string>

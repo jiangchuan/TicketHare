@@ -91,8 +91,6 @@ import static io.chizi.tickethare.util.AppConstants.TRANS_IMAGE_W;
  */
 
 public class PreviewActivity extends Activity {
-
-
     // Database
     ContentResolver resolver; // Provides access to other applications Content Providers
 

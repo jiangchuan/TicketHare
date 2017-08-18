@@ -17,6 +17,10 @@
     <dimen name="profile_text_margin_small">10dp</dimen>
     <dimen name="profile_button_margin">40dp</dimen>
 
+    <dimen name="prompt_title_margin">20dp</dimen>
+    <dimen name="prompt_radio_button_margin">20dp</dimen>
+    <dimen name="prompt_spinner_margin">40dp</dimen>
+
     <dimen name="ticket_details_font_size">13sp</dimen>
     <dimen name="load_map_font_size">16sp</dimen>
     <dimen name="profile_font_size">20sp</dimen>
