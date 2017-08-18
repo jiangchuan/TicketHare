@@ -49,7 +49,6 @@ import static io.chizi.tickethare.util.AppConstants.FAR_IMG_FILE_PATH;
 import static io.chizi.tickethare.util.AppConstants.CLOSE_IMG_FILE_PATH;
 import static io.chizi.tickethare.util.AppConstants.CURRENT_LATITUDE;
 import static io.chizi.tickethare.util.AppConstants.CURRENT_LICENSE_COLOR;
-import static io.chizi.tickethare.util.AppConstants.CURRENT_LICENSE_CORRECT;
 import static io.chizi.tickethare.util.AppConstants.CURRENT_LICENSE_NUM;
 import static io.chizi.tickethare.util.AppConstants.CURRENT_LONGITUDE;
 import static io.chizi.tickethare.util.AppConstants.MAP_FILE_PATH;
@@ -70,7 +69,6 @@ import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_DAY;
 import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_HOUR;
 import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_LATITUDE;
 import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_LICENSE_COLOR;
-import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_LICENSE_CORRECT;
 import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_LICENSE_NUM;
 import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_LONGITUDE;
 import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_MINUTE;
@@ -101,7 +99,6 @@ public class PreviewActivity extends Activity {
     private String policeDept;
     private String licenseNum;
     private String licenseColor = "蓝";
-    private int licenseCorrect = -1;
     private String vehicleType = "小型客车";
     private String vehicleColor;
 
@@ -218,7 +215,6 @@ public class PreviewActivity extends Activity {
             policeDept = savedInstanceState.getString(SAVED_INSTANCE_POLICE_DEPT);
             licenseNum = savedInstanceState.getString(SAVED_INSTANCE_LICENSE_NUM);
             licenseColor = savedInstanceState.getString(SAVED_INSTANCE_LICENSE_COLOR);
-            licenseCorrect = savedInstanceState.getInt(SAVED_INSTANCE_LICENSE_CORRECT, -1);
             vehicleType = savedInstanceState.getString(SAVED_INSTANCE_VEHICLE_TYPE);
             vehicleColor = savedInstanceState.getString(SAVED_INSTANCE_VEHICLE_COLOR);
 
@@ -250,7 +246,6 @@ public class PreviewActivity extends Activity {
                 ticketID = params.getLong(CURRENT_TICKET_ID);
                 licenseNum = params.getString(CURRENT_LICENSE_NUM);
                 licenseColor = params.getString(CURRENT_LICENSE_COLOR);
-                licenseCorrect = params.getInt(CURRENT_LICENSE_CORRECT);
                 vehicleType = params.getString(CURRENT_VEHICLE_TYPE);
                 vehicleColor = params.getString(CURRENT_VEHICLE_COLOR);
                 address = params.getString(CURRENT_ADDRESS);
@@ -763,7 +758,6 @@ public class PreviewActivity extends Activity {
         outState.putString(SAVED_INSTANCE_POLICE_DEPT, policeDept);
         outState.putString(SAVED_INSTANCE_LICENSE_NUM, licenseNum);
         outState.putString(SAVED_INSTANCE_LICENSE_COLOR, licenseColor);
-        outState.putInt(SAVED_INSTANCE_LICENSE_CORRECT, licenseCorrect);
         outState.putString(SAVED_INSTANCE_VEHICLE_TYPE, vehicleType);
         outState.putString(SAVED_INSTANCE_VEHICLE_COLOR, vehicleColor);
 

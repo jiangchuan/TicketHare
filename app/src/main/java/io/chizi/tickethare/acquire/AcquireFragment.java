@@ -108,7 +108,6 @@ import static io.chizi.tickethare.database.DBProvider.KEY_POLICE_PORTRAIT_URI;
 import static io.chizi.tickethare.database.DBProvider.KEY_TICKET_IMG_URI;
 import static io.chizi.tickethare.database.DBProvider.KEY_LATITUDE;
 import static io.chizi.tickethare.database.DBProvider.KEY_LICENSE_COLOR;
-import static io.chizi.tickethare.database.DBProvider.KEY_LICENSE_CORRECT;
 import static io.chizi.tickethare.database.DBProvider.KEY_LICENSE_NUM;
 import static io.chizi.tickethare.database.DBProvider.KEY_LONGITUDE;
 import static io.chizi.tickethare.database.DBProvider.KEY_MAP_URI;
@@ -137,7 +136,6 @@ import static io.chizi.tickethare.util.AppConstants.FAR_IMG_FILE_PATH;
 import static io.chizi.tickethare.util.AppConstants.CLOSE_IMG_FILE_PATH;
 import static io.chizi.tickethare.util.AppConstants.CURRENT_LATITUDE;
 import static io.chizi.tickethare.util.AppConstants.CURRENT_LICENSE_COLOR;
-import static io.chizi.tickethare.util.AppConstants.CURRENT_LICENSE_CORRECT;
 import static io.chizi.tickethare.util.AppConstants.CURRENT_LICENSE_NUM;
 import static io.chizi.tickethare.util.AppConstants.CURRENT_LONGITUDE;
 import static io.chizi.tickethare.util.AppConstants.MAP_FILE_PATH;
@@ -177,7 +175,6 @@ import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_DAY;
 import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_HOUR;
 import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_LATITUDE;
 import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_LICENSE_COLOR;
-import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_LICENSE_CORRECT;
 import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_LICENSE_NUM;
 import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_LONGITUDE;
 import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_MINUTE;
@@ -234,7 +231,6 @@ public class AcquireFragment extends Fragment {
     private String farImgFilePath;
     private String ticketImgFilePath;
     private String mapFilePath;
-    private int licenseCorrect = -1;
     private int isUploaded = -1;
     private int year = -1;
     private int month = -1;
@@ -373,7 +369,6 @@ public class AcquireFragment extends Fragment {
             policePortraitPath = savedInstanceState.getString(SAVED_INSTANCE_POLICE_PORTRAIT_PATH);
             licenseNum = savedInstanceState.getString(SAVED_INSTANCE_LICENSE_NUM);
             licenseColor = savedInstanceState.getString(SAVED_INSTANCE_LICENSE_COLOR);
-            licenseCorrect = savedInstanceState.getInt(SAVED_INSTANCE_LICENSE_CORRECT, -1);
             isUploaded = savedInstanceState.getInt(SAVED_INSTANCE_IS_UPLOADED, -1);
             vehicleType = savedInstanceState.getString(SAVED_INSTANCE_VEHICLE_TYPE);
             vehicleColor = savedInstanceState.getString(SAVED_INSTANCE_VEHICLE_COLOR);
@@ -575,7 +570,6 @@ public class AcquireFragment extends Fragment {
 //                                    userInput.setError(getString(R.string.request_wrong_userid));
 //                                } else {
 //                                    userInput.setError(null);
-//                                    licenseCorrect = 1;
 //                                    showLiscenseColorPrompt();
 //                                }
                             }
@@ -583,7 +577,6 @@ public class AcquireFragment extends Fragment {
                 .setNegativeButton(android.R.string.cancel,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                licenseCorrect = -1;
                                 dialog.cancel();
                             }
                         });
@@ -601,7 +594,6 @@ public class AcquireFragment extends Fragment {
                     userInput.setError(getString(R.string.request_wrong_license_num));
                 } else {
                     userInput.setError(null);
-                    licenseCorrect = 1;
                     alertDialog.dismiss();
                     showLiscenseColorPrompt();
                 }
@@ -974,7 +966,6 @@ public class AcquireFragment extends Fragment {
         params.putLong(CURRENT_TICKET_ID, ticketID);
         params.putString(CURRENT_LICENSE_NUM, licenseNum);
         params.putString(CURRENT_LICENSE_COLOR, licenseColor);
-        params.putInt(CURRENT_LICENSE_CORRECT, licenseCorrect);
         params.putString(CURRENT_VEHICLE_TYPE, vehicleType);
         params.putString(CURRENT_VEHICLE_COLOR, vehicleColor);
         params.putString(CURRENT_ADDRESS, address);
@@ -1106,7 +1097,6 @@ public class AcquireFragment extends Fragment {
         ticketID = -1L;
         licenseNum = null;
         licenseColor = "蓝";
-        licenseCorrect = -1;
         isUploaded = -1;
         vehicleType = "小型客车";
         vehicleColor = "黑";
@@ -1312,8 +1302,6 @@ public class AcquireFragment extends Fragment {
             Toast.makeText(getActivity(), R.string.toast_ticket_no_license, Toast.LENGTH_SHORT).show();
         } else if (licenseColor == null) {
             Toast.makeText(getActivity(), R.string.toast_ticket_no_license_color, Toast.LENGTH_SHORT).show();
-        } else if (licenseCorrect == -1) {
-            showLicenseCheckDialog();
         } else if (isUploaded == -1) {
             showUploadDialog();
         } else if (currentTime == null) {
@@ -1325,7 +1313,6 @@ public class AcquireFragment extends Fragment {
             values.put(KEY_USER_ID, userID);
             values.put(KEY_LICENSE_NUM, licenseNum);
             values.put(KEY_LICENSE_COLOR, licenseColor);
-            values.put(KEY_LICENSE_CORRECT, licenseCorrect);
             values.put(KEY_DATETIME, currentTime);
             values.put(KEY_YEAR, year);
             values.put(KEY_MONTH, month);
@@ -1481,7 +1468,6 @@ public class AcquireFragment extends Fragment {
         outState.putString(SAVED_INSTANCE_POLICE_PORTRAIT_PATH, policePortraitPath);
         outState.putString(SAVED_INSTANCE_LICENSE_NUM, licenseNum);
         outState.putString(SAVED_INSTANCE_LICENSE_COLOR, licenseColor);
-        outState.putInt(SAVED_INSTANCE_LICENSE_CORRECT, licenseCorrect);
         outState.putInt(SAVED_INSTANCE_IS_UPLOADED, isUploaded);
         outState.putString(SAVED_INSTANCE_VEHICLE_TYPE, vehicleType);
         outState.putString(SAVED_INSTANCE_VEHICLE_COLOR, vehicleColor);
@@ -1614,14 +1600,12 @@ public class AcquireFragment extends Fragment {
         builder.setTitle("\"" + licenseNum.substring(0, 2) + "\u2022" + licenseNum.substring(2) + "\" " + getString(R.string.alert_dialog_license_check));
         builder.setPositiveButton(R.string.alert_dialog_license_check_yes, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                licenseCorrect = 1;
                 showLiscenseColorPrompt();
                 dialog.dismiss();
             }
         });
         builder.setNegativeButton(R.string.alert_dialog_license_check_no, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                licenseCorrect = 0;
                 showLiscenseNumPrompt();
                 dialog.dismiss();
             }
@@ -1677,7 +1661,6 @@ public class AcquireFragment extends Fragment {
                         .setUserId(userID)
                         .setLicenseNum(licenseNum)
                         .setLicenseColor(licenseColor)
-                        .setLicenseCorrect(licenseCorrect == 1 ? true : false)
                         .setVehicleType(vehicleType)
                         .setVehicleColor(vehicleColor)
                         .setYear(year)
@@ -1843,7 +1826,6 @@ public class AcquireFragment extends Fragment {
                 vehicleColor = "黑";
                 showLicenseCheckDialog();
             } else {
-                licenseCorrect = 0;
                 showLiscenseNumPrompt();
             }
         }

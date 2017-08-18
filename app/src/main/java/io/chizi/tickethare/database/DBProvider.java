@@ -32,7 +32,6 @@ public class DBProvider extends ContentProvider {
     public static final String KEY_USER_ID = "user_id";
     public static final String KEY_LICENSE_NUM = "license_num";
     public static final String KEY_LICENSE_COLOR = "license_color";
-    public static final String KEY_LICENSE_CORRECT = "license_correct";
     public static final String KEY_CAR_TYPE = "car_type";
     public static final String KEY_CAR_COLOR = "car_color";
     public static final String KEY_DATETIME = "datetime";
@@ -95,7 +94,6 @@ public class DBProvider extends ContentProvider {
             + KEY_USER_ID + " TEXT NOT NULL DEFAULT 'NA', "
             + KEY_LICENSE_NUM + " TEXT NOT NULL DEFAULT 'NA', "
             + KEY_LICENSE_COLOR + " TEXT NOT NULL DEFAULT 'NA', "
-            + KEY_LICENSE_CORRECT + " INTEGER NOT NULL DEFAULT -1, "
             + KEY_CAR_TYPE + " TEXT NOT NULL DEFAULT 'NA', "
             + KEY_CAR_COLOR + " TEXT NOT NULL DEFAULT 'NA', "
             + KEY_DATETIME + " TEXT NOT NULL DEFAULT 'NA', "

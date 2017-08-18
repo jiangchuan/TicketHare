@@ -41,7 +41,6 @@ public interface AppConstants {
     static final String CURRENT_TICKET_ID = "current_ticket_id";
     static final String CURRENT_LICENSE_NUM = "current_license_num";
     static final String CURRENT_LICENSE_COLOR = "current_license_color";
-    static final String CURRENT_LICENSE_CORRECT = "current_license_correct";
     static final String CURRENT_IS_UPLOADED = "current_is_uploaded";
     static final String CURRENT_VEHICLE_TYPE = "current_vehicle_type";
     static final String CURRENT_VEHICLE_COLOR = "current_vehicle_color";
@@ -77,7 +76,6 @@ public interface AppConstants {
     static final String SAVED_INSTANCE_POLICE_PORTRAIT_PATH = "saved_instance_police_portrait_path";
     static final String SAVED_INSTANCE_LICENSE_NUM = "saved_instance_license_num";
     static final String SAVED_INSTANCE_LICENSE_COLOR = "saved_instance_license_color";
-    static final String SAVED_INSTANCE_LICENSE_CORRECT = "saved_instance_license_correct";
     static final String SAVED_INSTANCE_IS_UPLOADED = "saved_instance_is_uploaded";
     static final String SAVED_INSTANCE_VEHICLE_TYPE = "saved_instance_vehicle_type";
     static final String SAVED_INSTANCE_VEHICLE_COLOR = "saved_instance_vehicle_color";
