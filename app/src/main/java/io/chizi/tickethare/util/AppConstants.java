@@ -25,7 +25,11 @@ public interface AppConstants {
     static final int TRANS_IMAGE_H = 800;
     static final int COMPRESS_RATIO = 80;
 
-//    static final String HOST_IP = "104.154.251.38";
+    static final long SECOND_IN_MS = 1000; // in ms
+    static final long MINUTE_IN_MS = 60 * SECOND_IN_MS; // in ms
+    static final long HOUR_IN_MS = 60 * MINUTE_IN_MS; // in ms
+
+    //    static final String HOST_IP = "104.154.251.38";
     static final String HOST_IP = "192.168.0.18";
 //    static final String HOST_IP = "192.168.1.100";
     static final int PORT = 50051;

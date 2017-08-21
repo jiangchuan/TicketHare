@@ -152,9 +152,11 @@ import static io.chizi.tickethare.util.AppConstants.GOBACK_USER_ID;
 import static io.chizi.tickethare.util.AppConstants.CLOSE_IMG_FILE_PREFIX;
 import static io.chizi.tickethare.util.AppConstants.FAR_IMG_FILE_PREFIX;
 import static io.chizi.tickethare.util.AppConstants.HOST_IP;
+import static io.chizi.tickethare.util.AppConstants.MINUTE_IN_MS;
 import static io.chizi.tickethare.util.AppConstants.PORT;
 import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_IS_UPLOADED;
 import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_POLICE_PORTRAIT_PATH;
+import static io.chizi.tickethare.util.AppConstants.SECOND_IN_MS;
 import static io.chizi.tickethare.util.AppConstants.TICKET_IMG_FILE_PREFIX;
 import static io.chizi.tickethare.util.AppConstants.JPEG_FILE_SUFFIX;
 import static io.chizi.tickethare.util.AppConstants.MAP_FILE_PREFIX;
@@ -282,9 +284,12 @@ public class AcquireFragment extends Fragment {
     private ManagedChannel mChannel;
 
     private Boolean receivedLoc = false;
-    private static final long LOC_TIME_INTERVAL = 5000; // in ms
-    private static final long ANCHOR_TIME_INTERVAL = 10000; // in ms
-    private static final long TICKET_STATS_TIME_INTERVAL = 10000; // in ms
+
+
+
+    private static final long LOC_TIME_INTERVAL = 5 * SECOND_IN_MS;
+    private static final long ANCHOR_TIME_INTERVAL = 30 * MINUTE_IN_MS;
+    private static final long TICKET_STATS_TIME_INTERVAL = 10 * MINUTE_IN_MS;
 
     private String masterOrder;
 
@@ -500,7 +505,7 @@ public class AcquireFragment extends Fragment {
             public void run() {
                 locHandler.post(new Runnable() {
                     public void run() {
-                        if (receivedLoc) {
+                        if (receivedLoc && latLonInChina()) {
                             new SlaveLocSubmitGrpcTask().execute();
                         }
                     }
@@ -516,7 +521,7 @@ public class AcquireFragment extends Fragment {
             public void run() {
                 anchorHandler.post(new Runnable() {
                     public void run() {
-                        if (receivedLoc) {
+                        if (receivedLoc && latLonInChina()) {
                             new SlaveAnchorSubmitGrpcTask().execute();
                         }
                     }
@@ -542,6 +547,12 @@ public class AcquireFragment extends Fragment {
 
     }
 
+    private boolean latLonInChina() {
+        if (longitude > 73 && longitude < 135 && latitude > 20 && latitude < 54) {
+            return true;
+        }
+        return false;
+    }
 
     private void showLiscenseNumPrompt() {
         // get prompts.xml view
@@ -1654,7 +1665,6 @@ public class AcquireFragment extends Fragment {
                 prepareProgressDialog();
             }
         }
-
         @Override
         protected List<String> doInBackground(Void... nothing) {
             if (progressDialog == null) {
