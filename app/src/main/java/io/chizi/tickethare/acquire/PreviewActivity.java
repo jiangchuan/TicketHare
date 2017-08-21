@@ -15,6 +15,7 @@ import android.hardware.usb.UsbManager;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -88,7 +89,7 @@ import static io.chizi.tickethare.util.AppConstants.TRANS_IMAGE_W;
  * Created by Jiangchuan on 5/21/17.
  */
 
-public class PreviewActivity extends Activity {
+public class PreviewActivity extends AppCompatActivity {
     // Database
     ContentResolver resolver; // Provides access to other applications Content Providers
 

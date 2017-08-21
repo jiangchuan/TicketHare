@@ -26,8 +26,8 @@ public interface AppConstants {
     static final int COMPRESS_RATIO = 80;
 
 //    static final String HOST_IP = "104.154.251.38";
-//    static final String HOST_IP = "192.168.0.17";
-    static final String HOST_IP = "192.168.1.100";
+    static final String HOST_IP = "192.168.0.18";
+//    static final String HOST_IP = "192.168.1.100";
     static final int PORT = 50051;
 
     static final String POLICE_USER_ID = "police_user_id";
@@ -84,6 +84,7 @@ public interface AppConstants {
     static final String SAVED_INSTANCE_CURR_TIME = "saved_instance_curr_time";
     static final String SAVED_INSTANCE_YEAR = "saved_instance_year";
     static final String SAVED_INSTANCE_MONTH = "saved_instance_month";
+    static final String SAVED_INSTANCE_WEEK = "saved_instance_week";
     static final String SAVED_INSTANCE_DAY = "saved_instance_day";
     static final String SAVED_INSTANCE_HOUR = "saved_instance_hour";
     static final String SAVED_INSTANCE_MINUTE = "saved_instance_minute";

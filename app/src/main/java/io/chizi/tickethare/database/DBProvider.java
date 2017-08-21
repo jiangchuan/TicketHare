@@ -37,6 +37,7 @@ public class DBProvider extends ContentProvider {
     public static final String KEY_DATETIME = "datetime";
     public static final String KEY_YEAR = "year";
     public static final String KEY_MONTH = "month";
+    public static final String KEY_WEEK = "week";
     public static final String KEY_DAY = "day";
     public static final String KEY_HOUR = "hour";
     public static final String KEY_MINUTE = "minute";
@@ -99,6 +100,7 @@ public class DBProvider extends ContentProvider {
             + KEY_DATETIME + " TEXT NOT NULL DEFAULT 'NA', "
             + KEY_YEAR + " INTEGER NOT NULL DEFAULT -1, "
             + KEY_MONTH + " INTEGER NOT NULL DEFAULT -1, "
+            + KEY_WEEK + " INTEGER NOT NULL DEFAULT -1, "
             + KEY_DAY + " INTEGER NOT NULL DEFAULT -1, "
             + KEY_HOUR + " INTEGER NOT NULL DEFAULT -1, "
             + KEY_MINUTE + " INTEGER NOT NULL DEFAULT -1, "

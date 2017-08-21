@@ -120,6 +120,7 @@ import static io.chizi.tickethare.database.DBProvider.KEY_TICKET_ID;
 import static io.chizi.tickethare.database.DBProvider.KEY_TICKET_RANGE_END;
 import static io.chizi.tickethare.database.DBProvider.KEY_TICKET_RANGE_START;
 import static io.chizi.tickethare.database.DBProvider.KEY_USER_ID;
+import static io.chizi.tickethare.database.DBProvider.KEY_WEEK;
 import static io.chizi.tickethare.database.DBProvider.KEY_YEAR;
 import static io.chizi.tickethare.database.DBProvider.POLICE_URL;
 import static io.chizi.tickethare.database.DBProvider.RANGE_URL;
@@ -179,6 +180,7 @@ import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_LICENSE_NUM;
 import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_LONGITUDE;
 import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_MINUTE;
 import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_MONTH;
+import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_WEEK;
 import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_POLICE_CITY;
 import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_POLICE_DEPT;
 import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_POLICE_NAME;
@@ -234,6 +236,7 @@ public class AcquireFragment extends Fragment {
     private int isUploaded = -1;
     private int year = -1;
     private int month = -1;
+    private int week = -1;
     private int day = -1;
     private int hour = -1;
     private int minute = -1;
@@ -385,6 +388,7 @@ public class AcquireFragment extends Fragment {
 
             year = savedInstanceState.getInt(SAVED_INSTANCE_YEAR, -1);
             month = savedInstanceState.getInt(SAVED_INSTANCE_MONTH, -1);
+            week = savedInstanceState.getInt(SAVED_INSTANCE_WEEK, -1);
             day = savedInstanceState.getInt(SAVED_INSTANCE_DAY, -1);
             hour = savedInstanceState.getInt(SAVED_INSTANCE_HOUR, -1);
             minute = savedInstanceState.getInt(SAVED_INSTANCE_MINUTE, -1);
@@ -1059,6 +1063,7 @@ public class AcquireFragment extends Fragment {
         currentTime = dateFormatf.format(now.getTime());
         year = now.get(Calendar.YEAR);
         month = now.get(Calendar.MONTH) + 1; // Note: zero based!
+        week = now.get(Calendar.WEEK_OF_YEAR);
         day = now.get(Calendar.DAY_OF_MONTH);
         hour = now.get(Calendar.HOUR_OF_DAY);
         minute = now.get(Calendar.MINUTE);
@@ -1316,6 +1321,7 @@ public class AcquireFragment extends Fragment {
             values.put(KEY_DATETIME, currentTime);
             values.put(KEY_YEAR, year);
             values.put(KEY_MONTH, month);
+            values.put(KEY_WEEK, week);
             values.put(KEY_DAY, day);
             values.put(KEY_HOUR, hour);
             values.put(KEY_MINUTE, minute);
@@ -1484,6 +1490,7 @@ public class AcquireFragment extends Fragment {
 
         outState.putInt(SAVED_INSTANCE_YEAR, year);
         outState.putInt(SAVED_INSTANCE_MONTH, month);
+        outState.putInt(SAVED_INSTANCE_WEEK, week);
         outState.putInt(SAVED_INSTANCE_DAY, day);
         outState.putInt(SAVED_INSTANCE_HOUR, hour);
         outState.putInt(SAVED_INSTANCE_MINUTE, minute);
@@ -1665,6 +1672,7 @@ public class AcquireFragment extends Fragment {
                         .setVehicleColor(vehicleColor)
                         .setYear(year)
                         .setMonth(month)
+                        .setWeek(week)
                         .setDay(day)
                         .setHour(hour)
                         .setMinute(minute)
