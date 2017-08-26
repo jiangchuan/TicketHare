@@ -77,6 +77,8 @@ message TicketDetails {
   bytes far_image = 17;
   bytes close_image = 18;
   bytes ticket_image = 19;
+  int32 saved_ticket_count = 20;
+  int32 uploaded_ticket_count = 21;
 }
 
 message RecordReply {

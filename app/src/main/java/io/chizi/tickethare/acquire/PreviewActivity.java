@@ -280,7 +280,8 @@ public class PreviewActivity extends AppCompatActivity {
         dateTimeEditText.setText(currentTime);
 
         addressEditText = (EditText) findViewById(R.id.ticket_parking_address);
-        addressEditText.setText(address + " (" + longitude + ", " + latitude + ")");
+        addressEditText.setText(address);
+//        addressEditText.setText(address + " (" + longitude + ", " + latitude + ")");
 
         yearEditText = (EditText) findViewById(R.id.ticket_year);
         yearEditText.setText(Integer.toString(year));

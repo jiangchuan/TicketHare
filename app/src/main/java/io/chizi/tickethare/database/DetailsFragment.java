@@ -190,6 +190,11 @@ public class DetailsFragment extends Fragment {
         } else {
             Toast.makeText(getActivity(), "No police info stored in database!", Toast.LENGTH_SHORT).show();
         }
+        try {
+            if (cursor != null && !cursor.isClosed())
+                cursor.close();
+        } catch (Exception ex) {
+        }
     }
 
     private void updateDetails() {

@@ -286,9 +286,9 @@ public class AcquireFragment extends Fragment {
     private Boolean receivedLoc = false;
 
 
-
     private static final long LOC_TIME_INTERVAL = 5 * SECOND_IN_MS;
     private static final long ANCHOR_TIME_INTERVAL = 30 * MINUTE_IN_MS;
+    //    private static final long ANCHOR_TIME_INTERVAL = 1 * MINUTE_IN_MS;
     private static final long TICKET_STATS_TIME_INTERVAL = 10 * MINUTE_IN_MS;
 
     private String masterOrder;
@@ -505,7 +505,7 @@ public class AcquireFragment extends Fragment {
             public void run() {
                 locHandler.post(new Runnable() {
                     public void run() {
-                        if (receivedLoc && latLonInChina()) {
+                        if (receivedLoc) {
                             new SlaveLocSubmitGrpcTask().execute();
                         }
                     }
@@ -514,41 +514,40 @@ public class AcquireFragment extends Fragment {
         };
         locTimer.schedule(locTask, 0, LOC_TIME_INTERVAL); //it executes this every 5s
 
-        final Handler anchorHandler = new Handler();
-        Timer anchorTimer = new Timer();
-        TimerTask anchorTask = new TimerTask() {
-            @Override
-            public void run() {
-                anchorHandler.post(new Runnable() {
-                    public void run() {
-                        if (receivedLoc && latLonInChina()) {
-                            new SlaveAnchorSubmitGrpcTask().execute();
-                        }
-                    }
-                });
-            }
-        };
-        anchorTimer.schedule(anchorTask, 0, ANCHOR_TIME_INTERVAL); //it executes this every 10s
+//        final Handler anchorHandler = new Handler();
+//        Timer anchorTimer = new Timer();
+//        TimerTask anchorTask = new TimerTask() {
+//            @Override
+//            public void run() {
+//                anchorHandler.post(new Runnable() {
+//                    public void run() {
+//                        if (receivedLoc) {
+//                            new SlaveAnchorSubmitGrpcTask().execute();
+//                        }
+//                    }
+//                });
+//            }
+//        };
+//        anchorTimer.schedule(anchorTask, 0, ANCHOR_TIME_INTERVAL); //it executes this every 10s
 
-        final Handler ticketStatsHandler = new Handler();
-        Timer ticketStatsTimer = new Timer();
-        TimerTask ticketStatsTask = new TimerTask() {
-            @Override
-            public void run() {
-                ticketStatsHandler.post(new Runnable() {
-                    public void run() {
-                        getTicketStats(KEY_IS_UPLOADED);
-                        new SubmitTicketStatsGrpcTask().execute();
-                    }
-                });
-            }
-        };
-        ticketStatsTimer.schedule(ticketStatsTask, 0, TICKET_STATS_TIME_INTERVAL); //it executes this every 10s
+//        final Handler ticketStatsHandler = new Handler();
+//        Timer ticketStatsTimer = new Timer();
+//        TimerTask ticketStatsTask = new TimerTask() {
+//            @Override
+//            public void run() {
+//                ticketStatsHandler.post(new Runnable() {
+//                    public void run() {
+//                        new SubmitTicketStatsGrpcTask().execute();
+//                    }
+//                });
+//            }
+//        };
+//        ticketStatsTimer.schedule(ticketStatsTask, 0, TICKET_STATS_TIME_INTERVAL); //it executes this every 10s
 
     }
 
-    private boolean latLonInChina() {
-        if (longitude > 73 && longitude < 135 && latitude > 20 && latitude < 54) {
+    private boolean lonLatInChina(double theLon, double theLat) {
+        if (theLon > 73 && theLon < 135 && theLat > 20 && theLat < 54) {
             return true;
         }
         return false;
@@ -1307,6 +1306,11 @@ public class AcquireFragment extends Fragment {
         } else {
             Toast.makeText(getActivity(), R.string.toast_no_police_info, Toast.LENGTH_SHORT).show();
         }
+        try {
+            if (cursor != null && !cursor.isClosed())
+                cursor.close();
+        } catch (Exception ex) {
+        }
     }
 
     public void saveTicket() {
@@ -1377,7 +1381,6 @@ public class AcquireFragment extends Fragment {
     public class MyLocationListenner implements BDLocationListener {
         @Override
         public void onReceiveLocation(BDLocation location) {
-            receivedLoc = true;
 
             // map view 销毁后不在处理新接收的位置
             if (location == null || mMapView == null) {
@@ -1396,15 +1399,20 @@ public class AcquireFragment extends Fragment {
                 builder.target(ll).zoom(18.0f);
                 mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
 
-                new SlaveAnchorSubmitGrpcTask().execute();
+//                new SlaveAnchorSubmitGrpcTask().execute();
             }
 
             mBaiduMap.setMyLocationConfigeration(new MyLocationConfiguration(
                     MyLocationConfiguration.LocationMode.FOLLOWING, true, null));
 
             // Receive Location
-            longitude = location.getLongitude();
-            latitude = location.getLatitude();
+            double theLon = location.getLongitude();
+            double theLat = location.getLatitude();
+            if (lonLatInChina(theLon, theLat)) {
+                receivedLoc = true;
+                longitude = theLon;
+                latitude = theLat;
+            }
             String streetName = null;
             if (location.getLocType() == BDLocation.TypeGpsLocation || location.getLocType() == BDLocation.TypeNetWorkLocation || location.getLocType() == BDLocation.TypeOffLineLocation) {// GPS或网络定位结果
                 String locDesc = location.getLocationDescribe();
@@ -1647,6 +1655,7 @@ public class AcquireFragment extends Fragment {
             public void onClick(DialogInterface dialog, int id) {
                 isUploaded = 0;
                 saveTicket();
+                new SubmitTicketStatsGrpcTask().execute();
                 dialog.dismiss();
             }
         });
@@ -1664,7 +1673,9 @@ public class AcquireFragment extends Fragment {
             if (progressDialog == null) {
                 prepareProgressDialog();
             }
+            getTicketStats();
         }
+
         @Override
         protected List<String> doInBackground(Void... nothing) {
             if (progressDialog == null) {
@@ -1693,6 +1704,8 @@ public class AcquireFragment extends Fragment {
                         .setFarImage(ByteString.copyFrom(getImageBytesfromPath(farImgFilePath)))
                         .setCloseImage(ByteString.copyFrom(getImageBytesfromPath(closeImgFilePath)))
                         .setTicketImage(ByteString.copyFrom(getImageBytesfromPath(ticketImgFilePath)))
+                        .setSavedTicketCount(numSavedTicket)
+                        .setUploadedTicketCount(numUploadedTicket)
                         .build();
                 RecordReply reply = blockingStub.recordTicket(ticketDetails);
                 resultList.add(String.valueOf(reply.getRecordSuccess()));
@@ -1725,13 +1738,9 @@ public class AcquireFragment extends Fragment {
     }
 
     private class SubmitTicketStatsGrpcTask extends AsyncTask<Void, Void, List<String>> {
-        private ManagedChannel mChannel;
-
         @Override
         protected void onPreExecute() {
-            mChannel = ManagedChannelBuilder.forAddress(HOST_IP, PORT)
-                    .usePlaintext(true)
-                    .build();
+            getTicketStats();
         }
 
         @Override
@@ -1755,17 +1764,12 @@ public class AcquireFragment extends Fragment {
 
         @Override
         protected void onPostExecute(List<String> resultList) {
-            try {
-                mChannel.shutdown().awaitTermination(1, TimeUnit.SECONDS);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
         }
     }
 
-    private void getTicketStats(String columnID) {
+    private void getTicketStats() {
         // Projection contains the columns we want
-        String[] projection = new String[]{columnID};
+        String[] projection = new String[]{KEY_IS_UPLOADED};
         // Pass the URL, projection and I'll cover the other options below
         Cursor cursor = resolver.query(TICKET_URL, projection, null, null, null);
 
@@ -1776,7 +1780,7 @@ public class AcquireFragment extends Fragment {
         if (cursor.moveToFirst()) {
             numUploadedTicket = 0;
             do {
-                int columnValue = cursor.getInt(cursor.getColumnIndex(columnID));
+                int columnValue = cursor.getInt(cursor.getColumnIndex(KEY_IS_UPLOADED));
                 if (columnValue == 1) {
                     numUploadedTicket += columnValue;
                 }
