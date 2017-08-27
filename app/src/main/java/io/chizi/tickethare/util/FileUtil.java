@@ -40,6 +40,22 @@ public class FileUtil {
         return storageDir;
     }
 
+    public static boolean deleteTempFiles(File file) {
+        if (file.isDirectory()) {
+            File[] files = file.listFiles();
+            if (files != null) {
+                for (File f : files) {
+                    if (f.isDirectory()) {
+                        deleteTempFiles(f);
+                    } else {
+                        f.delete();
+                    }
+                }
+            }
+        }
+        return file.delete();
+    }
+
 
     public static String getFileName(String filePrefix) {
         // Create an image file name
