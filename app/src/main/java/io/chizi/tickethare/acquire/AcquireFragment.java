@@ -73,7 +73,6 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.TimeUnit;
 
 import HPRTAndroidSDK.HPRTPrinterHelper;
 import HPRTAndroidSDK.PublicFunction;
@@ -130,6 +129,10 @@ import static io.chizi.tickethare.util.AppConstants.BACK_LICENSE_COLOR;
 import static io.chizi.tickethare.util.AppConstants.BACK_LICENSE_NUM;
 import static io.chizi.tickethare.util.AppConstants.BACK_VEHICLE_COLOR;
 import static io.chizi.tickethare.util.AppConstants.BACK_VEHICLE_TYPE;
+import static io.chizi.tickethare.util.AppConstants.CHINA_EAST;
+import static io.chizi.tickethare.util.AppConstants.CHINA_NORTH;
+import static io.chizi.tickethare.util.AppConstants.CHINA_SOUTH;
+import static io.chizi.tickethare.util.AppConstants.CHINA_WEST;
 import static io.chizi.tickethare.util.AppConstants.COMPRESS_RATIO;
 import static io.chizi.tickethare.util.AppConstants.CURRENT_ADDRESS;
 import static io.chizi.tickethare.util.AppConstants.CURRENT_POLICE_PORTRAIT_PATH;
@@ -513,41 +516,10 @@ public class AcquireFragment extends Fragment {
             }
         };
         locTimer.schedule(locTask, 0, LOC_TIME_INTERVAL); //it executes this every 5s
-
-//        final Handler anchorHandler = new Handler();
-//        Timer anchorTimer = new Timer();
-//        TimerTask anchorTask = new TimerTask() {
-//            @Override
-//            public void run() {
-//                anchorHandler.post(new Runnable() {
-//                    public void run() {
-//                        if (receivedLoc) {
-//                            new SlaveAnchorSubmitGrpcTask().execute();
-//                        }
-//                    }
-//                });
-//            }
-//        };
-//        anchorTimer.schedule(anchorTask, 0, ANCHOR_TIME_INTERVAL); //it executes this every 10s
-
-//        final Handler ticketStatsHandler = new Handler();
-//        Timer ticketStatsTimer = new Timer();
-//        TimerTask ticketStatsTask = new TimerTask() {
-//            @Override
-//            public void run() {
-//                ticketStatsHandler.post(new Runnable() {
-//                    public void run() {
-//                        new SubmitTicketStatsGrpcTask().execute();
-//                    }
-//                });
-//            }
-//        };
-//        ticketStatsTimer.schedule(ticketStatsTask, 0, TICKET_STATS_TIME_INTERVAL); //it executes this every 10s
-
     }
 
     private boolean lonLatInChina(double theLon, double theLat) {
-        if (theLon > 73 && theLon < 135 && theLat > 20 && theLat < 54) {
+        if (theLon > CHINA_WEST && theLon < CHINA_EAST && theLat > CHINA_SOUTH && theLat < CHINA_NORTH) {
             return true;
         }
         return false;
@@ -1040,7 +1012,7 @@ public class AcquireFragment extends Fragment {
                 } else {
                     printTicket();
                     Toast.makeText(getActivity(), getResources().getString(R.string.activity_main_connected), Toast.LENGTH_LONG).show();
-                    takeTicketPictureIntent();
+                    showPrintCheckDialog();
                 }
                 break;
 
@@ -1186,42 +1158,6 @@ public class AcquireFragment extends Fragment {
             }
         }
     }
-
-    private class SlaveAnchorSubmitGrpcTask extends AsyncTask<Void, Void, List<String>> {
-        @Override
-        protected void onPreExecute() {
-        }
-
-        @Override
-        protected List<String> doInBackground(Void... nothing) {
-            ArrayList<String> resultList = new ArrayList<String>();
-            try {
-                TicketGrpc.TicketBlockingStub blockingStub = TicketGrpc.newBlockingStub(mChannel);
-                SlaveLoc request = newSlaveLoc(userID, longitude, latitude);
-                MasterOrder reply = blockingStub.slaveAnchorSubmit(request);
-                resultList.add(String.valueOf(reply.getMasterOrder()));
-                return resultList;
-            } catch (Exception e) {
-                StringWriter sw = new StringWriter();
-                PrintWriter pw = new PrintWriter(sw);
-                e.printStackTrace(pw);
-                pw.flush();
-                resultList.add("Failed... : " + System.getProperty("line.separator") + sw);
-                return resultList;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(List<String> resultList) {
-            if (resultList != null) {
-                String masterOrder = resultList.get(0);
-                if (masterOrder != null) {
-//                    Toast.makeText(getActivity(), masterOrder, Toast.LENGTH_LONG).show();
-                }
-            }
-        }
-    }
-
 
     public static SlaveLoc newSlaveLoc(String theSid, double theLon, double theLat) {
         return SlaveLoc.newBuilder().setSid(theSid).setLongitude(theLon).setLatitude(theLat).build();
@@ -1398,8 +1334,6 @@ public class AcquireFragment extends Fragment {
                 MapStatus.Builder builder = new MapStatus.Builder();
                 builder.target(ll).zoom(18.0f);
                 mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(builder.build()));
-
-//                new SlaveAnchorSubmitGrpcTask().execute();
             }
 
             mBaiduMap.setMyLocationConfigeration(new MyLocationConfiguration(
@@ -1624,13 +1558,13 @@ public class AcquireFragment extends Fragment {
     private void showLicenseCheckDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("\"" + licenseNum.substring(0, 2) + "\u2022" + licenseNum.substring(2) + "\" " + getString(R.string.alert_dialog_license_check));
-        builder.setPositiveButton(R.string.alert_dialog_license_check_yes, new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(R.string.alert_dialog_check_yes, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 showLiscenseColorPrompt();
                 dialog.dismiss();
             }
         });
-        builder.setNegativeButton(R.string.alert_dialog_license_check_no, new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(R.string.alert_dialog_check_no, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 showLiscenseNumPrompt();
                 dialog.dismiss();
@@ -1640,10 +1574,32 @@ public class AcquireFragment extends Fragment {
         dialog.show();
     }
 
+    private void showPrintCheckDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("重新打印?");
+        builder.setPositiveButton(R.string.alert_dialog_check_yes, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                printTicket();
+                Toast.makeText(getActivity(), getResources().getString(R.string.activity_main_connected), Toast.LENGTH_LONG).show();
+                takeTicketPictureIntent();
+                dialog.dismiss();
+            }
+        });
+        builder.setNegativeButton(R.string.alert_dialog_check_no, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                takeTicketPictureIntent();
+                dialog.dismiss();
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+
     private void showUploadDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(getString(R.string.alert_dialog_upload));
-        builder.setPositiveButton(R.string.alert_dialog_license_check_yes, new DialogInterface.OnClickListener() {
+        builder.setPositiveButton(R.string.alert_dialog_check_yes, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 isUploaded = 1;
                 saveTicket();
@@ -1651,7 +1607,7 @@ public class AcquireFragment extends Fragment {
                 dialog.dismiss();
             }
         });
-        builder.setNegativeButton(R.string.alert_dialog_license_check_no, new DialogInterface.OnClickListener() {
+        builder.setNegativeButton(R.string.alert_dialog_check_no, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 isUploaded = 0;
                 saveTicket();

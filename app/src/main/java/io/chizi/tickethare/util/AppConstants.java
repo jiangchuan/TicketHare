@@ -29,6 +29,16 @@ public interface AppConstants {
     static final long MINUTE_IN_MS = 60 * SECOND_IN_MS; // in ms
     static final long HOUR_IN_MS = 60 * MINUTE_IN_MS; // in ms
 
+//    static final double CHINA_WEST = 73.0;
+//    static final double CHINA_EAST = 135.0;
+//    static final double CHINA_SOUTH = 20.0;
+//    static final double CHINA_NORTH = 54.0;
+
+    static final double CHINA_WEST = -125.0;
+    static final double CHINA_EAST = -64.0;
+    static final double CHINA_SOUTH = 24.0;
+    static final double CHINA_NORTH = 49.5;
+
     //    static final String HOST_IP = "104.154.251.38";
     static final String HOST_IP = "192.168.0.18";
 //    static final String HOST_IP = "192.168.1.100";

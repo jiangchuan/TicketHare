@@ -82,11 +82,20 @@ public class MainActivity extends RuntimePermissionsActivity {
     }
 
 //    @Override
-//    protected void onDestroy() {
-//        if(!isChangingConfigurations()) {
+//    protected void onPause() {
+//        if(isFinishing()) {
 //            FileUtil.deleteTempFiles(getExternalFilesDir(null));
 //            clearTickets();
 //        }
-//        super.onDestroy();
+//        super.onPause();
 //    }
+
+        @Override
+    protected void onDestroy() {
+        if(!isChangingConfigurations()) {
+            FileUtil.deleteTempFiles(getExternalFilesDir(null));
+            clearTickets();
+        }
+        super.onDestroy();
+    }
 }

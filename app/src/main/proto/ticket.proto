@@ -15,7 +15,6 @@ service Ticket {
   rpc SubmitTicketStats (TicketStats) returns (StatsReply) {}
 
   rpc SlaveLocSubmit(SlaveLoc) returns (MasterOrder) {}
-  rpc SlaveAnchorSubmit(SlaveLoc) returns (MasterOrder) {}
 
   rpc PullTicketRange (TicketRangeSid) returns (TicketRange) {}
 }

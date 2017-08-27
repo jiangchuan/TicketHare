@@ -289,8 +289,8 @@
 
     <string name="alert_dialog_license_check"> correct?</string>
     <string name="alert_dialog_upload">Upload ticket?</string>
-    <string name="alert_dialog_license_check_yes">Yes</string>
-    <string name="alert_dialog_license_check_no">No</string>
+    <string name="alert_dialog_check_yes">Yes</string>
+    <string name="alert_dialog_check_no">No</string>
     <string name="alert_dialog_authenticate">Authenticating ...</string>
     <string name="alert_dialog_dbresponse">Number of uploaded tickets: </string>
 
