@@ -17,6 +17,9 @@ service Ticket {
   rpc SlaveLocSubmit(SlaveLoc) returns (MasterOrder) {}
 
   rpc PullTicketRange (TicketRangeSid) returns (TicketRange) {}
+
+  rpc HareLogout(LogoutRequest) returns (LogoutReply) {}
+
 }
 
 message AccountRequest {
@@ -112,4 +115,12 @@ message TicketRangeSid {
 message TicketRange {
   int64 ticket_id_start = 1;
   int64 ticket_id_end = 2;
+}
+
+message LogoutRequest {
+  string user_id = 1;
+}
+
+message LogoutReply {
+  bool logout_success = 1;
 }

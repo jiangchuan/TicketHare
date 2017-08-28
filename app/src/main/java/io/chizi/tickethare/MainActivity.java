@@ -2,25 +2,47 @@ package io.chizi.tickethare;
 
 import android.Manifest;
 import android.content.ContentResolver;
+import android.content.Intent;
 import android.database.Cursor;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.widget.Toast;
 
 
-import java.io.File;
+import com.google.protobuf.ByteString;
 
+import java.io.File;
+import java.io.PrintWriter;
+import java.io.StringWriter;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+
+import io.chizi.ticket.LoginReply;
+import io.chizi.ticket.LoginRequest;
+import io.chizi.ticket.LogoutReply;
+import io.chizi.ticket.LogoutRequest;
+import io.chizi.ticket.TicketGrpc;
 import io.chizi.tickethare.acquire.AcquireFragment;
+import io.chizi.tickethare.login.LoginActivity;
 import io.chizi.tickethare.pager.MyFragmentPagerAdapter;
 import io.chizi.tickethare.pager.SlidingTabLayout;
 import io.chizi.tickethare.util.FileUtil;
+import io.grpc.ManagedChannel;
+import io.grpc.ManagedChannelBuilder;
 
 import static io.chizi.tickethare.database.DBProvider.KEY_TICKET_RANGE_END;
 import static io.chizi.tickethare.database.DBProvider.KEY_TICKET_RANGE_START;
 import static io.chizi.tickethare.database.DBProvider.KEY_USER_ID;
 import static io.chizi.tickethare.database.DBProvider.RANGE_URL;
 import static io.chizi.tickethare.database.DBProvider.TICKET_URL;
+import static io.chizi.tickethare.util.AppConstants.HOST_IP;
+import static io.chizi.tickethare.util.AppConstants.JPEG_FILE_SUFFIX;
+import static io.chizi.tickethare.util.AppConstants.POLICE_USER_ID;
+import static io.chizi.tickethare.util.AppConstants.PORT;
 import static io.chizi.tickethare.util.AppConstants.REQUEST_PERMISSIONS;
+import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_USER_ID;
 
 
 /**
@@ -29,6 +51,8 @@ import static io.chizi.tickethare.util.AppConstants.REQUEST_PERMISSIONS;
 
 //public class MainActivity extends FragmentActivity {
 public class MainActivity extends RuntimePermissionsActivity {
+    private String userID;
+
     // Database
     private ContentResolver resolver; // Provides access to other applications Content Providers
 
@@ -37,7 +61,14 @@ public class MainActivity extends RuntimePermissionsActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        if (savedInstanceState != null) {
+            userID = savedInstanceState.getString(SAVED_INSTANCE_USER_ID);
+        }
+
         resolver = getContentResolver();
+
+        Intent intentFrom = getIntent(); // Get the Intent that called for this Activity to open
+        userID = intentFrom.getExtras().getString(POLICE_USER_ID); // Get the data that was sent
 
         // Layout manager that allows the user to flip through the pages
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
@@ -73,6 +104,7 @@ public class MainActivity extends RuntimePermissionsActivity {
     public void onBackPressed() {
         FileUtil.deleteTempFiles(getExternalFilesDir(null));
         clearTickets();
+        new LogoutGrpcTask().execute();
         super.onBackPressed();
     }
 
@@ -95,7 +127,57 @@ public class MainActivity extends RuntimePermissionsActivity {
         if(!isChangingConfigurations()) {
             FileUtil.deleteTempFiles(getExternalFilesDir(null));
             clearTickets();
+            new LogoutGrpcTask().execute();
         }
         super.onDestroy();
+    }
+
+    private class LogoutGrpcTask extends AsyncTask<Void, Void, List<String>> {
+        private ManagedChannel mChannel;
+
+        @Override
+        protected void onPreExecute() {
+            mChannel = ManagedChannelBuilder.forAddress(HOST_IP, PORT)
+                    .usePlaintext(true)
+                    .build();
+        }
+
+        @Override
+        protected List<String> doInBackground(Void... nothing) {
+            ArrayList<String> resultList = new ArrayList<String>();
+            try {
+                TicketGrpc.TicketBlockingStub blockingStub = TicketGrpc.newBlockingStub(mChannel);
+                LogoutRequest request = LogoutRequest.newBuilder()
+                        .setUserId(userID)
+                        .build();
+                LogoutReply reply = blockingStub.hareLogout(request);
+                Boolean theSucess = reply.getLogoutSuccess();
+                resultList.add(String.valueOf(theSucess));
+                return resultList;
+            } catch (Exception e) {
+                StringWriter sw = new StringWriter();
+                PrintWriter pw = new PrintWriter(sw);
+                e.printStackTrace(pw);
+                pw.flush();
+                resultList.add("Failed... : " + System.getProperty("line.separator") + sw);
+                return resultList;
+            }
+        }
+
+        @Override
+        protected void onPostExecute(List<String> resultList) {
+            try {
+                mChannel.shutdown().awaitTermination(1, TimeUnit.SECONDS);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+        }
+    }
+
+    @Override
+    protected void onSaveInstanceState(Bundle outState) {
+        outState.putString(SAVED_INSTANCE_USER_ID, userID);
+
+        super.onSaveInstanceState(outState);
     }
 }
