@@ -3,42 +3,27 @@ package io.chizi.tickethare;
 import android.Manifest;
 import android.content.ContentResolver;
 import android.content.Intent;
-import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.widget.Toast;
 
-
-import com.google.protobuf.ByteString;
-
-import java.io.File;
 import java.io.PrintWriter;
 import java.io.StringWriter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.TimeUnit;
 
-import io.chizi.ticket.LoginReply;
-import io.chizi.ticket.LoginRequest;
 import io.chizi.ticket.LogoutReply;
 import io.chizi.ticket.LogoutRequest;
 import io.chizi.ticket.TicketGrpc;
-import io.chizi.tickethare.acquire.AcquireFragment;
-import io.chizi.tickethare.login.LoginActivity;
 import io.chizi.tickethare.pager.MyFragmentPagerAdapter;
 import io.chizi.tickethare.pager.SlidingTabLayout;
 import io.chizi.tickethare.util.FileUtil;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
-
-import static io.chizi.tickethare.database.DBProvider.KEY_TICKET_RANGE_END;
-import static io.chizi.tickethare.database.DBProvider.KEY_TICKET_RANGE_START;
-import static io.chizi.tickethare.database.DBProvider.KEY_USER_ID;
-import static io.chizi.tickethare.database.DBProvider.RANGE_URL;
 import static io.chizi.tickethare.database.DBProvider.TICKET_URL;
 import static io.chizi.tickethare.util.AppConstants.HOST_IP;
-import static io.chizi.tickethare.util.AppConstants.JPEG_FILE_SUFFIX;
 import static io.chizi.tickethare.util.AppConstants.POLICE_USER_ID;
 import static io.chizi.tickethare.util.AppConstants.PORT;
 import static io.chizi.tickethare.util.AppConstants.REQUEST_PERMISSIONS;
@@ -51,7 +36,10 @@ import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_USER_ID;
 
 //public class MainActivity extends FragmentActivity {
 public class MainActivity extends RuntimePermissionsActivity {
+    private ManagedChannel mChannel;
+
     private String userID;
+    private SimpleDateFormat dateFormatf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
     // Database
     private ContentResolver resolver; // Provides access to other applications Content Providers
@@ -64,11 +52,11 @@ public class MainActivity extends RuntimePermissionsActivity {
         if (savedInstanceState != null) {
             userID = savedInstanceState.getString(SAVED_INSTANCE_USER_ID);
         }
-
-        resolver = getContentResolver();
-
         Intent intentFrom = getIntent(); // Get the Intent that called for this Activity to open
         userID = intentFrom.getExtras().getString(POLICE_USER_ID); // Get the data that was sent
+
+        mChannel = ManagedChannelBuilder.forAddress(HOST_IP, PORT).usePlaintext(true).build();
+        resolver = getContentResolver();
 
         // Layout manager that allows the user to flip through the pages
         ViewPager viewPager = (ViewPager) findViewById(R.id.viewpager);
@@ -113,33 +101,11 @@ public class MainActivity extends RuntimePermissionsActivity {
         Toast.makeText(MainActivity.this, getResources().getString(R.string.toast_permission_received), Toast.LENGTH_LONG).show();
     }
 
-//    @Override
-//    protected void onPause() {
-//        if(isFinishing()) {
-//            FileUtil.deleteTempFiles(getExternalFilesDir(null));
-//            clearTickets();
-//        }
-//        super.onPause();
-//    }
 
-        @Override
-    protected void onDestroy() {
-        if(!isChangingConfigurations()) {
-            FileUtil.deleteTempFiles(getExternalFilesDir(null));
-            clearTickets();
-            new LogoutGrpcTask().execute();
-        }
-        super.onDestroy();
-    }
 
     private class LogoutGrpcTask extends AsyncTask<Void, Void, List<String>> {
-        private ManagedChannel mChannel;
-
         @Override
         protected void onPreExecute() {
-            mChannel = ManagedChannelBuilder.forAddress(HOST_IP, PORT)
-                    .usePlaintext(true)
-                    .build();
         }
 
         @Override
@@ -166,18 +132,33 @@ public class MainActivity extends RuntimePermissionsActivity {
 
         @Override
         protected void onPostExecute(List<String> resultList) {
-            try {
-                mChannel.shutdown().awaitTermination(1, TimeUnit.SECONDS);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
         }
     }
 
     @Override
     protected void onSaveInstanceState(Bundle outState) {
         outState.putString(SAVED_INSTANCE_USER_ID, userID);
-
         super.onSaveInstanceState(outState);
     }
+
+    //    @Override
+//    protected void onPause() {
+//        if(isFinishing()) {
+//            FileUtil.deleteTempFiles(getExternalFilesDir(null));
+//            clearTickets();
+//        }
+//        super.onPause();
+//    }
+
+    @Override
+    protected void onDestroy() {
+        if (!isChangingConfigurations()) {
+            FileUtil.deleteTempFiles(getExternalFilesDir(null));
+            clearTickets();
+            new LogoutGrpcTask().execute();
+        }
+        mChannel.shutdown();
+        super.onDestroy();
+    }
+
 }

@@ -5,6 +5,8 @@ import android.content.res.AssetManager;
 import android.os.Environment;
 import android.util.Log;
 
+import com.google.protobuf.ByteString;
+
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -12,6 +14,8 @@ import java.io.InputStream;
 import java.io.OutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import io.chizi.tickethare.MainActivity;
 
 /**
  * Created by Jiangchuan on 5/21/17.
@@ -38,6 +42,18 @@ public class FileUtil {
             Log.v(LOG_TAG, "External storage is not mounted READ/WRITE.");
         }
         return storageDir;
+    }
+
+    public static String writeByteStringToFile(Activity activity, String fileName, ByteString mByteString) {
+        byte[] mByte = new byte[mByteString.size()];
+        mByteString.copyTo(mByte, 0);
+        String theFilePath = FileUtil.getStorageDir(activity) + "/" + fileName;
+        try {
+            FileUtil.writeFile(mByte, theFilePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return theFilePath;
     }
 
     public static boolean deleteTempFiles(File file) {
