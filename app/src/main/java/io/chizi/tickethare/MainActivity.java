@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
+import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
 import java.io.PrintWriter;
@@ -35,7 +36,7 @@ import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_USER_ID;
  */
 
 //public class MainActivity extends FragmentActivity {
-public class MainActivity extends RuntimePermissionsActivity {
+public class MainActivity extends AppCompatActivity {
     private ManagedChannel mChannel;
 
     private String userID;
@@ -72,15 +73,15 @@ public class MainActivity extends RuntimePermissionsActivity {
         // Connect the viewPager with the sliding tab layout
         slidingTabLayout.setViewPager(viewPager);
 
-        MainActivity.super.requestAppPermissions(new
-                        String[]{Manifest.permission.CAMERA,
-                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        Manifest.permission.ACCESS_COARSE_LOCATION,
-                        Manifest.permission.ACCESS_FINE_LOCATION,
-                        Manifest.permission.READ_PHONE_STATE
-                }, R.string
-                        .snackbar_permission_text
-                , REQUEST_PERMISSIONS);
+//        MainActivity.super.requestAppPermissions(new
+//                        String[]{Manifest.permission.CAMERA,
+//                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+//                        Manifest.permission.ACCESS_COARSE_LOCATION,
+//                        Manifest.permission.ACCESS_FINE_LOCATION,
+//                        Manifest.permission.READ_PHONE_STATE
+//                }, R.string
+//                        .snackbar_permission_text
+//                , REQUEST_PERMISSIONS);
 
     }
 
@@ -96,10 +97,10 @@ public class MainActivity extends RuntimePermissionsActivity {
         super.onBackPressed();
     }
 
-    @Override
-    public void onPermissionsGranted(int requestCode) {
-        Toast.makeText(MainActivity.this, getResources().getString(R.string.toast_permission_received), Toast.LENGTH_LONG).show();
-    }
+//    @Override
+//    public void onPermissionsGranted(int requestCode) {
+//        Toast.makeText(MainActivity.this, getResources().getString(R.string.toast_permission_received), Toast.LENGTH_LONG).show();
+//    }
 
 
 

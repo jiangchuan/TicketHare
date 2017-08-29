@@ -1,5 +1,6 @@
 package io.chizi.tickethare.login;
 
+import android.Manifest;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
@@ -30,6 +31,7 @@ import io.chizi.ticket.LoginRequest;
 import io.chizi.ticket.TicketGrpc;
 import io.chizi.tickethare.MainActivity;
 import io.chizi.tickethare.R;
+import io.chizi.tickethare.RuntimePermissionsActivity;
 import io.chizi.tickethare.database.DBProvider;
 import io.chizi.tickethare.util.FileUtil;
 import io.grpc.ManagedChannel;
@@ -49,12 +51,13 @@ import static io.chizi.tickethare.util.AppConstants.JPEG_FILE_SUFFIX;
 import static io.chizi.tickethare.util.AppConstants.MAP_FILE_PREFIX;
 import static io.chizi.tickethare.util.AppConstants.POLICE_USER_ID;
 import static io.chizi.tickethare.util.AppConstants.PORT;
+import static io.chizi.tickethare.util.AppConstants.REQUEST_PERMISSIONS;
 
 /**
  * Created by Jiangchuan on 5/21/17.
  */
 
-public class LoginActivity extends AppCompatActivity {
+public class LoginActivity extends RuntimePermissionsActivity {
     private static final String LOG_TAG = LoginActivity.class.getName();
 
     private String userID;
@@ -107,6 +110,22 @@ public class LoginActivity extends AppCompatActivity {
                 overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
             }
         });
+
+        LoginActivity.super.requestAppPermissions(new
+                        String[]{Manifest.permission.CAMERA,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        Manifest.permission.ACCESS_COARSE_LOCATION,
+                        Manifest.permission.ACCESS_FINE_LOCATION,
+                        Manifest.permission.READ_PHONE_STATE
+                }, R.string
+                        .snackbar_permission_text
+                , REQUEST_PERMISSIONS);
+
+    }
+
+    @Override
+    public void onPermissionsGranted(int requestCode) {
+        Toast.makeText(LoginActivity.this, getResources().getString(R.string.toast_permission_received), Toast.LENGTH_LONG).show();
     }
 
     public void login() {
