@@ -972,9 +972,10 @@ public class AcquireFragment extends Fragment {
                 if (resultCode == getActivity().RESULT_OK) {
                     if (farImgFilePath != null) {
                         takeClosePictureIntent();
-                    } else {
-                        showAlertandRepeat("farImgFilePath is null!", REQUEST_FAR_IMG_CAPTURE);
                     }
+//                    else {
+//                        showAlertandRepeat("farImgFilePath is null!", REQUEST_FAR_IMG_CAPTURE);
+//                    }
                 }
                 break;
 
@@ -983,13 +984,16 @@ public class AcquireFragment extends Fragment {
                     if (closeImgFilePath != null) {
                         imageBitmap = BitmapUtil.getScaledBitmap(closeImgFilePath, TRANS_IMAGE_W, TRANS_IMAGE_H);
                         if (imageBitmap != null) {
-                            new PlateRecognizeTask().execute();
+                            loadLibAndRecognize();
+//                            new PlateRecognizeTask().execute();
                         } else {
-                            showAlertandRepeat("imageBitmap is null!", REQUEST_CLOSE_IMG_CAPTURE);
+                            showLiscenseNumPrompt();
+//                            showAlertandRepeat("imageBitmap is null!", REQUEST_CLOSE_IMG_CAPTURE);
                         }
-                    } else {
-                        showAlertandRepeat("closeImgFilePath is null!", REQUEST_CLOSE_IMG_CAPTURE);
                     }
+//                    else {
+//                        showAlertandRepeat("closeImgFilePath is null!", REQUEST_CLOSE_IMG_CAPTURE);
+//                    }
                 }
                 break;
 
@@ -1022,9 +1026,10 @@ public class AcquireFragment extends Fragment {
                     if (ticketImgFilePath != null) {
                         showUploadDialog();
                         backToHome();
-                    } else {
-                        showAlertandRepeat("ticketImgFilePath is null!", REQUEST_TICKET_IMG_CAPTURE);
                     }
+//                    else {
+//                        showAlertandRepeat("ticketImgFilePath is null!", REQUEST_TICKET_IMG_CAPTURE);
+//                    }
                 }
                 break;
 
@@ -1369,6 +1374,16 @@ public class AcquireFragment extends Fragment {
         }
     }
 
+    private void loadLibAndRecognize() {
+        if (!OpenCVLoader.initDebug()) {
+            Log.d(LOG_TAG, "Internal OpenCV library not found. Using OpenCV Manager for initialization");
+            OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_1_0, getActivity(), mLoaderCallback);
+        } else {
+            Log.d(LOG_TAG, "OpenCV library found inside package. Using it!");
+            mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
+        }
+    }
+
     @Override
     public void onPause() {
         mMapView.onPause();
@@ -1379,13 +1394,13 @@ public class AcquireFragment extends Fragment {
     public void onResume() {
         mMapView.onResume();
         super.onResume();
-        if (!OpenCVLoader.initDebug()) {
-            Log.d(LOG_TAG, "Internal OpenCV library not found. Using OpenCV Manager for initialization");
-            OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_1_0, getActivity(), mLoaderCallback);
-        } else {
-            Log.d(LOG_TAG, "OpenCV library found inside package. Using it!");
-            mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
-        }
+//        if (!OpenCVLoader.initDebug()) {
+//            Log.d(LOG_TAG, "Internal OpenCV library not found. Using OpenCV Manager for initialization");
+//            OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_1_0, getActivity(), mLoaderCallback);
+//        } else {
+//            Log.d(LOG_TAG, "OpenCV library found inside package. Using it!");
+//            mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
+//        }
 
         String paper = PFun.ReadSharedPreferencesData("papertype");
         if (!"".equals(paper)) {
@@ -1532,28 +1547,28 @@ public class AcquireFragment extends Fragment {
         dialog.show();
     }
 
-    private void showAlertandRepeat(String alertString, final int requestCode) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(alertString);
-        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                switch (requestCode) {
-                    case REQUEST_FAR_IMG_CAPTURE:
-                        takeFarPictureIntent();
-                        break;
-                    case REQUEST_CLOSE_IMG_CAPTURE:
-                        takeClosePictureIntent();
-                        break;
-                    case REQUEST_TICKET_IMG_CAPTURE:
-                        takeTicketPictureIntent();
-                        break;
-                }
-                dialog.dismiss();
-            }
-        });
-        AlertDialog dialog = builder.create();
-        dialog.show();
-    }
+//    private void showAlertandRepeat(String alertString, final int requestCode) {
+//            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+//            builder.setTitle(alertString);
+//            builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+//            public void onClick(DialogInterface dialog, int id) {
+//                switch (requestCode) {
+//                    case REQUEST_FAR_IMG_CAPTURE:
+//                        takeFarPictureIntent();
+//                        break;
+//                    case REQUEST_CLOSE_IMG_CAPTURE:
+//                        takeClosePictureIntent();
+//                        break;
+//                    case REQUEST_TICKET_IMG_CAPTURE:
+//                        takeTicketPictureIntent();
+//                        break;
+//                }
+//                dialog.dismiss();
+//            }
+//        });
+//        AlertDialog dialog = builder.create();
+//        dialog.show();
+//    }
 
     private void showLicenseCheckDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
@@ -1769,7 +1784,6 @@ public class AcquireFragment extends Fragment {
         progressDialog = null;
     }
 
-
     private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(getActivity()) {
         @Override
         public void onManagerConnected(int status) {
@@ -1777,6 +1791,7 @@ public class AcquireFragment extends Fragment {
                 case LoaderCallbackInterface.SUCCESS:
                     Log.d(LOG_TAG, "OpenCV loaded successfully");
                     System.loadLibrary("platerecognizer");
+                    new PlateRecognizeTask().execute();
                     break;
                 default:
                     super.onManagerConnected(status);
@@ -1792,7 +1807,8 @@ public class AcquireFragment extends Fragment {
             bitmap = BitmapUtil.cropBitmapCenter(bitmap, SCREEN_WIDTH, SCREEN_HEIGHT, RATIO_ENLARGE, VERTICAL_RATIO_W, VERTICAL_RATIO_H, HORIZONTAL_RATIO_W, HORIZONTAL_RATIO_H);
             Mat m = new Mat();
             Utils.bitmapToMat(bitmap, m);
-            return plateRecognition(m.getNativeObjAddr(), m.getNativeObjAddr());
+            String recognizeResult = plateRecognition(m.getNativeObjAddr(), m.getNativeObjAddr());
+            return recognizeResult;
         }
 
         @Override
