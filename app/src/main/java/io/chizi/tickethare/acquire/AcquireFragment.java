@@ -1467,9 +1467,9 @@ public class AcquireFragment extends Fragment {
             startActivityForResult(intent, REQUEST_FAR_IMG_CAPTURE);
         } catch (IOException e) {
             e.printStackTrace();
-            farImgFile = null;
-            farImgFilePath = null;
-            showAlertandRepeat(getString(R.string.img_file_create_error), REQUEST_FAR_IMG_CAPTURE);
+//            farImgFile = null;
+//            farImgFilePath = null;
+//            showAlertandRepeat(getString(R.string.img_file_create_error), REQUEST_FAR_IMG_CAPTURE);
         }
     }
 
@@ -1492,9 +1492,9 @@ public class AcquireFragment extends Fragment {
             startActivityForResult(intent, REQUEST_CLOSE_IMG_CAPTURE);
         } catch (IOException e) {
             e.printStackTrace();
-            closeImgFile = null;
-            closeImgFilePath = null;
-            showAlertandRepeat(getString(R.string.img_file_create_error), REQUEST_CLOSE_IMG_CAPTURE);
+//            closeImgFile = null;
+//            closeImgFilePath = null;
+//            showAlertandRepeat(getString(R.string.img_file_create_error), REQUEST_CLOSE_IMG_CAPTURE);
         }
     }
 
@@ -1514,9 +1514,9 @@ public class AcquireFragment extends Fragment {
             startActivityForResult(intent, REQUEST_TICKET_IMG_CAPTURE);
         } catch (IOException e) {
             e.printStackTrace();
-            ticketImgFile = null;
-            ticketImgFilePath = null;
-            showAlertandRepeat(getString(R.string.img_file_create_error), REQUEST_TICKET_IMG_CAPTURE);
+//            ticketImgFile = null;
+//            ticketImgFilePath = null;
+//            showAlertandRepeat(getString(R.string.img_file_create_error), REQUEST_TICKET_IMG_CAPTURE);
         }
     }
 
