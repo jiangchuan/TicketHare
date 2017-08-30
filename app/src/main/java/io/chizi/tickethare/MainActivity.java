@@ -40,10 +40,21 @@ public class MainActivity extends AppCompatActivity {
     private ManagedChannel mChannel;
 
     private String userID;
+    private double longitude;
+    private double latitude;
+
     private SimpleDateFormat dateFormatf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
     // Database
     private ContentResolver resolver; // Provides access to other applications Content Providers
+
+    public void setLongitude(double longitude) {
+        this.longitude = longitude;
+    }
+
+    public void setLatitude(double latitude) {
+        this.latitude = latitude;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

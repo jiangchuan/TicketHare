@@ -89,6 +89,7 @@ import io.chizi.tickethare.R;
 import io.chizi.tickethare.database.TitlesFragment;
 import io.chizi.tickethare.util.BitmapUtil;
 import io.chizi.tickethare.util.ColorSpinnerAdapter;
+import io.chizi.tickethare.util.DateUtil;
 import io.chizi.tickethare.util.FileUtil;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
@@ -279,6 +280,8 @@ public class AcquireFragment extends Fragment {
     private double latitude;
     private TextView addressLonLatTextView;
 
+    private Timer locTimer;
+
     // Database
     private ContentResolver resolver; // Provides access to other applications Content Providers
 
@@ -423,6 +426,8 @@ public class AcquireFragment extends Fragment {
         takePictureButton.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
+                locTimer.cancel();
+                renewLocTimer();
                 initFields();
                 saveScreen();
                 takeFarPictureIntent();
@@ -501,15 +506,29 @@ public class AcquireFragment extends Fragment {
                 .usePlaintext(true)
                 .build();
 
+        renewLocTimer();
+
+    }
+
+    private void renewLocTimer() {
         final Handler locHandler = new Handler();
-        Timer locTimer = new Timer();
+        locTimer = new Timer();
         TimerTask locTask = new TimerTask() {
+            Calendar now = Calendar.getInstance();
+            int year = now.get(Calendar.YEAR);
+            int month = now.get(Calendar.MONTH);
+            int day = now.get(Calendar.DAY_OF_MONTH);
+            long nineOClockPm = DateUtil.getDate(year, month, day, 21, 0).getTime();
             @Override
             public void run() {
                 locHandler.post(new Runnable() {
                     public void run() {
-                        if (receivedLoc) {
-                            new SlaveLocSubmitGrpcTask().execute();
+                        if (System.currentTimeMillis() > nineOClockPm) {
+                            cancel();
+                        } else {
+                            if (receivedLoc) {
+                                new SlaveLocSubmitGrpcTask().execute();
+                            }
                         }
                     }
                 });
@@ -1428,6 +1447,8 @@ public class AcquireFragment extends Fragment {
         if (HPRTPrinter != null) {
             HPRTPrinterHelper.PortClose();
         }
+
+        locTimer.cancel();
 
         super.onDestroy();
     }
