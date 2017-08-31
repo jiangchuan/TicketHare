@@ -119,6 +119,7 @@ import static io.chizi.tickethare.database.DBProvider.KEY_POLICE_NAME;
 import static io.chizi.tickethare.database.DBProvider.KEY_TICKET_ID;
 import static io.chizi.tickethare.database.DBProvider.KEY_TICKET_RANGE_END;
 import static io.chizi.tickethare.database.DBProvider.KEY_TICKET_RANGE_START;
+import static io.chizi.tickethare.database.DBProvider.KEY_TIME_MILIS;
 import static io.chizi.tickethare.database.DBProvider.KEY_USER_ID;
 import static io.chizi.tickethare.database.DBProvider.KEY_WEEK;
 import static io.chizi.tickethare.database.DBProvider.KEY_YEAR;
@@ -160,6 +161,7 @@ import static io.chizi.tickethare.util.AppConstants.MINUTE_IN_MS;
 import static io.chizi.tickethare.util.AppConstants.PORT;
 import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_IS_UPLOADED;
 import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_POLICE_PORTRAIT_PATH;
+import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_TIME_MILIS;
 import static io.chizi.tickethare.util.AppConstants.SECOND_IN_MS;
 import static io.chizi.tickethare.util.AppConstants.TICKET_IMG_FILE_PREFIX;
 import static io.chizi.tickethare.util.AppConstants.JPEG_FILE_SUFFIX;
@@ -246,6 +248,7 @@ public class AcquireFragment extends Fragment {
     private int day = -1;
     private int hour = -1;
     private int minute = -1;
+    private long timeMilis = 0;
 
     private int numSavedTicket;
     private int numUploadedTicket;
@@ -403,6 +406,7 @@ public class AcquireFragment extends Fragment {
             day = savedInstanceState.getInt(SAVED_INSTANCE_DAY, -1);
             hour = savedInstanceState.getInt(SAVED_INSTANCE_HOUR, -1);
             minute = savedInstanceState.getInt(SAVED_INSTANCE_MINUTE, -1);
+            timeMilis = savedInstanceState.getLong(SAVED_INSTANCE_TIME_MILIS, 0);
         }
 
         Activity activity = getActivity();
@@ -519,6 +523,7 @@ public class AcquireFragment extends Fragment {
             int month = now.get(Calendar.MONTH);
             int day = now.get(Calendar.DAY_OF_MONTH);
             long nineOClockPm = DateUtil.getDate(year, month, day, 21, 0).getTime();
+
             @Override
             public void run() {
                 locHandler.post(new Runnable() {
@@ -1073,6 +1078,7 @@ public class AcquireFragment extends Fragment {
         day = now.get(Calendar.DAY_OF_MONTH);
         hour = now.get(Calendar.HOUR_OF_DAY);
         minute = now.get(Calendar.MINUTE);
+        timeMilis = now.getTimeInMillis();
     }
 
     private void getTicketID() {
@@ -1300,6 +1306,7 @@ public class AcquireFragment extends Fragment {
             values.put(KEY_DAY, day);
             values.put(KEY_HOUR, hour);
             values.put(KEY_MINUTE, minute);
+            values.put(KEY_TIME_MILIS, timeMilis);
             if (vehicleType != null) {
                 values.put(KEY_CAR_TYPE, vehicleType);
             }
@@ -1309,14 +1316,8 @@ public class AcquireFragment extends Fragment {
             if (address != null) {
                 values.put(KEY_ADDRESS, address);
             }
-            String lon = Double.toString(longitude);
-            if (lon != null) {
-                values.put(KEY_LONGITUDE, lon);
-            }
-            String lat = Double.toString(latitude);
-            if (lat != null) {
-                values.put(KEY_LATITUDE, lat);
-            }
+            values.put(KEY_LONGITUDE, longitude);
+            values.put(KEY_LATITUDE, latitude);
             if (mapFilePath != null) {
                 values.put(KEY_MAP_URI, mapFilePath);
             }
@@ -1483,6 +1484,7 @@ public class AcquireFragment extends Fragment {
         outState.putInt(SAVED_INSTANCE_DAY, day);
         outState.putInt(SAVED_INSTANCE_HOUR, hour);
         outState.putInt(SAVED_INSTANCE_MINUTE, minute);
+        outState.putLong(SAVED_INSTANCE_TIME_MILIS, timeMilis);
 
         super.onSaveInstanceState(outState);
     }
@@ -1689,6 +1691,7 @@ public class AcquireFragment extends Fragment {
                         .setDay(day)
                         .setHour(hour)
                         .setMinute(minute)
+                        .setTicketTime(timeMilis)
                         .setAddress(address)
                         .setLongitude(longitude)
                         .setLatitude(latitude)

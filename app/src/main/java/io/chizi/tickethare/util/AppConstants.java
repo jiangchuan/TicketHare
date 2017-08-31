@@ -67,10 +67,6 @@ public interface AppConstants {
     static final String MAP_FILE_PATH = "map_file_path";
     static final String FAR_IMG_FILE_PATH = "far_img_file_path";
     static final String CLOSE_IMG_FILE_PATH = "close_img_file_path";
-    static final String CURRENT_IMG3_FILE_PATH = "current_img3_file_path";
-    static final String CURRENT_MAP_LONGITUDE = "current_map_longitude";
-    static final String CURRENT_MAP_LATITUDE = "current_map_latitude";
-    static final String CURRENT_MAP_ADDRESS = "current_map_address";
 
     static final String BACK_LICENSE_NUM = "back_license_num";
     static final String BACK_VEHICLE_COLOR = "back_vehicle_color";
@@ -79,9 +75,6 @@ public interface AppConstants {
 
     static final String NUM_RECORD_TICKET = "num_record_ticket";
 
-    static final String SAVED_INSTANCE_MAP = "saved_instance_map";
-    static final String SAVED_INSTANCE_PHOTO1 = "saved_instance_image1";
-    static final String SAVED_INSTANCE_PHOTO2 = "saved_instance_image2";
     static final String SAVED_INSTANCE_CURR_POS = "saved_instance_curr_pos";
     static final String SAVED_INSTANCE_CURR_INDEX = "saved_instance_curr_index";
     static final String SAVED_INSTANCE_TICKET_ID = "saved_instance_ticket_id";
@@ -102,6 +95,7 @@ public interface AppConstants {
     static final String SAVED_INSTANCE_DAY = "saved_instance_day";
     static final String SAVED_INSTANCE_HOUR = "saved_instance_hour";
     static final String SAVED_INSTANCE_MINUTE = "saved_instance_minute";
+    static final String SAVED_INSTANCE_TIME_MILIS = "saved_instance_time_milis";
     static final String SAVED_INSTANCE_ADDRESS = "saved_instance_address";
     static final String SAVED_INSTANCE_LONGITUDE = "saved_instance_longitude";
     static final String SAVED_INSTANCE_LATITUDE = "saved_instance_latitude";
@@ -112,7 +106,6 @@ public interface AppConstants {
 
     static final String RUNTIME_DATA_DIR_ASSET = "runtime_data";
     static final String ANDROID_DATA_DIR = "/data/data/org.openalpr.app";
-    static final String OPENALPR_CONF_FILE = "openalpr.conf";
     static final String PREF_INSTALLED_KEY = "installed";
     static final String MAP_FILE_PREFIX = "MAP_";
     static final String CLOSE_IMG_FILE_PREFIX = "CLOSE_";
@@ -120,8 +113,6 @@ public interface AppConstants {
     static final String TICKET_IMG_FILE_PREFIX = "TICKET_";
     static final String PNG_FILE_SUFFIX = ".png";
     static final String JPEG_FILE_SUFFIX = ".jpg";
-    static final String ALPR_FRAGMENT_TAG = "alpr";
-    static final String ALPR_ARGS = "alprargs";
 
     static final String FILE_INSDCARD_DIR = "mrcar";
 }

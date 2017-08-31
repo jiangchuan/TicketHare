@@ -41,6 +41,7 @@ public class DBProvider extends ContentProvider {
     public static final String KEY_DAY = "day";
     public static final String KEY_HOUR = "hour";
     public static final String KEY_MINUTE = "minute";
+    public static final String KEY_TIME_MILIS = "time_milis";
     public static final String KEY_ADDRESS = "address";
     public static final String KEY_LONGITUDE = "longitude";
     public static final String KEY_LATITUDE = "latitude";
@@ -104,6 +105,7 @@ public class DBProvider extends ContentProvider {
             + KEY_DAY + " INTEGER NOT NULL DEFAULT -1, "
             + KEY_HOUR + " INTEGER NOT NULL DEFAULT -1, "
             + KEY_MINUTE + " INTEGER NOT NULL DEFAULT -1, "
+            + KEY_TIME_MILIS + " INTEGER NOT NULL DEFAULT -1, "
             + KEY_ADDRESS + " TEXT NOT NULL DEFAULT 'NA', "
             + KEY_LONGITUDE + " DOUBLE NOT NULL DEFAULT -1, "
             + KEY_LATITUDE + " DOUBLE NOT NULL DEFAULT -1, "

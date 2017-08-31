@@ -3,15 +3,16 @@ package io.chizi.tickethare.database;
 import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Intent;
+import android.database.Cursor;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Toast;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -22,7 +23,6 @@ import java.util.Iterator;
 import io.chizi.ticket.PullTicketsRequest;
 import io.chizi.ticket.TicketDetails;
 import io.chizi.ticket.TicketGrpc;
-import io.chizi.tickethare.MainActivity;
 import io.chizi.tickethare.R;
 import io.chizi.tickethare.util.DateUtil;
 import io.chizi.tickethare.util.GrpcRunnable;
@@ -48,6 +48,7 @@ import static io.chizi.tickethare.database.DBProvider.KEY_MINUTE;
 import static io.chizi.tickethare.database.DBProvider.KEY_MONTH;
 import static io.chizi.tickethare.database.DBProvider.KEY_TICKET_ID;
 import static io.chizi.tickethare.database.DBProvider.KEY_TICKET_IMG_URI;
+import static io.chizi.tickethare.database.DBProvider.KEY_TIME_MILIS;
 import static io.chizi.tickethare.database.DBProvider.KEY_USER_ID;
 import static io.chizi.tickethare.database.DBProvider.KEY_WEEK;
 import static io.chizi.tickethare.database.DBProvider.KEY_YEAR;
@@ -67,8 +68,10 @@ public class DatabaseFragment extends Fragment {
     private ManagedChannel mChannel;
 
     private String userID;
+    private long lastTimeMilis = 0;
     private SimpleDateFormat dateFormatf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
+    private int updateCount = 0;
     // Database
     private ContentResolver resolver; // Provides access to other applications Content Providers
 
@@ -115,10 +118,12 @@ public class DatabaseFragment extends Fragment {
                     .setSid(userID)
                     .setYear(now.get(Calendar.YEAR))
                     .setWeek(now.get(Calendar.WEEK_OF_YEAR))
+                    .setLastTime(lastTimeMilis)
                     .build();
             Iterator<TicketDetails> hareProfiles;
             hareProfiles = blockingStub.pullTickets(request);
 
+            updateCount = 0;
             while (hareProfiles.hasNext()) {
                 TicketDetails reply = hareProfiles.next();
                 // Insert the value into the Content Provider
@@ -142,13 +147,12 @@ public class DatabaseFragment extends Fragment {
                 values.put(KEY_DAY, day);
                 values.put(KEY_HOUR, hour);
                 values.put(KEY_MINUTE, minute);
+                values.put(KEY_TIME_MILIS, reply.getTicketTime());
                 values.put(KEY_CAR_TYPE, reply.getVehicleType());
                 values.put(KEY_CAR_COLOR, reply.getVehicleColor());
                 values.put(KEY_ADDRESS, reply.getAddress());
-
-                values.put(KEY_LONGITUDE, Double.toString(reply.getLongitude()));
-                values.put(KEY_LATITUDE, Double.toString(reply.getLatitude()));
-
+                values.put(KEY_LONGITUDE, reply.getLongitude());
+                values.put(KEY_LATITUDE, reply.getLatitude());
                 String mapFilePath = writeByteStringToFile(getActivity(),
                         Long.toString(ticketID) + "_map" + JPEG_FILE_SUFFIX,
                         reply.getMapImage());
@@ -171,6 +175,7 @@ public class DatabaseFragment extends Fragment {
                 values.put(KEY_IS_UPLOADED, 1);
 
                 resolver.insert(TICKET_URL, values);
+                updateCount++;
             }
 
             return "Pull tickets success!";
@@ -192,6 +197,23 @@ public class DatabaseFragment extends Fragment {
         titlesFragment.clickOnListViewItem(0);
     }
 
+    private void getTicketLastTime() {
+        String[] projection = new String[]{"MAX(" + KEY_TIME_MILIS + ") AS last_time"};
+        Cursor cursor = resolver.query(TICKET_URL, projection, KEY_USER_ID + "=?", new String[]{userID}, null);
+        lastTimeMilis = 0;
+        if (cursor.moveToFirst()) {
+            lastTimeMilis = cursor.getLong(cursor.getColumnIndex("last_time"));
+            Toast.makeText(getActivity(), "lastTimeMilis from SQLite = " + Long.toString(lastTimeMilis), Toast.LENGTH_SHORT).show();
+        } else {
+            Toast.makeText(getActivity(), "无罚单存在本机", Toast.LENGTH_SHORT).show();
+        }
+        try {
+            if (cursor != null && !cursor.isClosed())
+                cursor.close();
+        } catch (Exception ex) {
+        }
+    }
+
     private class GeneralGrpcTask extends AsyncTask<Void, Void, String> {
         private final GrpcRunnable mGrpc;
 
@@ -201,6 +223,7 @@ public class DatabaseFragment extends Fragment {
 
         @Override
         protected void onPreExecute() {
+            getTicketLastTime();
         }
 
         @Override
@@ -220,7 +243,8 @@ public class DatabaseFragment extends Fragment {
 
         @Override
         protected void onPostExecute(String result) {
-            refreshTitlesFragment();
+//            refreshTitlesFragment();
+            Toast.makeText(getActivity(), "Updated count = " + Integer.toString(updateCount), Toast.LENGTH_SHORT).show();
         }
     }
 
