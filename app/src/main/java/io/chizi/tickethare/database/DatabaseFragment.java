@@ -77,6 +77,11 @@ public class DatabaseFragment extends Fragment {
     private SimpleDateFormat dateFormatf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
     private int updateCount = 0;
+
+    private String mapFilePath;
+    private String farImgFilePath;
+    private String closeImgFilePath;
+    private String ticketImgFilePath;
     // Database
     private ContentResolver resolver; // Provides access to other applications Content Providers
 
@@ -152,30 +157,35 @@ public class DatabaseFragment extends Fragment {
                 values.put(KEY_DAY, day);
                 values.put(KEY_HOUR, hour);
                 values.put(KEY_MINUTE, minute);
-                values.put(KEY_TIME_MILIS, reply.getTicketTime());
+                long timeMils = reply.getTicketTime();
+                values.put(KEY_TIME_MILIS, timeMils);
                 values.put(KEY_CAR_TYPE, reply.getVehicleType());
                 values.put(KEY_CAR_COLOR, reply.getVehicleColor());
                 values.put(KEY_ADDRESS, reply.getAddress());
                 values.put(KEY_LONGITUDE, reply.getLongitude());
                 values.put(KEY_LATITUDE, reply.getLatitude());
-                String ticketIDStr = Long.toString(ticketID);
-                String mapFilePath = writeByteStringToFile(getActivity(),
-                        ticketIDStr + MAP_IMG_FILE_PREFIX, JPEG_FILE_SUFFIX,
+                String timeMilsStr = Long.toString(timeMils);
+//                String mapFilePath = writeByteStringToFile(getActivity(),
+                        mapFilePath = writeByteStringToFile(getActivity(),
+                        timeMilsStr + MAP_IMG_FILE_PREFIX, JPEG_FILE_SUFFIX,
                         reply.getMapImage());
                 values.put(KEY_MAP_URI, mapFilePath);
 
-                String farImgFilePath = writeByteStringToFile(getActivity(),
-                        ticketIDStr + FAR_IMG_FILE_PREFIX, JPEG_FILE_SUFFIX,
+//                String farImgFilePath = writeByteStringToFile(getActivity(),
+                        farImgFilePath = writeByteStringToFile(getActivity(),
+                        timeMilsStr + FAR_IMG_FILE_PREFIX, JPEG_FILE_SUFFIX,
                         reply.getFarImage());
                 values.put(KEY_FAR_IMG_URI, farImgFilePath);
 
-                String closeImgFilePath = writeByteStringToFile(getActivity(),
-                        ticketIDStr + CLOSE_IMG_FILE_PREFIX, JPEG_FILE_SUFFIX,
+//                String closeImgFilePath = writeByteStringToFile(getActivity(),
+                        closeImgFilePath = writeByteStringToFile(getActivity(),
+                        timeMilsStr + CLOSE_IMG_FILE_PREFIX, JPEG_FILE_SUFFIX,
                         reply.getCloseImage());
                 values.put(KEY_CLOSE_IMG_URI, closeImgFilePath);
 
-                String ticketImgFilePath = writeByteStringToFile(getActivity(),
-                        ticketIDStr + TICKET_IMG_FILE_PREFIX, JPEG_FILE_SUFFIX,
+//                String ticketImgFilePath = writeByteStringToFile(getActivity(),
+                        ticketImgFilePath = writeByteStringToFile(getActivity(),
+                        timeMilsStr + TICKET_IMG_FILE_PREFIX, JPEG_FILE_SUFFIX,
                         reply.getTicketImage());
                 values.put(KEY_TICKET_IMG_URI, ticketImgFilePath);
                 values.put(KEY_IS_UPLOADED, 1);
@@ -249,10 +259,14 @@ public class DatabaseFragment extends Fragment {
 
         @Override
         protected void onPostExecute(String result) {
+//            Toast.makeText(getActivity(), "Updated count = " + Integer.toString(updateCount), Toast.LENGTH_SHORT).show();
             if (updateCount > 0) {
                 refreshTitlesFragment();
+//                Toast.makeText(getActivity(), mapFilePath, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getActivity(), farImgFilePath, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getActivity(), closeImgFilePath, Toast.LENGTH_SHORT).show();
+//                Toast.makeText(getActivity(), ticketImgFilePath, Toast.LENGTH_SHORT).show();
             }
-//            Toast.makeText(getActivity(), "Updated count = " + Integer.toString(updateCount), Toast.LENGTH_SHORT).show();
         }
     }
 

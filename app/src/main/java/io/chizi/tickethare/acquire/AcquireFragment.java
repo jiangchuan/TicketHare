@@ -433,7 +433,9 @@ public class AcquireFragment extends Fragment {
                 locTimer.cancel();
                 renewLocTimer();
                 initFields();
-                getTicketID();
+                saveScreen();
+                getCurrentTime();
+                takeFarPictureIntent();
             }
         });
 //        profileImageView.setOnClickListener(new ImageView.OnClickListener() {
@@ -519,7 +521,7 @@ public class AcquireFragment extends Fragment {
         TimerTask locTask = new TimerTask() {
             Calendar now = Calendar.getInstance();
             int year = now.get(Calendar.YEAR);
-            int month = now.get(Calendar.MONTH);
+            int month = now.get(Calendar.MONTH) + 1;
             int day = now.get(Calendar.DAY_OF_MONTH);
             long nineOClockPm = DateUtil.getDate(year, month, day, 21, 0).getTime();
 
@@ -583,10 +585,13 @@ public class AcquireFragment extends Fragment {
 //                                }
                             }
                         })
-                .setNegativeButton(android.R.string.cancel,
+//                .setNegativeButton(android.R.string.cancel,
+                .setNegativeButton(R.string.alert_dialog_recognize_again,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
+//                                dialog.cancel();
+                                takeClosePictureIntent();
+                                dialog.dismiss();
                             }
                         });
 
@@ -1026,19 +1031,17 @@ public class AcquireFragment extends Fragment {
                     vehicleColor = data.getStringExtra(BACK_VEHICLE_COLOR);
                     vehicleType = data.getStringExtra(BACK_VEHICLE_TYPE);
                     licenseColor = data.getStringExtra(BACK_LICENSE_COLOR);
-//                    getTicketID();
-                    getCurrentTime();
-                    connectToBlueTooth();
+                    getTicketID();
                 }
                 break;
 
             case HPRTPrinterHelper.ACTIVITY_CONNECT_BT:
                 String strIsConnected = data.getExtras().getString("is_connected");
                 if (strIsConnected.equals("NO")) {
-                    Toast.makeText(getActivity(), getResources().getString(R.string.activity_main_scan_error), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), R.string.activity_main_scan_error, Toast.LENGTH_LONG).show();
                 } else {
                     printTicket();
-                    Toast.makeText(getActivity(), getResources().getString(R.string.activity_main_connected), Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), R.string.activity_main_connected, Toast.LENGTH_LONG).show();
                     showPrintCheckDialog();
                 }
                 break;
@@ -1048,7 +1051,6 @@ public class AcquireFragment extends Fragment {
                 if (resultCode == getActivity().RESULT_OK) {
                     if (ticketImgFilePath != null) {
                         showUploadDialog();
-                        backToHome();
                     }
 //                    else {
 //                        showAlertandRepeat("ticketImgFilePath is null!", REQUEST_TICKET_IMG_CAPTURE);
@@ -1091,8 +1093,7 @@ public class AcquireFragment extends Fragment {
                 new TicketRangeGrpcTask().execute();
             } else {
                 updateTicketIDandRange();
-                saveScreen();
-                takeFarPictureIntent();
+                connectToBlueTooth();
             }
         } else {
             new TicketRangeGrpcTask().execute();
@@ -1152,8 +1153,7 @@ public class AcquireFragment extends Fragment {
         @Override
         protected void onPostExecute(List<String> resultList) {
             updateTicketIDandRange();
-            saveScreen();
-            takeFarPictureIntent();
+            connectToBlueTooth();
         }
     }
 
@@ -1241,7 +1241,8 @@ public class AcquireFragment extends Fragment {
         // 截图，在SnapshotReadyCallback中保存图片到 sd 卡
         mBaiduMap.snapshot(new BaiduMap.SnapshotReadyCallback() {
             public void onSnapshotReady(Bitmap snapshot) {
-                mapFilePath = FileUtil.getStorageDir(getActivity()) + "/" + Long.toString(ticketID)+ MAP_IMG_FILE_PREFIX + JPEG_FILE_SUFFIX;
+                mapFilePath = FileUtil.getStorageDir(getActivity()) + "/" + Long.toString(timeMilis)+ MAP_IMG_FILE_PREFIX + JPEG_FILE_SUFFIX;
+//                Toast.makeText(getActivity(), mapFilePath, Toast.LENGTH_LONG).show();
                 File file = new File(mapFilePath);
                 FileOutputStream out;
                 try {
@@ -1494,8 +1495,9 @@ public class AcquireFragment extends Fragment {
 
     private void takeFarPictureIntent() {
         try {
-            farImgFile = FileUtil.createImageFile(getActivity(), Long.toString(ticketID) + FAR_IMG_FILE_PREFIX, JPEG_FILE_SUFFIX);
+            farImgFile = FileUtil.createImageFile(getActivity(), Long.toString(timeMilis) + FAR_IMG_FILE_PREFIX, JPEG_FILE_SUFFIX);
             farImgFilePath = farImgFile.getAbsolutePath();
+//            Toast.makeText(getActivity(), farImgFilePath, Toast.LENGTH_LONG).show();
             Intent intent = new CameraActivity.IntentBuilder(getActivity())
                     .facing(Facing.BACK)
                     .to(farImgFile)
@@ -1516,8 +1518,9 @@ public class AcquireFragment extends Fragment {
 
     private void takeClosePictureIntent() {
         try {
-            closeImgFile = FileUtil.createImageFile(getActivity(), Long.toString(ticketID) + CLOSE_IMG_FILE_PREFIX, JPEG_FILE_SUFFIX);
+            closeImgFile = FileUtil.createImageFile(getActivity(), Long.toString(timeMilis) + CLOSE_IMG_FILE_PREFIX, JPEG_FILE_SUFFIX);
             closeImgFilePath = closeImgFile.getAbsolutePath();
+//            Toast.makeText(getActivity(), closeImgFilePath, Toast.LENGTH_LONG).show();
             Intent intent = new CameraActivity.IntentBuilder(getActivity())
                     // .skipConfirm()
                     .facing(Facing.BACK)
@@ -1541,8 +1544,9 @@ public class AcquireFragment extends Fragment {
 
     private void takeTicketPictureIntent() {
         try {
-            ticketImgFile = FileUtil.createImageFile(getActivity(), Long.toString(ticketID) + TICKET_IMG_FILE_PREFIX, JPEG_FILE_SUFFIX);
+            ticketImgFile = FileUtil.createImageFile(getActivity(), Long.toString(timeMilis) + TICKET_IMG_FILE_PREFIX, JPEG_FILE_SUFFIX);
             ticketImgFilePath = ticketImgFile.getAbsolutePath();
+//            Toast.makeText(getActivity(), ticketImgFilePath, Toast.LENGTH_LONG).show();
             Intent intent = new CameraActivity.IntentBuilder(getActivity())
                     .facing(Facing.BACK)
                     .to(ticketImgFile)
@@ -1621,7 +1625,7 @@ public class AcquireFragment extends Fragment {
         builder.setPositiveButton(R.string.alert_dialog_check_yes, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 printTicket();
-                Toast.makeText(getActivity(), getResources().getString(R.string.activity_main_connected), Toast.LENGTH_LONG).show();
+                Toast.makeText(getActivity(), R.string.activity_main_connected, Toast.LENGTH_LONG).show();
                 takeTicketPictureIntent();
                 dialog.dismiss();
             }
@@ -1731,7 +1735,6 @@ public class AcquireFragment extends Fragment {
             } else {
                 Toast.makeText(getActivity(), R.string.toast_record_ticket_failed, Toast.LENGTH_LONG).show();
             }
-            backToHome();
         }
     }
 

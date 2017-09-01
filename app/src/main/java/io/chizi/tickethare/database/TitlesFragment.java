@@ -21,6 +21,7 @@ import static io.chizi.tickethare.database.DBProvider.KEY_DATETIME;
 import static io.chizi.tickethare.database.DBProvider.KEY_LICENSE_NUM;
 import static io.chizi.tickethare.database.DBProvider.KEY_ROW_ID;
 import static io.chizi.tickethare.database.DBProvider.KEY_TICKET_ID;
+import static io.chizi.tickethare.database.DBProvider.KEY_TIME_MILIS;
 import static io.chizi.tickethare.database.DBProvider.KEY_USER_ID;
 import static io.chizi.tickethare.database.DBProvider.TICKET_URL;
 import static io.chizi.tickethare.util.AppConstants.POLICE_USER_ID;
@@ -77,8 +78,6 @@ public class TitlesFragment extends ListFragment {
         mDuelPane = detailsFrame != null && detailsFrame.getVisibility() == View.VISIBLE;
 
         if (!isDatabaseEmpty()) {
-            // Send the item selected to showDetails so the right hero info is shown
-//                showDetails(mCurCheckPosition);
             clickOnListViewItem(mCurCheckPosition);
         }
     }
@@ -124,7 +123,7 @@ public class TitlesFragment extends ListFragment {
         if (resolver == null) {
             resolver = getActivity().getContentResolver();
         }
-        Cursor cursor = resolver.query(TICKET_URL, projection, null, null, null);
+        Cursor cursor = resolver.query(TICKET_URL, projection, KEY_USER_ID + "=?", new String[]{userID}, null);
         if (cursor.getCount() < 1) {
             result = true;
         }
@@ -149,7 +148,7 @@ public class TitlesFragment extends ListFragment {
         // Projection contains the columns we want
         String[] projection = new String[]{KEY_LICENSE_NUM, KEY_DATETIME, KEY_TICKET_ID};
         // Pass the URL, projection and I'll cover the other options below
-        Cursor cursor = resolver.query(TICKET_URL, projection, KEY_USER_ID + "=?", new String[]{userID}, null);
+        Cursor cursor = resolver.query(TICKET_URL, projection, KEY_USER_ID + "=?", new String[]{userID}, KEY_TIME_MILIS + " DESC");
 
         int numTickets = cursor.getCount();
         ticketTitles = new String[numTickets];
@@ -205,7 +204,7 @@ public class TitlesFragment extends ListFragment {
             // When a DetailsFragment is created by calling newInstance the index for the data
             // it is supposed to show is passed to it. If that index hasn't been assigned we must
             // assign it in the if block
-            if (details == null || details.getShownIndex() != index) {
+//            if (details == null || details.getShownIndex() != index) {
                 // Make the details fragment and give it the currently selected hero index
                 details = DetailsFragment.newInstance(index, ticketIDs[index]);
 
@@ -218,7 +217,7 @@ public class TitlesFragment extends ListFragment {
                 // TRANSIT_FRAGMENT_FADE calls for the Fragment to fade away
                 ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
                 ft.commit();
-            }
+//            }
 
         } else {
             // Launch a new Activity to show our DetailsFragment

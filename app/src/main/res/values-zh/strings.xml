@@ -291,6 +291,7 @@
     <string name="alert_dialog_upload">上传罚单到服务器?</string>
     <string name="alert_dialog_check_yes">是</string>
     <string name="alert_dialog_check_no">否</string>
+    <string name="alert_dialog_recognize_again">重新识别</string>
     <string name="alert_dialog_authenticate">正在登录 ...</string>
     <string name="alert_dialog_dbresponse">已上传罚单数: </string>
 

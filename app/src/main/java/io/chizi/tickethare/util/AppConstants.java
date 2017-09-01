@@ -108,10 +108,10 @@ public interface AppConstants {
     static final String RUNTIME_DATA_DIR_ASSET = "runtime_data";
     static final String ANDROID_DATA_DIR = "/data/data/org.openalpr.app";
     static final String PREF_INSTALLED_KEY = "installed";
-    static final String MAP_IMG_FILE_PREFIX = "MAP_";
-    static final String CLOSE_IMG_FILE_PREFIX = "CLOSE_";
-    static final String FAR_IMG_FILE_PREFIX = "FAR_";
-    static final String TICKET_IMG_FILE_PREFIX = "TICKET_";
+    static final String MAP_IMG_FILE_PREFIX = "_map";
+    static final String CLOSE_IMG_FILE_PREFIX = "_close";
+    static final String FAR_IMG_FILE_PREFIX = "_far";
+    static final String TICKET_IMG_FILE_PREFIX = "_ticket";
     static final String PNG_FILE_SUFFIX = ".png";
     static final String JPEG_FILE_SUFFIX = ".jpg";
 

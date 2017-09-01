@@ -32,7 +32,7 @@
             android:id="@+id/car_license"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="1.4"
+            android:layout_weight="1.2"
             android:imeOptions="flagNoExtractUi"
             android:textSize="@dimen/ticket_details_font_size" />
 
@@ -52,7 +52,7 @@
             android:id="@+id/car_color"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
-            android:layout_weight="0.7"
+            android:layout_weight="0.9"
             android:prompt="@string/car_color_prompt" />
     </LinearLayout>
 
