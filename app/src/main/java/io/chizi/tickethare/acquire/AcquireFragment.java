@@ -165,7 +165,7 @@ import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_TIME_MILIS;
 import static io.chizi.tickethare.util.AppConstants.SECOND_IN_MS;
 import static io.chizi.tickethare.util.AppConstants.TICKET_IMG_FILE_PREFIX;
 import static io.chizi.tickethare.util.AppConstants.JPEG_FILE_SUFFIX;
-import static io.chizi.tickethare.util.AppConstants.MAP_FILE_PREFIX;
+import static io.chizi.tickethare.util.AppConstants.MAP_IMG_FILE_PREFIX;
 import static io.chizi.tickethare.util.AppConstants.POLICE_USER_ID;
 import static io.chizi.tickethare.util.AppConstants.PREF_INSTALLED_KEY;
 import static io.chizi.tickethare.util.AppConstants.REQUEST_FAR_IMG_CAPTURE;
@@ -433,8 +433,7 @@ public class AcquireFragment extends Fragment {
                 locTimer.cancel();
                 renewLocTimer();
                 initFields();
-                saveScreen();
-                takeFarPictureIntent();
+                getTicketID();
             }
         });
 //        profileImageView.setOnClickListener(new ImageView.OnClickListener() {
@@ -1027,7 +1026,7 @@ public class AcquireFragment extends Fragment {
                     vehicleColor = data.getStringExtra(BACK_VEHICLE_COLOR);
                     vehicleType = data.getStringExtra(BACK_VEHICLE_TYPE);
                     licenseColor = data.getStringExtra(BACK_LICENSE_COLOR);
-                    getTicketID();
+//                    getTicketID();
                     getCurrentTime();
                     connectToBlueTooth();
                 }
@@ -1092,6 +1091,8 @@ public class AcquireFragment extends Fragment {
                 new TicketRangeGrpcTask().execute();
             } else {
                 updateTicketIDandRange();
+                saveScreen();
+                takeFarPictureIntent();
             }
         } else {
             new TicketRangeGrpcTask().execute();
@@ -1151,6 +1152,8 @@ public class AcquireFragment extends Fragment {
         @Override
         protected void onPostExecute(List<String> resultList) {
             updateTicketIDandRange();
+            saveScreen();
+            takeFarPictureIntent();
         }
     }
 
@@ -1238,7 +1241,7 @@ public class AcquireFragment extends Fragment {
         // 截图，在SnapshotReadyCallback中保存图片到 sd 卡
         mBaiduMap.snapshot(new BaiduMap.SnapshotReadyCallback() {
             public void onSnapshotReady(Bitmap snapshot) {
-                mapFilePath = FileUtil.getStorageDir(getActivity()) + "/" + FileUtil.getFileName(MAP_FILE_PREFIX) + JPEG_FILE_SUFFIX;
+                mapFilePath = FileUtil.getStorageDir(getActivity()) + "/" + Long.toString(ticketID)+ MAP_IMG_FILE_PREFIX + JPEG_FILE_SUFFIX;
                 File file = new File(mapFilePath);
                 FileOutputStream out;
                 try {
@@ -1491,7 +1494,7 @@ public class AcquireFragment extends Fragment {
 
     private void takeFarPictureIntent() {
         try {
-            farImgFile = FileUtil.createImageFile(getActivity(), FAR_IMG_FILE_PREFIX, JPEG_FILE_SUFFIX);
+            farImgFile = FileUtil.createImageFile(getActivity(), Long.toString(ticketID) + FAR_IMG_FILE_PREFIX, JPEG_FILE_SUFFIX);
             farImgFilePath = farImgFile.getAbsolutePath();
             Intent intent = new CameraActivity.IntentBuilder(getActivity())
                     .facing(Facing.BACK)
@@ -1513,7 +1516,7 @@ public class AcquireFragment extends Fragment {
 
     private void takeClosePictureIntent() {
         try {
-            closeImgFile = FileUtil.createImageFile(getActivity(), CLOSE_IMG_FILE_PREFIX, JPEG_FILE_SUFFIX);
+            closeImgFile = FileUtil.createImageFile(getActivity(), Long.toString(ticketID) + CLOSE_IMG_FILE_PREFIX, JPEG_FILE_SUFFIX);
             closeImgFilePath = closeImgFile.getAbsolutePath();
             Intent intent = new CameraActivity.IntentBuilder(getActivity())
                     // .skipConfirm()
@@ -1538,7 +1541,7 @@ public class AcquireFragment extends Fragment {
 
     private void takeTicketPictureIntent() {
         try {
-            ticketImgFile = FileUtil.createImageFile(getActivity(), TICKET_IMG_FILE_PREFIX, JPEG_FILE_SUFFIX);
+            ticketImgFile = FileUtil.createImageFile(getActivity(), Long.toString(ticketID) + TICKET_IMG_FILE_PREFIX, JPEG_FILE_SUFFIX);
             ticketImgFilePath = ticketImgFile.getAbsolutePath();
             Intent intent = new CameraActivity.IntentBuilder(getActivity())
                     .facing(Facing.BACK)

@@ -25,12 +25,30 @@ public class FileUtil {
 
     private static final String LOG_TAG = FileUtil.class.getName();
 
-    public static File createImageFile(Activity activity, String prefix, String suffix) throws IOException {
+    public static File createImageFile(Activity activity, String imageFileName, String suffix) throws IOException {
         // Create an image file name
-        String imageFileName = getFileName(prefix);
+//        String imageFileName = getFileName(prefix);
         File storageDir = getStorageDir(activity);
         File imageF = File.createTempFile(imageFileName, suffix, storageDir);
         return imageF;
+    }
+
+    public static String writeByteStringToFile(Activity activity, String imageFileName, String suffix, ByteString mByteString) {
+        byte[] mByte = new byte[mByteString.size()];
+        mByteString.copyTo(mByte, 0);
+        String theFilePath = getStorageDir(activity) + "/" + imageFileName + suffix;
+        try {
+            writeFile(mByte, theFilePath);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return theFilePath;
+    }
+
+    public static void writeFile(byte[] data, String fileName) throws IOException {
+        FileOutputStream out = new FileOutputStream(fileName);
+        out.write(data);
+        out.close();
     }
 
     public static File getStorageDir(Activity activity) {
@@ -42,18 +60,6 @@ public class FileUtil {
             Log.v(LOG_TAG, "External storage is not mounted READ/WRITE.");
         }
         return storageDir;
-    }
-
-    public static String writeByteStringToFile(Activity activity, String fileName, ByteString mByteString) {
-        byte[] mByte = new byte[mByteString.size()];
-        mByteString.copyTo(mByte, 0);
-        String theFilePath = FileUtil.getStorageDir(activity) + "/" + fileName;
-        try {
-            FileUtil.writeFile(mByte, theFilePath);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return theFilePath;
     }
 
     public static boolean deleteTempFiles(File file) {
@@ -73,11 +79,8 @@ public class FileUtil {
     }
 
 
-    public static String getFileName(String filePrefix) {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        String fileName = filePrefix + timeStamp;
-        return fileName;
+    public static String getFileName(String ticketIDStr, String filePrefix) {
+        return (ticketIDStr + filePrefix);
     }
 
     public static boolean copyAssetFolder(AssetManager assetManager, String fromAssetPath, String toPath) {
@@ -129,10 +132,5 @@ public class FileUtil {
         }
     }
 
-    public static void writeFile(byte[] data, String fileName) throws IOException{
-        FileOutputStream out = new FileOutputStream(fileName);
-        out.write(data);
-        out.close();
-    }
 
 }

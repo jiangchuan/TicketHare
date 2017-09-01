@@ -53,11 +53,16 @@ import static io.chizi.tickethare.database.DBProvider.KEY_USER_ID;
 import static io.chizi.tickethare.database.DBProvider.KEY_WEEK;
 import static io.chizi.tickethare.database.DBProvider.KEY_YEAR;
 import static io.chizi.tickethare.database.DBProvider.TICKET_URL;
+import static io.chizi.tickethare.util.AppConstants.CLOSE_IMG_FILE_PREFIX;
+import static io.chizi.tickethare.util.AppConstants.FAR_IMG_FILE_PATH;
+import static io.chizi.tickethare.util.AppConstants.FAR_IMG_FILE_PREFIX;
 import static io.chizi.tickethare.util.AppConstants.HOST_IP;
 import static io.chizi.tickethare.util.AppConstants.JPEG_FILE_SUFFIX;
+import static io.chizi.tickethare.util.AppConstants.MAP_IMG_FILE_PREFIX;
 import static io.chizi.tickethare.util.AppConstants.POLICE_USER_ID;
 import static io.chizi.tickethare.util.AppConstants.PORT;
 import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_USER_ID;
+import static io.chizi.tickethare.util.AppConstants.TICKET_IMG_FILE_PREFIX;
 import static io.chizi.tickethare.util.FileUtil.writeByteStringToFile;
 
 /**
@@ -153,23 +158,24 @@ public class DatabaseFragment extends Fragment {
                 values.put(KEY_ADDRESS, reply.getAddress());
                 values.put(KEY_LONGITUDE, reply.getLongitude());
                 values.put(KEY_LATITUDE, reply.getLatitude());
+                String ticketIDStr = Long.toString(ticketID);
                 String mapFilePath = writeByteStringToFile(getActivity(),
-                        Long.toString(ticketID) + "_map" + JPEG_FILE_SUFFIX,
+                        ticketIDStr + MAP_IMG_FILE_PREFIX, JPEG_FILE_SUFFIX,
                         reply.getMapImage());
                 values.put(KEY_MAP_URI, mapFilePath);
 
                 String farImgFilePath = writeByteStringToFile(getActivity(),
-                        Long.toString(ticketID) + "_farImg" + JPEG_FILE_SUFFIX,
+                        ticketIDStr + FAR_IMG_FILE_PREFIX, JPEG_FILE_SUFFIX,
                         reply.getFarImage());
                 values.put(KEY_FAR_IMG_URI, farImgFilePath);
 
                 String closeImgFilePath = writeByteStringToFile(getActivity(),
-                        Long.toString(ticketID) + "_closeImg" + JPEG_FILE_SUFFIX,
+                        ticketIDStr + CLOSE_IMG_FILE_PREFIX, JPEG_FILE_SUFFIX,
                         reply.getCloseImage());
                 values.put(KEY_CLOSE_IMG_URI, closeImgFilePath);
 
                 String ticketImgFilePath = writeByteStringToFile(getActivity(),
-                        Long.toString(ticketID) + "_ticketImg" + JPEG_FILE_SUFFIX,
+                        ticketIDStr + TICKET_IMG_FILE_PREFIX, JPEG_FILE_SUFFIX,
                         reply.getTicketImage());
                 values.put(KEY_TICKET_IMG_URI, ticketImgFilePath);
                 values.put(KEY_IS_UPLOADED, 1);
@@ -203,9 +209,9 @@ public class DatabaseFragment extends Fragment {
         lastTimeMilis = 0;
         if (cursor.moveToFirst()) {
             lastTimeMilis = cursor.getLong(cursor.getColumnIndex("last_time"));
-            Toast.makeText(getActivity(), "lastTimeMilis from SQLite = " + Long.toString(lastTimeMilis), Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getActivity(), "lastTimeMilis from SQLite = " + Long.toString(lastTimeMilis), Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(getActivity(), "无罚单存在本机", Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getActivity(), "无罚单存在本机", Toast.LENGTH_SHORT).show();
         }
         try {
             if (cursor != null && !cursor.isClosed())
@@ -246,7 +252,7 @@ public class DatabaseFragment extends Fragment {
             if (updateCount > 0) {
                 refreshTitlesFragment();
             }
-            Toast.makeText(getActivity(), "Updated count = " + Integer.toString(updateCount), Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getActivity(), "Updated count = " + Integer.toString(updateCount), Toast.LENGTH_SHORT).show();
         }
     }
 

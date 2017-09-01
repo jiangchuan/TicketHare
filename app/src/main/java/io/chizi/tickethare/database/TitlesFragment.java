@@ -27,6 +27,7 @@ import static io.chizi.tickethare.util.AppConstants.POLICE_USER_ID;
 import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_CURR_INDEX;
 import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_CURR_POS;
 import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_USER_ID;
+import static io.chizi.tickethare.util.AppConstants.TITLES_FRAGMENT_TICKET_ID;
 
 /**
  * Created by Jiangchuan on 5/21/17.
@@ -228,6 +229,7 @@ public class TitlesFragment extends ListFragment {
 
             // Pass along the currently selected index assigned to the keyword index
             intent.putExtra(SAVED_INSTANCE_CURR_INDEX, index);
+            intent.putExtra(TITLES_FRAGMENT_TICKET_ID, ticketIDs[index]);
 
             // Call for the Activity to open
             startActivity(intent);
