@@ -20,9 +20,13 @@ import io.chizi.tickethare.R;
 import static io.chizi.tickethare.database.DBProvider.KEY_DATETIME;
 import static io.chizi.tickethare.database.DBProvider.KEY_LICENSE_NUM;
 import static io.chizi.tickethare.database.DBProvider.KEY_ROW_ID;
+import static io.chizi.tickethare.database.DBProvider.KEY_TICKET_ID;
+import static io.chizi.tickethare.database.DBProvider.KEY_USER_ID;
 import static io.chizi.tickethare.database.DBProvider.TICKET_URL;
+import static io.chizi.tickethare.util.AppConstants.POLICE_USER_ID;
 import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_CURR_INDEX;
 import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_CURR_POS;
+import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_USER_ID;
 
 /**
  * Created by Jiangchuan on 5/21/17.
@@ -31,9 +35,12 @@ import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_CURR_POS;
 public class TitlesFragment extends ListFragment {
     ContentResolver resolver; // Provides access to other applications Content Providers
 
+    private String userID;
+
     private TextView emptyTextView;
     ArrayAdapter<String> connectArrayToListView;
-    String[] ticketTitles;
+    private String[] ticketTitles;
+    private long[] ticketIDs;
 
     // True or False depending on if we are in horizontal or duel pane mode
     boolean mDuelPane;
@@ -50,6 +57,13 @@ public class TitlesFragment extends ListFragment {
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
+        if (savedInstanceState != null) {
+            userID = savedInstanceState.getString(SAVED_INSTANCE_USER_ID);
+            mCurCheckPosition = savedInstanceState.getInt(SAVED_INSTANCE_CURR_POS, 0);
+        }
+        Intent intentFrom = getActivity().getIntent(); // Get the Intent that called for this Activity to open
+        userID = intentFrom.getExtras().getString(POLICE_USER_ID); // Get the data that was sent
+
         resolver = getActivity().getContentResolver();
         updateListView();
 
@@ -61,26 +75,16 @@ public class TitlesFragment extends ListFragment {
         // Check if the detailsFrame exists and if it is visible
         mDuelPane = detailsFrame != null && detailsFrame.getVisibility() == View.VISIBLE;
 
-        // If the screen is rotated onSaveInstanceState() below will store the // hero most recently selected. Get the value attached to curChoice and // store it in mCurCheckPosition
-        if (savedInstanceState != null) {
-            // Restore last state for checked position.
-            mCurCheckPosition = savedInstanceState.getInt(SAVED_INSTANCE_CURR_POS, 0);
-        }
-
         if (!isDatabaseEmpty()) {
             // Send the item selected to showDetails so the right hero info is shown
 //                showDetails(mCurCheckPosition);
             clickOnListViewItem(mCurCheckPosition);
-
         }
     }
 
     public void clickOnListViewItem(final int mPosition) {
         if (mDuelPane) {
             final ListView mListView = getListView();
-            // CHOICE_MODE_SINGLE allows one item in the ListView to be selected at a time
-            // CHOICE_MODE_MULTIPLE allows multiple
-            // CHOICE_MODE_NONE is the default and the item won't be highlighted in this case'
             mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
             new Handler().post(new Runnable() {
                 @Override
@@ -95,12 +99,7 @@ public class TitlesFragment extends ListFragment {
     }
 
     public void updateDB() {
-        // An ArrayAdapter connects the array to our ListView
-        // getActivity() returns a Context so we have the resources needed
-        // We pass a default list item text view to put the data in and the
-        // array
-//        ticketTitles = Arrays.asList(getTicketTitles());
-        ticketTitles = getTicketTitles();
+        getTicketTitles();
         connectArrayToListView = new ArrayAdapter<String>(
                 getActivity(),
                 android.R.layout.simple_list_item_activated_1,
@@ -145,20 +144,24 @@ public class TitlesFragment extends ListFragment {
         }
     }
 
-    private String[] getTicketTitles() {
+    private void getTicketTitles() {
         // Projection contains the columns we want
-        String[] projection = new String[]{KEY_LICENSE_NUM, KEY_DATETIME};
+        String[] projection = new String[]{KEY_LICENSE_NUM, KEY_DATETIME, KEY_TICKET_ID};
         // Pass the URL, projection and I'll cover the other options below
-        Cursor cursor = resolver.query(TICKET_URL, projection, null, null, null);
+        Cursor cursor = resolver.query(TICKET_URL, projection, KEY_USER_ID + "=?", new String[]{userID}, null);
 
-        String[] ticketTitlesArray = new String[cursor.getCount()];
+        int numTickets = cursor.getCount();
+        ticketTitles = new String[numTickets];
+        ticketIDs = new long[numTickets];
         // Cycle through and display every row of data
         int i = 0;
         if (cursor.moveToFirst()) {
             do {
                 String license = cursor.getString(cursor.getColumnIndex(KEY_LICENSE_NUM));
                 String datetime = cursor.getString(cursor.getColumnIndex(KEY_DATETIME));
-                ticketTitlesArray[i++] = license + ", " + datetime;
+                ticketTitles[i] = license + ", " + datetime;
+                ticketIDs[i] = cursor.getLong(cursor.getColumnIndex(KEY_TICKET_ID));
+                i++;
             } while (cursor.moveToNext());
         }
 
@@ -168,8 +171,6 @@ public class TitlesFragment extends ListFragment {
         } catch (Exception ex) {
 
         }
-
-        return ticketTitlesArray;
     }
 
     // Called every time the screen orientation changes or Android kills an Activity
@@ -178,6 +179,7 @@ public class TitlesFragment extends ListFragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        outState.putString(SAVED_INSTANCE_USER_ID, userID);
         outState.putInt(SAVED_INSTANCE_CURR_POS, mCurCheckPosition);
     }
 
@@ -204,7 +206,7 @@ public class TitlesFragment extends ListFragment {
             // assign it in the if block
             if (details == null || details.getShownIndex() != index) {
                 // Make the details fragment and give it the currently selected hero index
-                details = DetailsFragment.newInstance(index);
+                details = DetailsFragment.newInstance(index, ticketIDs[index]);
 
                 // Start Fragment transactions
                 FragmentTransaction ft = getFragmentManager().beginTransaction();
@@ -231,4 +233,5 @@ public class TitlesFragment extends ListFragment {
             startActivity(intent);
         }
     }
+
 }

@@ -25,10 +25,12 @@ import io.chizi.tickethare.util.ColorSpinnerAdapter;
 import static io.chizi.tickethare.database.DBProvider.KEY_ADDRESS;
 import static io.chizi.tickethare.database.DBProvider.KEY_CAR_COLOR;
 import static io.chizi.tickethare.database.DBProvider.KEY_CAR_TYPE;
+import static io.chizi.tickethare.database.DBProvider.KEY_DATETIME;
 import static io.chizi.tickethare.database.DBProvider.KEY_DAY;
 import static io.chizi.tickethare.database.DBProvider.KEY_HOUR;
 import static io.chizi.tickethare.database.DBProvider.KEY_FAR_IMG_URI;
 import static io.chizi.tickethare.database.DBProvider.KEY_CLOSE_IMG_URI;
+import static io.chizi.tickethare.database.DBProvider.KEY_POLICE_PORTRAIT_URI;
 import static io.chizi.tickethare.database.DBProvider.KEY_TICKET_IMG_URI;
 import static io.chizi.tickethare.database.DBProvider.KEY_LATITUDE;
 import static io.chizi.tickethare.database.DBProvider.KEY_LICENSE_COLOR;
@@ -46,6 +48,7 @@ import static io.chizi.tickethare.database.DBProvider.KEY_USER_ID;
 import static io.chizi.tickethare.database.DBProvider.KEY_YEAR;
 import static io.chizi.tickethare.database.DBProvider.TICKET_URL;
 import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_CURR_INDEX;
+import static io.chizi.tickethare.util.AppConstants.TITLES_FRAGMENT_TICKET_ID;
 import static io.chizi.tickethare.util.AppConstants.TRANS_IMAGE_H;
 import static io.chizi.tickethare.util.AppConstants.TRANS_IMAGE_W;
 
@@ -55,6 +58,25 @@ import static io.chizi.tickethare.util.AppConstants.TRANS_IMAGE_W;
 
 public class DetailsFragment extends Fragment {
     ContentResolver resolver; // Provides access to other applications Content Providers
+
+    private String userID;
+    private String licenseNum;
+    private String licenseColor;
+    private String vehicleType;
+    private String vehicleColor;
+    private int year;
+    private int month;
+    private int day;
+    private int hour;
+    private int minute;
+    private String address;
+    private double longitude;
+    private double latitude;
+    private String mapURI;
+    private String farImgURI;
+    private String closeImgURI;
+    private String ticketImgURI;
+
 
     private String policeName;
     private String policeCity;
@@ -98,12 +120,13 @@ public class DetailsFragment extends Fragment {
 
 
     // Create a DetailsFragment that contains the hero data for the correct index
-    public static DetailsFragment newInstance(int index) {
+    public static DetailsFragment newInstance(int index, long ticketID) {
         DetailsFragment f = new DetailsFragment();
 
         // Bundles are used to pass data using a key "index" and a value
         Bundle args = new Bundle();
         args.putInt(SAVED_INSTANCE_CURR_INDEX, index);
+        args.putLong(TITLES_FRAGMENT_TICKET_ID, ticketID);
 
         // Assign key value to the fragment
         f.setArguments(args);
@@ -112,8 +135,11 @@ public class DetailsFragment extends Fragment {
     }
 
     public int getShownIndex() {
-        // Returns the index assigned
         return getArguments().getInt(SAVED_INSTANCE_CURR_INDEX, 0);
+    }
+
+    public long getShownTicketID() {
+        return getArguments().getLong(TITLES_FRAGMENT_TICKET_ID, 0);
     }
 
     // LayoutInflator puts the Fragment on the screen
@@ -180,6 +206,37 @@ public class DetailsFragment extends Fragment {
         updateDetails();
     }
 
+    public void getTicketInfo(String theTicketID) {
+        String[] projection = new String[]{KEY_USER_ID, KEY_LICENSE_NUM, KEY_LICENSE_COLOR, KEY_CAR_TYPE, KEY_CAR_COLOR, KEY_YEAR, KEY_MONTH, KEY_DAY, KEY_HOUR, KEY_MINUTE, KEY_ADDRESS, KEY_LONGITUDE, KEY_LATITUDE, KEY_MAP_URI, KEY_FAR_IMG_URI, KEY_CLOSE_IMG_URI, KEY_TICKET_IMG_URI};
+        Cursor cursor = resolver.query(TICKET_URL, projection, KEY_TICKET_ID + "=?", new String[]{theTicketID}, null);
+        if (cursor.moveToFirst()) {
+            userID = cursor.getString(cursor.getColumnIndex(KEY_USER_ID));
+            licenseNum = cursor.getString(cursor.getColumnIndex(KEY_LICENSE_NUM));
+            licenseColor = cursor.getString(cursor.getColumnIndex(KEY_LICENSE_COLOR));
+            vehicleType = cursor.getString(cursor.getColumnIndex(KEY_CAR_TYPE));
+            vehicleColor = cursor.getString(cursor.getColumnIndex(KEY_CAR_COLOR));
+            year = cursor.getInt(cursor.getColumnIndex(KEY_YEAR));
+            month = cursor.getInt(cursor.getColumnIndex(KEY_MONTH));
+            day = cursor.getInt(cursor.getColumnIndex(KEY_DAY));
+            hour = cursor.getInt(cursor.getColumnIndex(KEY_HOUR));
+            minute = cursor.getInt(cursor.getColumnIndex(KEY_MINUTE));
+            address = cursor.getString(cursor.getColumnIndex(KEY_ADDRESS));
+            longitude = cursor.getDouble(cursor.getColumnIndex(KEY_LONGITUDE));
+            latitude = cursor.getDouble(cursor.getColumnIndex(KEY_LATITUDE));
+            mapURI = cursor.getString(cursor.getColumnIndex(KEY_MAP_URI));
+            farImgURI = cursor.getString(cursor.getColumnIndex(KEY_FAR_IMG_URI));
+            closeImgURI = cursor.getString(cursor.getColumnIndex(KEY_CLOSE_IMG_URI));
+            ticketImgURI = cursor.getString(cursor.getColumnIndex(KEY_TICKET_IMG_URI));
+        } else {
+            Toast.makeText(getActivity(), R.string.toast_no_ticket_info, Toast.LENGTH_SHORT).show();
+        }
+        try {
+            if (cursor != null && !cursor.isClosed())
+                cursor.close();
+        } catch (Exception ex) {
+        }
+    }
+
     public void getUserInfo(String theUserID) {
         String[] projection = new String[]{KEY_POLICE_NAME, KEY_POLICE_CITY, KEY_POLICE_DEPT};
         Cursor cursor = resolver.query(DBProvider.POLICE_URL, projection, KEY_USER_ID + "=?", new String[]{theUserID}, null);
@@ -198,36 +255,36 @@ public class DetailsFragment extends Fragment {
     }
 
     private void updateDetails() {
-        String[] projection = new String[]{KEY_ROW_ID};
         if (resolver == null) {
             resolver = getActivity().getContentResolver();
         }
-        Cursor cursor = resolver.query(TICKET_URL, projection, null, null, null);
-        if (cursor.getCount() > 0) {
-            int shownIndex = getShownIndex();
-            ticketIDTextView.setText(Long.toString(getLongColumnValues(KEY_TICKET_ID)[shownIndex]));
-            licenseEditText.setText(getStringColumnValues(KEY_LICENSE_NUM)[shownIndex]);
-            addressEditText.setText(getAddresses()[shownIndex]);
+        String ticketID = Long.toString(getShownTicketID());
+        getTicketInfo(ticketID);
 
-            int year = getIntColumnValues(KEY_YEAR)[shownIndex];
-            int month = getIntColumnValues(KEY_MONTH)[shownIndex];
-            int day = getIntColumnValues(KEY_DAY)[shownIndex];
-            String dateTimeString = year + "年" + month + "月" + day + "日"
-                    + Integer.toString(getIntColumnValues(KEY_HOUR)[shownIndex]) + "时"
-                    + Integer.toString(getIntColumnValues(KEY_MINUTE)[shownIndex]) + "分";
+            ticketIDTextView.setText(ticketID);
+            licenseEditText.setText(licenseNum);
+            addressEditText.setText(address);
+
+        String yearStr = Integer.toString(year);
+        String monthStr = Integer.toString(month);
+        String dayStr = Integer.toString(day);
+        String hourStr = Integer.toString(hour);
+        String minuteStr = Integer.toString(minute);
+
+            String dateTimeString = yearStr + "年" + monthStr + "月" + dayStr + "日"
+                    + hourStr + "时"
+                    + minuteStr + "分";
             dateTimeEditText.setText(dateTimeString);
 
-            yearEditText.setText(Integer.toString(year));
-            monthEditText.setText(Integer.toString(month));
-            dayEditText.setText(Integer.toString(day));
+            yearEditText.setText(yearStr);
+            monthEditText.setText(monthStr);
+            dayEditText.setText(dayStr);
 
-            String userID = getStringColumnValues(KEY_USER_ID)[shownIndex];
             getUserInfo(userID);
             ticketTitleTextView.setText(policeCity + getString(R.string.ticket_title));
             ticketDespTextView.setText(getString(R.string.ticket_description1) + policeDept + getString(R.string.ticket_description2));
             ticketPoliceEditText.setText(policeName);
 
-            String vehicleColor = getStringColumnValues(KEY_CAR_COLOR)[shownIndex];
             if (vehicleColor != null) {
                 switch (vehicleColor) {
                     case "黑":
@@ -266,7 +323,6 @@ public class DetailsFragment extends Fragment {
                 }
             }
 
-            String vehicleType = getStringColumnValues(KEY_CAR_TYPE)[shownIndex];
             if (vehicleType != null) {
                 switch (vehicleType) {
                     case "大型客车":
@@ -295,7 +351,6 @@ public class DetailsFragment extends Fragment {
                 }
             }
 
-            String licenseColor = getStringColumnValues(KEY_LICENSE_COLOR)[shownIndex];
             if (licenseColor != null) {
                 switch (licenseColor) {
                     case "黄":
@@ -316,7 +371,7 @@ public class DetailsFragment extends Fragment {
             mapVTO.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
                 public boolean onPreDraw() {
                     mapDetailsImageView.getViewTreeObserver().removeOnPreDrawListener(this);
-                    String filePath = getStringColumnValues(KEY_MAP_URI)[getShownIndex()];
+                    String filePath = mapURI;
                     if (filePath != null) {
                         Bitmap bitmap = BitmapUtil.getScaledBitmap(filePath, TRANS_IMAGE_W, TRANS_IMAGE_H);
                         if (bitmap != null) {
@@ -334,7 +389,7 @@ public class DetailsFragment extends Fragment {
             photo1VTO.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
                 public boolean onPreDraw() {
                     photo1DetailsImageView.getViewTreeObserver().removeOnPreDrawListener(this);
-                    String filePath = getStringColumnValues(KEY_FAR_IMG_URI)[getShownIndex()];
+                    String filePath = farImgURI;
                     if (filePath != null) {
                         Bitmap bitmap = BitmapUtil.getScaledBitmap(filePath, TRANS_IMAGE_W, TRANS_IMAGE_H);
                         if (bitmap != null) {
@@ -352,7 +407,7 @@ public class DetailsFragment extends Fragment {
             photo2VTO.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
                 public boolean onPreDraw() {
                     photo2DetailsImageView.getViewTreeObserver().removeOnPreDrawListener(this);
-                    String filePath = getStringColumnValues(KEY_CLOSE_IMG_URI)[getShownIndex()];
+                    String filePath = closeImgURI;
                     if (filePath != null) {
                         Bitmap bitmap = BitmapUtil.getScaledBitmap(filePath, TRANS_IMAGE_W, TRANS_IMAGE_H);
                         if (bitmap != null) {
@@ -370,7 +425,7 @@ public class DetailsFragment extends Fragment {
             photo3VTO.addOnPreDrawListener(new ViewTreeObserver.OnPreDrawListener() {
                 public boolean onPreDraw() {
                     photo3DetailsImageView.getViewTreeObserver().removeOnPreDrawListener(this);
-                    String filePath = getStringColumnValues(KEY_TICKET_IMG_URI)[getShownIndex()];
+                    String filePath = ticketImgURI;
                     if (filePath != null) {
                         Bitmap bitmap = BitmapUtil.getScaledBitmap(filePath, TRANS_IMAGE_W, TRANS_IMAGE_H);
                         if (bitmap != null) {
@@ -383,7 +438,7 @@ public class DetailsFragment extends Fragment {
                     return true;
                 }
             });
-        }
+
 
         vehicleTypeRadioGroup1.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
@@ -412,121 +467,6 @@ public class DetailsFragment extends Fragment {
             }
         });
 
-        try {
-            if (cursor != null && !cursor.isClosed())
-                cursor.close();
-        } catch (Exception ex) {
-
-        }
-
-    }
-
-    private String[] getAddresses() {
-        // Projection contains the columns we want
-        String[] projection = new String[]{KEY_ADDRESS, KEY_LONGITUDE, KEY_LATITUDE};
-        // Pass the URL, projection and I'll cover the other options below
-        Cursor cursor = resolver.query(TICKET_URL, projection, null, null, null);
-
-        String[] ticketDetailsArray = new String[cursor.getCount()];
-        // Cycle through and display every row of data
-        int i = 0;
-        if (cursor.moveToFirst()) {
-            do {
-//                String datetime = cursor.getString(cursor.getColumnIndex("datetime"));
-                String address = cursor.getString(cursor.getColumnIndex(KEY_ADDRESS));
-                String lon = Double.toString(cursor.getDouble(cursor.getColumnIndex(KEY_LONGITUDE)));
-                String lat = Double.toString(cursor.getDouble(cursor.getColumnIndex(KEY_LATITUDE)));
-                ticketDetailsArray[i++] = address + " (" + lon + ", " + lat + ")";
-            } while (cursor.moveToNext());
-        }
-
-        try {
-            if (cursor != null && !cursor.isClosed())
-                cursor.close();
-        } catch (Exception ex) {
-
-        }
-
-        return ticketDetailsArray;
-    }
-
-    private String[] getStringColumnValues(String columnID) {
-        // Projection contains the columns we want
-        String[] projection = new String[]{columnID};
-        // Pass the URL, projection and I'll cover the other options below
-        Cursor cursor = resolver.query(TICKET_URL, projection, null, null, null);
-
-        String[] ticketDetailsArray = new String[cursor.getCount()];
-        // Cycle through and display every row of data
-        int i = 0;
-        if (cursor.moveToFirst()) {
-            do {
-                String columnValue = cursor.getString(cursor.getColumnIndex(columnID));
-                ticketDetailsArray[i++] = columnValue;
-            } while (cursor.moveToNext());
-        }
-
-        try {
-            if (cursor != null && !cursor.isClosed())
-                cursor.close();
-        } catch (Exception ex) {
-
-        }
-
-        return ticketDetailsArray;
-    }
-
-
-    private int[] getIntColumnValues(String columnID) {
-        // Projection contains the columns we want
-        String[] projection = new String[]{columnID};
-        // Pass the URL, projection and I'll cover the other options below
-        Cursor cursor = resolver.query(TICKET_URL, projection, null, null, null);
-
-        int[] ticketDetailsArray = new int[cursor.getCount()];
-        // Cycle through and display every row of data
-        int i = 0;
-        if (cursor.moveToFirst()) {
-            do {
-                int columnValue = cursor.getInt(cursor.getColumnIndex(columnID));
-                ticketDetailsArray[i++] = columnValue;
-            } while (cursor.moveToNext());
-        }
-
-        try {
-            if (cursor != null && !cursor.isClosed())
-                cursor.close();
-        } catch (Exception ex) {
-
-        }
-
-        return ticketDetailsArray;
-    }
-
-    private Long[] getLongColumnValues(String columnID) {
-        // Projection contains the columns we want
-        String[] projection = new String[]{columnID};
-        // Pass the URL, projection and I'll cover the other options below
-        Cursor cursor = resolver.query(TICKET_URL, projection, null, null, null);
-
-        Long[] ticketDetailsArray = new Long[cursor.getCount()];
-        // Cycle through and display every row of data
-        int i = 0;
-        if (cursor.moveToFirst()) {
-            do {
-                Long columnValue = cursor.getLong(cursor.getColumnIndex(columnID));
-                ticketDetailsArray[i++] = columnValue;
-            } while (cursor.moveToNext());
-        }
-
-        try {
-            if (cursor != null && !cursor.isClosed())
-                cursor.close();
-        } catch (Exception ex) {
-
-        }
-
-        return ticketDetailsArray;
     }
 
 }

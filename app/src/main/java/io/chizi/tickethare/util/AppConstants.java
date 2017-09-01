@@ -77,6 +77,7 @@ public interface AppConstants {
 
     static final String SAVED_INSTANCE_CURR_POS = "saved_instance_curr_pos";
     static final String SAVED_INSTANCE_CURR_INDEX = "saved_instance_curr_index";
+    static final String TITLES_FRAGMENT_TICKET_ID = "titles_fragment_ticket_id";
     static final String SAVED_INSTANCE_TICKET_ID = "saved_instance_ticket_id";
     static final String SAVED_INSTANCE_USER_ID = "saved_instance_user_id";
     static final String SAVED_INSTANCE_POLICE_NAME = "saved_instance_police_name";

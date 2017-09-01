@@ -243,14 +243,22 @@ public class DatabaseFragment extends Fragment {
 
         @Override
         protected void onPostExecute(String result) {
-//            refreshTitlesFragment();
+            if (updateCount > 0) {
+                refreshTitlesFragment();
+            }
             Toast.makeText(getActivity(), "Updated count = " + Integer.toString(updateCount), Toast.LENGTH_SHORT).show();
         }
     }
 
     @Override
-    public void onDestroyView() {
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putString(SAVED_INSTANCE_USER_ID, userID);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onDestroy() {
         mChannel.shutdown();
-        super.onDestroyView();
+        super.onDestroy();
     }
 }

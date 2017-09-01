@@ -218,9 +218,9 @@ public class AcquireFragment extends Fragment {
     private static int SCREEN_WIDTH; // 屏幕宽度（像素）
     private static int SCREEN_HEIGHT; // 屏幕高度（像素）
 
-    private Long ticketID = -1L;
-    private Long ticketIDStart = -1L;
-    private Long ticketIDEnd = -1L;
+    private long ticketID = -1L;
+    private long ticketIDStart = -1L;
+    private long ticketIDEnd = -1L;
     private String licenseNum;
     private String licenseColor = "蓝";
     private String vehicleType = "小型客车";

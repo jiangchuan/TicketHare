@@ -333,6 +333,7 @@
     <string name="request_wrong_police_station">Enter a police station please!</string>
     <string name="toast_update_hint">Long press to update the profile</string>
     <string name="toast_no_police_info">No police profile!</string>
+    <string name="toast_no_ticket_info">No ticket information!</string>
     <string name="toast_result_code_not_ok">resultCode not OK!</string>
     <string name="toast_record_ticket_success">Record ticket success!</string>
     <string name="toast_record_ticket_failed">Record ticket failed!</string>
