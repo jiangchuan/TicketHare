@@ -188,7 +188,7 @@ public class DatabaseFragment extends Fragment {
                         timeMilsStr + TICKET_IMG_FILE_PREFIX, JPEG_FILE_SUFFIX,
                         reply.getTicketImage());
                 values.put(KEY_TICKET_IMG_URI, ticketImgFilePath);
-                values.put(KEY_IS_UPLOADED, 1);
+                values.put(KEY_IS_UPLOADED, reply.getIsUploaded() ? 1 : 0);
 
                 resolver.insert(TICKET_URL, values);
                 updateCount++;

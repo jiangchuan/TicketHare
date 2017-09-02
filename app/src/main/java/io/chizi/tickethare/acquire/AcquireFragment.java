@@ -79,12 +79,10 @@ import HPRTAndroidSDK.PublicFunction;
 import io.chizi.ticket.MasterOrder;
 import io.chizi.ticket.RecordReply;
 import io.chizi.ticket.SlaveLoc;
-import io.chizi.ticket.StatsReply;
 import io.chizi.ticket.TicketDetails;
 import io.chizi.ticket.TicketGrpc;
 import io.chizi.ticket.TicketRange;
 import io.chizi.ticket.TicketRangeSid;
-import io.chizi.ticket.TicketStats;
 import io.chizi.tickethare.R;
 import io.chizi.tickethare.database.TitlesFragment;
 import io.chizi.tickethare.util.BitmapUtil;
@@ -249,9 +247,6 @@ public class AcquireFragment extends Fragment {
     private int hour = -1;
     private int minute = -1;
     private long timeMilis = 0;
-
-    private int numSavedTicket;
-    private int numUploadedTicket;
 
     private File closeImgFile = null;
     private File farImgFile = null;
@@ -1656,7 +1651,7 @@ public class AcquireFragment extends Fragment {
             public void onClick(DialogInterface dialog, int id) {
                 isUploaded = 0;
                 saveTicket();
-                new SubmitTicketStatsGrpcTask().execute();
+                recordTicket();
                 dialog.dismiss();
             }
         });
@@ -1671,15 +1666,14 @@ public class AcquireFragment extends Fragment {
     private class recordTicketGrpcTask extends AsyncTask<Void, Void, List<String>> {
         @Override
         protected void onPreExecute() {
-            if (progressDialog == null) {
+            if (isUploaded == 1 && progressDialog == null) {
                 prepareProgressDialog();
             }
-            getTicketStats();
         }
 
         @Override
         protected List<String> doInBackground(Void... nothing) {
-            if (progressDialog == null) {
+            if (isUploaded == 1 && progressDialog == null) {
                 prepareProgressDialog();
             }
             ArrayList<String> resultList = new ArrayList<String>();
@@ -1706,8 +1700,7 @@ public class AcquireFragment extends Fragment {
                         .setFarImage(ByteString.copyFrom(getImageBytesfromPath(farImgFilePath)))
                         .setCloseImage(ByteString.copyFrom(getImageBytesfromPath(closeImgFilePath)))
                         .setTicketImage(ByteString.copyFrom(getImageBytesfromPath(ticketImgFilePath)))
-                        .setSavedTicketCount(numSavedTicket)
-                        .setUploadedTicketCount(numUploadedTicket)
+                        .setIsUploaded(isUploaded == 1 ? true : false)
                         .build();
                 RecordReply reply = blockingStub.recordTicket(ticketDetails);
                 resultList.add(String.valueOf(reply.getRecordSuccess()));
@@ -1724,74 +1717,19 @@ public class AcquireFragment extends Fragment {
 
         @Override
         protected void onPostExecute(List<String> resultList) {
-            dismissProgressDialog();
-            if (resultList != null) {
-                String createSuccess = resultList.get(0);
-                if (createSuccess != null && createSuccess.equals("true")) {
-                    Toast.makeText(getActivity(), R.string.toast_record_ticket_success, Toast.LENGTH_LONG).show();
+            if (isUploaded == 1) {
+                dismissProgressDialog();
+                if (resultList != null) {
+                    String createSuccess = resultList.get(0);
+                    if (createSuccess != null && createSuccess.equals("true")) {
+                        Toast.makeText(getActivity(), R.string.toast_record_ticket_success, Toast.LENGTH_LONG).show();
+                    } else {
+                        Toast.makeText(getActivity(), R.string.toast_record_ticket_failed, Toast.LENGTH_LONG).show();
+                    }
                 } else {
                     Toast.makeText(getActivity(), R.string.toast_record_ticket_failed, Toast.LENGTH_LONG).show();
                 }
-            } else {
-                Toast.makeText(getActivity(), R.string.toast_record_ticket_failed, Toast.LENGTH_LONG).show();
             }
-        }
-    }
-
-    private class SubmitTicketStatsGrpcTask extends AsyncTask<Void, Void, List<String>> {
-        @Override
-        protected void onPreExecute() {
-            getTicketStats();
-        }
-
-        @Override
-        protected List<String> doInBackground(Void... nothing) {
-            ArrayList<String> resultList = new ArrayList<String>();
-            try {
-                TicketGrpc.TicketBlockingStub blockingStub = TicketGrpc.newBlockingStub(mChannel);
-                TicketStats loginRequest = TicketStats.newBuilder().setSid(userID).setSavedTicketCount(numSavedTicket).setUploadedTicketCount(numUploadedTicket).build();
-                StatsReply reply = blockingStub.submitTicketStats(loginRequest);
-                resultList.add(String.valueOf(reply.getStatsSuccess()));
-                return resultList;
-            } catch (Exception e) {
-                StringWriter sw = new StringWriter();
-                PrintWriter pw = new PrintWriter(sw);
-                e.printStackTrace(pw);
-                pw.flush();
-                resultList.add("Failed... : " + System.getProperty("line.separator") + sw);
-                return resultList;
-            }
-        }
-
-        @Override
-        protected void onPostExecute(List<String> resultList) {
-        }
-    }
-
-    private void getTicketStats() {
-        // Projection contains the columns we want
-        String[] projection = new String[]{KEY_IS_UPLOADED};
-        // Pass the URL, projection and I'll cover the other options below
-        Cursor cursor = resolver.query(TICKET_URL, projection, null, null, null);
-
-        numSavedTicket = cursor.getCount();
-
-        int[] ticketDetailsArray = new int[cursor.getCount()];
-        // Cycle through and display every row of data
-        if (cursor.moveToFirst()) {
-            numUploadedTicket = 0;
-            do {
-                int columnValue = cursor.getInt(cursor.getColumnIndex(KEY_IS_UPLOADED));
-                if (columnValue == 1) {
-                    numUploadedTicket += columnValue;
-                }
-            } while (cursor.moveToNext());
-        }
-        try {
-            if (cursor != null && !cursor.isClosed())
-                cursor.close();
-        } catch (Exception ex) {
-
         }
     }
 
