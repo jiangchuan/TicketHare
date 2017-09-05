@@ -288,6 +288,7 @@
     <string name="progress_dialog_recording_ticket">正在上传罚单 ...</string>
     <string name="progress_dialog_printing">正在打印 ... , 请确认打印是否成功</string>
 
+    <string name="alert_dialog_save_userid">保存用户名?</string>
     <string name="alert_dialog_license_check">对吗?</string>
     <string name="alert_dialog_upload">上传罚单到服务器?</string>
     <string name="alert_dialog_check_yes">是</string>
@@ -298,6 +299,7 @@
 
     <string name="checkbox_torch">开/关 手电</string>
     <string name="toast_permission_received">已获取权限</string>
+    <string name="toast_userid_saved">用户名已保存</string>
     <string name="toast_ticket_saved">罚单已保存</string>
     <string name="toast_insert_db_failed">插入数据库失败</string>
     <string name="toast_no_ticket_id">没有罚单号!</string>

@@ -1,9 +1,11 @@
 package io.chizi.tickethare.login;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
 import android.content.ContentValues;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -17,6 +19,10 @@ import android.widget.Toast;
 
 import com.google.protobuf.ByteString;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.io.OutputStreamWriter;
 import java.io.PrintWriter;
 import java.io.StringWriter;
 import java.util.ArrayList;
@@ -55,8 +61,11 @@ import static io.chizi.tickethare.util.AppConstants.REQUEST_PERMISSIONS;
 
 public class LoginActivity extends RuntimePermissionsActivity {
     private static final String LOG_TAG = LoginActivity.class.getName();
+    private final static String STORETEXT = "storetext.txt";
 
     private String userID;
+    private String savedUserID = null;
+
     private String password;
     private String policeName;
     private String policeType;
@@ -82,6 +91,8 @@ public class LoginActivity extends RuntimePermissionsActivity {
 
         userIDEditText = (EditText) findViewById(R.id.user_id);
         passwordEditText = (EditText) findViewById(R.id.input_password);
+        getSavedUserID();
+        userIDEditText.setText(savedUserID);
 
         resolver = getContentResolver();
 
@@ -98,11 +109,10 @@ public class LoginActivity extends RuntimePermissionsActivity {
 
             @Override
             public void onClick(View v) {
-                // Start the Signup activity
+                userID = userIDEditText.getText().toString();
                 Intent intent = new Intent(LoginActivity.this, ChangePasswordActivity.class);
-//                startActivityForResult(intent, REQUEST_SIGNUP);
+                intent.putExtra(POLICE_USER_ID, userID);
                 startActivity(intent);
-//                finish();
                 overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
             }
         });
@@ -239,9 +249,11 @@ public class LoginActivity extends RuntimePermissionsActivity {
         values.put(KEY_POLICE_PORTRAIT_URI, policePortraitPath);
         resolver.insert(DBProvider.POLICE_URL, values);
 
-        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-        intent.putExtra(POLICE_USER_ID, userID);
-        startActivity(intent);
+        if (userID.equals(savedUserID)) {
+            goToMainActivity();
+        } else {
+            showSaveUserIDDialog();
+        }
     }
 
     public void onLoginFailed() {
@@ -281,6 +293,64 @@ public class LoginActivity extends RuntimePermissionsActivity {
     private void dismissProgressDialog() {
         progressDialog.dismiss();
         progressDialog = null;
+    }
+
+    private void showSaveUserIDDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(LoginActivity.this);
+        builder.setTitle(getString(R.string.alert_dialog_save_userid));
+        builder.setPositiveButton(R.string.alert_dialog_check_yes, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                saveUserID();
+                goToMainActivity();
+                dialog.dismiss();
+            }
+        });
+        builder.setNegativeButton(R.string.alert_dialog_check_no, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int id) {
+                goToMainActivity();
+                dialog.dismiss();
+            }
+        });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    public void saveUserID() {
+        try {
+            OutputStreamWriter out = new OutputStreamWriter(openFileOutput(STORETEXT, 0));
+            out.write(userIDEditText.getText().toString());
+            out.close();
+            Toast.makeText(this, R.string.toast_userid_saved, Toast.LENGTH_LONG).show();
+        } catch (Throwable t) {
+            Toast.makeText(this, "Exception: " + t.toString(), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public void getSavedUserID() {
+        try {
+            InputStream in = openFileInput(STORETEXT);
+            if (in != null) {
+                InputStreamReader tmp = new InputStreamReader(in);
+                BufferedReader reader = new BufferedReader(tmp);
+                String str;
+                StringBuilder buf = new StringBuilder();
+                while ((str = reader.readLine()) != null) {
+                    buf.append(str);
+                }
+                in.close();
+                savedUserID = buf.toString();
+            }
+        } catch (java.io.FileNotFoundException e) {
+            // that's OK, we probably haven't created it yet
+        } catch (Throwable t) {
+            Toast.makeText(this, "Exception: " + t.toString(), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    private void goToMainActivity() {
+        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+        intent.putExtra(POLICE_USER_ID, userID);
+        startActivity(intent);
     }
 
 }

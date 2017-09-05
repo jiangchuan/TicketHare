@@ -84,7 +84,11 @@ public class ChangePasswordActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_change_password);
 
+        Intent intentFrom = getIntent(); // Get the Intent that called for this Activity to open
+        userID = intentFrom.getExtras().getString(POLICE_USER_ID); // Get the data that was sent
+
         userIDEditText = (EditText) findViewById(R.id.user_id);
+        userIDEditText.setText(userID);
         passwordEditText = (EditText) findViewById(R.id.edittext_password);
         newPasswordEditText = (EditText) findViewById(R.id.edittext_new_password);
         reNewPasswordEditText = (EditText) findViewById(R.id.edittext_re_new_password);

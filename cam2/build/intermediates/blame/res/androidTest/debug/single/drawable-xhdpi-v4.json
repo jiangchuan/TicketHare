@@ -32,12 +32,12 @@
         "source": "/Users/Jiangchuan/Documents/good6/TicketHare/cam2/build/intermediates/bundles/debug/res/drawable-xhdpi-v4/cwac_cam2_ic_videocam.png"
     },
     {
-        "merged": "/Users/Jiangchuan/Documents/good6/TicketHare/cam2/build/intermediates/res/merged/androidTest/debug/drawable-xhdpi-v4/cwac_cam2_ic_refresh_white.png",
-        "source": "/Users/Jiangchuan/Documents/good6/TicketHare/cam2/build/intermediates/bundles/debug/res/drawable-xhdpi-v4/cwac_cam2_ic_refresh_white.png"
-    },
-    {
         "merged": "/Users/Jiangchuan/Documents/good6/TicketHare/cam2/build/intermediates/res/merged/androidTest/debug/drawable-xhdpi-v4/cwac_cam2_ic_flash_on.png",
         "source": "/Users/Jiangchuan/Documents/good6/TicketHare/cam2/build/intermediates/bundles/debug/res/drawable-xhdpi-v4/cwac_cam2_ic_flash_on.png"
+    },
+    {
+        "merged": "/Users/Jiangchuan/Documents/good6/TicketHare/cam2/build/intermediates/res/merged/androidTest/debug/drawable-xhdpi-v4/cwac_cam2_ic_refresh_white.png",
+        "source": "/Users/Jiangchuan/Documents/good6/TicketHare/cam2/build/intermediates/bundles/debug/res/drawable-xhdpi-v4/cwac_cam2_ic_refresh_white.png"
     },
     {
         "merged": "/Users/Jiangchuan/Documents/good6/TicketHare/cam2/build/intermediates/res/merged/androidTest/debug/drawable-xhdpi-v4/cwac_cam2_ic_action_facing.png",
