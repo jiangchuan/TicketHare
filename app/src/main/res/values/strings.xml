@@ -286,6 +286,7 @@
     <string name="progress_dialog_creating_account">Creating account ...</string>
     <string name="progress_dialog_updating_profile">Updating profile ...</string>
     <string name="progress_dialog_recording_ticket">Recording ticket ...</string>
+    <string name="progress_dialog_printing">Printing ... , Please check that the print is successful</string>
 
     <string name="alert_dialog_license_check"> correct?</string>
     <string name="alert_dialog_upload">Upload ticket?</string>
