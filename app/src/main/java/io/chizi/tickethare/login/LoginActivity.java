@@ -65,7 +65,6 @@ public class LoginActivity extends RuntimePermissionsActivity {
 
     private String userID;
     private String savedUserID = null;
-
     private String password;
     private String policeName;
     private String policeType;
@@ -126,7 +125,6 @@ public class LoginActivity extends RuntimePermissionsActivity {
                 }, R.string
                         .snackbar_permission_text
                 , REQUEST_PERMISSIONS);
-
     }
 
     @Override

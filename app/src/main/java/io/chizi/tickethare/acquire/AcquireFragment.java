@@ -1031,23 +1031,25 @@ public class AcquireFragment extends Fragment {
                 break;
 
             case HPRTPrinterHelper.ACTIVITY_CONNECT_BT:
-                String strIsConnected = data.getExtras().getString("is_connected");
-                if (strIsConnected.equals("NO")) {
-                    Toast.makeText(getActivity(), R.string.activity_main_scan_error, Toast.LENGTH_LONG).show();
-                } else {
-                    printTicket();
+                if (resultCode == getActivity().RESULT_OK) {
+                    String strIsConnected = data.getExtras().getString("is_connected");
+                    if (strIsConnected.equals("NO")) {
+                        Toast.makeText(getActivity(), R.string.activity_main_scan_error, Toast.LENGTH_LONG).show();
+                    } else {
+                        printTicket();
 //                    Toast.makeText(getActivity(), R.string.activity_main_connected, Toast.LENGTH_LONG).show();
-                    final ProgressDialog printProgressDialog = new ProgressDialog(getActivity());
-                    printProgressDialog.setCanceledOnTouchOutside(false);
-                    printProgressDialog.setMessage(getString(R.string.progress_dialog_printing));
-                    printProgressDialog.show();
-                    Handler handler = new Handler();
-                    handler.postDelayed(new Runnable() {
-                        public void run() {
-                            printProgressDialog.dismiss();
-                            showPrintCheckDialog();
-                        }
-                    }, 3000); // 3000 milliseconds delay
+                        final ProgressDialog printProgressDialog = new ProgressDialog(getActivity());
+                        printProgressDialog.setCanceledOnTouchOutside(false);
+                        printProgressDialog.setMessage(getString(R.string.progress_dialog_printing));
+                        printProgressDialog.show();
+                        Handler handler = new Handler();
+                        handler.postDelayed(new Runnable() {
+                            public void run() {
+                                printProgressDialog.dismiss();
+                                showPrintCheckDialog();
+                            }
+                        }, 3000); // 3000 milliseconds delay
+                    }
                 }
                 break;
 
@@ -1245,7 +1247,7 @@ public class AcquireFragment extends Fragment {
         // 截图，在SnapshotReadyCallback中保存图片到 sd 卡
         mBaiduMap.snapshot(new BaiduMap.SnapshotReadyCallback() {
             public void onSnapshotReady(Bitmap snapshot) {
-                mapFilePath = FileUtil.getStorageDir(getActivity()) + "/" + Long.toString(timeMilis)+ MAP_IMG_FILE_PREFIX + JPEG_FILE_SUFFIX;
+                mapFilePath = FileUtil.getStorageDir(getActivity()) + "/" + Long.toString(timeMilis) + MAP_IMG_FILE_PREFIX + JPEG_FILE_SUFFIX;
 //                Toast.makeText(getActivity(), mapFilePath, Toast.LENGTH_LONG).show();
                 File file = new File(mapFilePath);
                 FileOutputStream out;

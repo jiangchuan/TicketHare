@@ -63,7 +63,8 @@ public class DeviceListActivity extends Activity {
             Intent intent = new Intent();
             intent.putExtra("is_connected", ((msg.what == 0) ? "OK" : "NO"));
             intent.putExtra("BTAddress", toothAddress);
-            setResult(HPRTPrinterHelper.ACTIVITY_CONNECT_BT, intent);
+//            setResult(HPRTPrinterHelper.ACTIVITY_CONNECT_BT, intent);
+            setResult(RESULT_OK, intent);
             finish();
         }
     };
