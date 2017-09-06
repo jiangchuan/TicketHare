@@ -290,12 +290,15 @@
 
     <string name="alert_dialog_save_userid">Save username?</string>
     <string name="alert_dialog_license_check"> correct?</string>
+    <string name="alert_dialog_print_again">Print again?</string>
     <string name="alert_dialog_upload">Upload ticket?</string>
     <string name="alert_dialog_check_yes">Yes</string>
     <string name="alert_dialog_check_no">No</string>
     <string name="alert_dialog_recognize_again">Recognize again</string>
     <string name="alert_dialog_authenticate">Authenticating ...</string>
     <string name="alert_dialog_dbresponse">Number of uploaded tickets: </string>
+    <string name="alert_dialog_exit_confirm">Login will be needed, logout?</string>
+    <string name="alert_dialog_middle_exit_confirm">The acquired data will be lost, going back?</string>
 
     <string name="checkbox_torch">On/Off flashlight</string>
     <string name="toast_permission_received">Permissions received</string>

@@ -1571,37 +1571,39 @@ public class AcquireFragment extends Fragment {
         }
     }
 
-    private void showAlertDialog(String alertString) {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(alertString);
-        builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                dialog.dismiss();
-            }
-        });
-        AlertDialog dialog = builder.create();
-        dialog.show();
-    }
+//    private void showAlertDialog(String alertString) {
+//        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+//        builder.setTitle(alertString);
+//        builder.setCancelable(false)
+//                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int id) {
+//                        dialog.dismiss();
+//                    }
+//                });
+//        AlertDialog dialog = builder.create();
+//        dialog.show();
+//    }
 
 //    private void showAlertandRepeat(String alertString, final int requestCode) {
-//            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-//            builder.setTitle(alertString);
-//            builder.setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-//            public void onClick(DialogInterface dialog, int id) {
-//                switch (requestCode) {
-//                    case REQUEST_FAR_IMG_CAPTURE:
-//                        takeFarPictureIntent();
-//                        break;
-//                    case REQUEST_CLOSE_IMG_CAPTURE:
-//                        takeClosePictureIntent();
-//                        break;
-//                    case REQUEST_TICKET_IMG_CAPTURE:
-//                        takeTicketPictureIntent();
-//                        break;
-//                }
-//                dialog.dismiss();
-//            }
-//        });
+//        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+//        builder.setTitle(alertString);
+//        builder.setCancelable(false)
+//                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int id) {
+//                        switch (requestCode) {
+//                            case REQUEST_FAR_IMG_CAPTURE:
+//                                takeFarPictureIntent();
+//                                break;
+//                            case REQUEST_CLOSE_IMG_CAPTURE:
+//                                takeClosePictureIntent();
+//                                break;
+//                            case REQUEST_TICKET_IMG_CAPTURE:
+//                                takeTicketPictureIntent();
+//                                break;
+//                        }
+//                        dialog.dismiss();
+//                    }
+//                });
 //        AlertDialog dialog = builder.create();
 //        dialog.show();
 //    }
@@ -1609,13 +1611,14 @@ public class AcquireFragment extends Fragment {
     private void showLicenseCheckDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("\"" + licenseNum.substring(0, 2) + "\u2022" + licenseNum.substring(2) + "\" " + getString(R.string.alert_dialog_license_check));
-        builder.setPositiveButton(R.string.alert_dialog_check_yes, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                showLiscenseColorPrompt();
-                dialog.dismiss();
-            }
-        });
-        builder.setNegativeButton(R.string.alert_dialog_check_no, new DialogInterface.OnClickListener() {
+        builder.setCancelable(false)
+                .setPositiveButton(R.string.alert_dialog_check_yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        showLiscenseColorPrompt();
+                        dialog.dismiss();
+                    }
+                })
+                .setNegativeButton(R.string.alert_dialog_check_no, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 showLiscenseNumPrompt();
                 dialog.dismiss();
@@ -1627,16 +1630,17 @@ public class AcquireFragment extends Fragment {
 
     private void showPrintCheckDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle("重新打印?");
-        builder.setPositiveButton(R.string.alert_dialog_check_yes, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                printTicket();
-                Toast.makeText(getActivity(), R.string.activity_main_connected, Toast.LENGTH_LONG).show();
-                takeTicketPictureIntent();
-                dialog.dismiss();
-            }
-        });
-        builder.setNegativeButton(R.string.alert_dialog_check_no, new DialogInterface.OnClickListener() {
+        builder.setTitle(getString(R.string.alert_dialog_print_again));
+        builder.setCancelable(false)
+                .setPositiveButton(R.string.alert_dialog_check_yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        printTicket();
+                        Toast.makeText(getActivity(), R.string.activity_main_connected, Toast.LENGTH_LONG).show();
+                        takeTicketPictureIntent();
+                        dialog.dismiss();
+                    }
+                })
+                .setNegativeButton(R.string.alert_dialog_check_no, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 takeTicketPictureIntent();
                 dialog.dismiss();
@@ -1650,15 +1654,16 @@ public class AcquireFragment extends Fragment {
     private void showUploadDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle(getString(R.string.alert_dialog_upload));
-        builder.setPositiveButton(R.string.alert_dialog_check_yes, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                isUploaded = 1;
-                saveTicket();
-                recordTicket();
-                dialog.dismiss();
-            }
-        });
-        builder.setNegativeButton(R.string.alert_dialog_check_no, new DialogInterface.OnClickListener() {
+        builder.setCancelable(false)
+                .setPositiveButton(R.string.alert_dialog_check_yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        isUploaded = 1;
+                        saveTicket();
+                        recordTicket();
+                        dialog.dismiss();
+                    }
+                })
+                .setNegativeButton(R.string.alert_dialog_check_no, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
                 isUploaded = 0;
                 saveTicket();

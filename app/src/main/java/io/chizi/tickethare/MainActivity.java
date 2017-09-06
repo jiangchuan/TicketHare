@@ -1,11 +1,14 @@
 package io.chizi.tickethare;
 
+import android.app.AlertDialog;
 import android.content.ContentResolver;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.widget.Toast;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -20,6 +23,7 @@ import io.chizi.tickethare.pager.MyFragmentPagerAdapter;
 import io.chizi.tickethare.pager.SlidingTabLayout;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
+
 import static io.chizi.tickethare.database.DBProvider.TICKET_URL;
 import static io.chizi.tickethare.util.AppConstants.HOST_IP;
 import static io.chizi.tickethare.util.AppConstants.POLICE_USER_ID;
@@ -77,11 +81,31 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public void onBackPressed() {
-//        FileUtil.deleteTempFiles(getExternalFilesDir(null));
-//        clearTickets();
-        new LogoutGrpcTask().execute();
-        super.onBackPressed();
+        showExitCheckDialog();
     }
+
+    private void showExitCheckDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+        builder.setTitle(getString(R.string.alert_dialog_exit_confirm));
+        builder.setCancelable(false)
+                .setPositiveButton(R.string.alert_dialog_check_yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+//                        FileUtil.deleteTempFiles(getExternalFilesDir(null));
+//                        clearTickets();
+                        new LogoutGrpcTask().execute();
+                        MainActivity.super.onBackPressed();
+                        dialog.dismiss();
+                    }
+                })
+                .setNegativeButton(R.string.alert_dialog_check_no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                    }
+                });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
 
     private class LogoutGrpcTask extends AsyncTask<Void, Void, List<String>> {
         @Override

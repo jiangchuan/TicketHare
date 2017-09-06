@@ -1,12 +1,14 @@
 package io.chizi.tickethare.acquire;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.app.PendingIntent;
 import android.app.ProgressDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.graphics.Bitmap;
@@ -405,7 +407,7 @@ public class PreviewActivity extends AppCompatActivity {
         cancelTicketButton.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View view) {
-                finish();
+                showExitCheckDialog();
             }
         });
 
@@ -531,6 +533,30 @@ public class PreviewActivity extends AppCompatActivity {
                 return true;
             }
         });
+    }
+
+    @Override
+    public void onBackPressed() {
+        showExitCheckDialog();
+    }
+
+    private void showExitCheckDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(PreviewActivity.this);
+        builder.setTitle(getString(R.string.alert_dialog_middle_exit_confirm));
+        builder.setCancelable(false)
+                .setPositiveButton(R.string.alert_dialog_check_yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        PreviewActivity.super.onBackPressed();
+                        dialog.dismiss();
+                    }
+                })
+                .setNegativeButton(R.string.alert_dialog_check_no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                    }
+                });
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
 //    @Override
