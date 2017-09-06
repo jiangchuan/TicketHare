@@ -4,4 +4,9 @@
     <string name="cwac_cam2_retry">重拍</string>
 
     <string name="plate_rect">车牌截取框</string>
+
+    <string name="alert_dialog_check_yes">是</string>
+    <string name="alert_dialog_check_no">否</string>
+    <string name="alert_dialog_middle_exit_confirm">返回将丢失本次收集的数据, 确认返回?</string>
+
 </resources>

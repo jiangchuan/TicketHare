@@ -15,7 +15,9 @@
 package com.commonsware.cwac.cam2;
 
 import android.Manifest;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.provider.MediaStore;
@@ -348,4 +350,29 @@ public class CameraActivity extends AbstractCameraActivity
             return (this);
         }
     }
+
+    @Override
+    public void onBackPressed() {
+        showExitCheckDialog();
+    }
+
+    private void showExitCheckDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(CameraActivity.this);
+        builder.setTitle(getString(R.string.alert_dialog_middle_exit_confirm));
+        builder.setCancelable(false)
+                .setPositiveButton(R.string.alert_dialog_check_yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        CameraActivity.super.onBackPressed();
+                        dialog.dismiss();
+                    }
+                })
+                .setNegativeButton(R.string.alert_dialog_check_no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                    }
+                });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
 }

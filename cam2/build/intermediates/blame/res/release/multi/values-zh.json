@@ -7,17 +7,17 @@
                     "startLine": 2,
                     "startColumn": 4,
                     "startOffset": 55,
-                    "endColumn": 43,
-                    "endOffset": 94
+                    "endColumn": 51,
+                    "endOffset": 102
                 },
                 "from": {
                     "file": "/Users/Jiangchuan/Documents/good6/TicketHare/cam2/src/main/res/values-zh/strings.xml",
                     "position": {
-                        "startLine": 2,
+                        "startLine": 8,
                         "startColumn": 4,
-                        "startOffset": 55,
-                        "endColumn": 43,
-                        "endOffset": 94
+                        "startOffset": 246,
+                        "endColumn": 51,
+                        "endOffset": 293
                     }
                 }
             },
@@ -25,18 +25,18 @@
                 "to": {
                     "startLine": 3,
                     "startColumn": 4,
-                    "startOffset": 99,
-                    "endColumn": 46,
-                    "endOffset": 141
+                    "startOffset": 107,
+                    "endColumn": 52,
+                    "endOffset": 155
                 },
                 "from": {
                     "file": "/Users/Jiangchuan/Documents/good6/TicketHare/cam2/src/main/res/values-zh/strings.xml",
                     "position": {
-                        "startLine": 3,
+                        "startLine": 7,
                         "startColumn": 4,
-                        "startOffset": 99,
-                        "endColumn": 46,
-                        "endOffset": 141
+                        "startOffset": 193,
+                        "endColumn": 52,
+                        "endOffset": 241
                     }
                 }
             },
@@ -44,19 +44,55 @@
                 "to": {
                     "startLine": 4,
                     "startColumn": 4,
-                    "startOffset": 146,
-                    "endColumn": 44,
-                    "endOffset": 186
+                    "startOffset": 160,
+                    "endColumn": 80,
+                    "endOffset": 236
                 },
                 "from": {
                     "file": "/Users/Jiangchuan/Documents/good6/TicketHare/cam2/src/main/res/values-zh/strings.xml",
                     "position": {
-                        "startLine": 5,
+                        "startLine": 9,
                         "startColumn": 4,
-                        "startOffset": 147,
-                        "endColumn": 44,
-                        "endOffset": 187
+                        "startOffset": 298,
+                        "endColumn": 80,
+                        "endOffset": 374
                     }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 5,
+                    "startColumn": 4,
+                    "startOffset": 241,
+                    "endColumn": 43,
+                    "endOffset": 280
+                },
+                "from": {
+                    "file": "/Users/Jiangchuan/Documents/good6/TicketHare/cam2/src/main/res/values-zh/strings.xml"
+                }
+            },
+            {
+                "to": {
+                    "startLine": 6,
+                    "startColumn": 4,
+                    "startOffset": 285,
+                    "endColumn": 46,
+                    "endOffset": 327
+                },
+                "from": {
+                    "file": "/Users/Jiangchuan/Documents/good6/TicketHare/cam2/src/main/res/values-zh/strings.xml"
+                }
+            },
+            {
+                "to": {
+                    "startLine": 7,
+                    "startColumn": 4,
+                    "startOffset": 332,
+                    "endColumn": 44,
+                    "endOffset": 372
+                },
+                "from": {
+                    "file": "/Users/Jiangchuan/Documents/good6/TicketHare/cam2/src/main/res/values-zh/strings.xml"
                 }
             }
         ]

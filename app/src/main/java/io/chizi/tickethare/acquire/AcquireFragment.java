@@ -1037,7 +1037,7 @@ public class AcquireFragment extends Fragment {
                         Toast.makeText(getActivity(), R.string.activity_main_scan_error, Toast.LENGTH_LONG).show();
                     } else {
                         printTicket();
-//                    Toast.makeText(getActivity(), R.string.activity_main_connected, Toast.LENGTH_LONG).show();
+                        Toast.makeText(getActivity(), R.string.activity_main_connected, Toast.LENGTH_LONG).show();
                         final ProgressDialog printProgressDialog = new ProgressDialog(getActivity());
                         printProgressDialog.setCanceledOnTouchOutside(false);
                         printProgressDialog.setMessage(getString(R.string.progress_dialog_printing));
@@ -1048,7 +1048,7 @@ public class AcquireFragment extends Fragment {
                                 printProgressDialog.dismiss();
                                 showPrintCheckDialog();
                             }
-                        }, 3000); // 3000 milliseconds delay
+                        }, 3 * SECOND_IN_MS); // 3 seconds delay
                     }
                 }
                 break;

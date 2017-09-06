@@ -139,9 +139,12 @@ int id start 0x7f080009
 int id up 0x7f08000b
 int layout cwac_cam2_fragment 0x7f030000
 int menu cwac_cam2_confirm 0x7f090000
-int string cwac_cam2_ok 0x7f050000
-int string cwac_cam2_retry 0x7f050001
-int string plate_rect 0x7f050002
+int string alert_dialog_check_no 0x7f050000
+int string alert_dialog_check_yes 0x7f050001
+int string alert_dialog_middle_exit_confirm 0x7f050002
+int string cwac_cam2_ok 0x7f050003
+int string cwac_cam2_retry 0x7f050004
+int string plate_rect 0x7f050005
 int[] styleable FloatingActionButton { 0x7f010000, 0x7f010001, 0x7f010002, 0x7f010003, 0x7f010004, 0x7f010005, 0x7f010006, 0x7f010007, 0x7f010008, 0x7f010009, 0x7f01000a, 0x7f01000b, 0x7f01000c, 0x7f01000d, 0x7f01000e, 0x7f01000f, 0x7f010010, 0x7f010011, 0x7f010012, 0x7f010013 }
 int styleable FloatingActionButton_fab_colorDisabled 2
 int styleable FloatingActionButton_fab_colorNormal 0

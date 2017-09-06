@@ -4,4 +4,9 @@
   <string name="cwac_cam2_retry">Try again</string>
 
   <string name="plate_rect">License plate capture rectangle</string>
+
+  <string name="alert_dialog_check_yes">Yes</string>
+  <string name="alert_dialog_check_no">No</string>
+  <string name="alert_dialog_middle_exit_confirm">The acquired data will be lost, going back?</string>
+
 </resources>

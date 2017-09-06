@@ -53,7 +53,7 @@
         <item >标签纸</item>
     </string-array>
 
-    <string name="activity_devicelist_title_paired_devices">已配对设备</string>
+    <string name="activity_devicelist_title_paired_devices">已配对打印机</string>
     <string name="activity_devicelist_title_other_devices">其它设备</string>
     <string name="activity_devicelist_button_scan">扫描蓝牙</string>
     <string name="activity_devicelist_none_paired">未配对设备</string>

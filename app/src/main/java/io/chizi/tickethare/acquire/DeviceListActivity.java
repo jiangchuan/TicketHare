@@ -37,7 +37,6 @@ import io.chizi.tickethare.R;
  */
 
 public class DeviceListActivity extends Activity {
-
     public static final String TAG = "DeviceListActivity";
     public static final boolean D = true;
     public static String EXTRA_DEVICE_ADDRESS = "device_address";
@@ -76,7 +75,10 @@ public class DeviceListActivity extends Activity {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_INDETERMINATE_PROGRESS);
         setContentView(R.layout.activity_devicelist);
-        setResult(Activity.RESULT_CANCELED);
+
+        setFinishOnTouchOutside(false);
+
+        setResult(RESULT_CANCELED);
         progress = (ProgressBar) findViewById(R.id.progress);
         Button scanButton = (Button) findViewById(R.id.button_scan);
         scanButton.setOnClickListener(new View.OnClickListener() {
@@ -128,6 +130,9 @@ public class DeviceListActivity extends Activity {
         }
         return data;
     }
+
+    @Override
+    public void onBackPressed() {}
 
     @Override
     protected void onDestroy() {
@@ -244,7 +249,6 @@ public class DeviceListActivity extends Activity {
 
     @Override
     protected void onStop() {
-        // TODO Auto-generated method stub
         super.onStop();
         if (thread != null) {
             Thread dummy = thread;
