@@ -1,11 +1,13 @@
 package io.chizi.tickethare.acquire;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.bluetooth.BluetoothAdapter;
 import android.bluetooth.BluetoothDevice;
 import android.bluetooth.BluetoothSocket;
 import android.content.BroadcastReceiver;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
@@ -132,7 +134,31 @@ public class DeviceListActivity extends Activity {
     }
 
     @Override
-    public void onBackPressed() {}
+    public void onBackPressed() {
+        showExitCheckDialog();
+    }
+
+    private void showExitCheckDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(DeviceListActivity.this);
+        builder.setTitle(getString(R.string.alert_dialog_print_exit_confirm));
+        builder.setCancelable(false)
+                .setPositiveButton(R.string.alert_dialog_check_yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        Intent intent = new Intent();
+                        intent.putExtra("is_connected", "NO");
+                        setResult(RESULT_OK, intent);
+                        finish();
+                        dialog.dismiss();
+                    }
+                })
+                .setNegativeButton(R.string.alert_dialog_check_no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                    }
+                });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
 
     @Override
     protected void onDestroy() {

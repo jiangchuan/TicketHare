@@ -23,8 +23,8 @@
     <string name="activity_main_tips">请连接打印机！</string>
     <string name="activity_main_scan_error">扫描失败！</string>
     <string name="activity_main_scan_success">扫描成功！</string>
-    <string name="activity_main_connecterr">连接打印机失败！</string>
-    <string name="activity_main_connected">连接打印机成功！</string>
+    <string name="activity_main_connecterr">连接打印机失败!</string>
+    <string name="activity_main_connected">连接打印机成功!</string>
     <string name="activity_main_connect_usb_printer">请连接USB打印机。</string>
     <string name="activity_main_close">断开</string>
     <string name="activity_main_originalsize">原大小:</string>
@@ -243,7 +243,6 @@
 
     <string name="button_submit">生成罚单</string>
     <string name="action_settings">设置</string>
-    <string name="cancelBtnTxt">取消</string>
     <string name="plate_label">车牌号</string>
     <string name="time_label">时间</string>
     <string name="address_label">地点</string>
@@ -290,15 +289,21 @@
 
     <string name="alert_dialog_save_userid">保存用户名?</string>
     <string name="alert_dialog_license_check">对吗?</string>
-    <string name="alert_dialog_print_again">重新打印?</string>
+    <string name="alert_dialog_check_print_success">打印是否成功?</string>
     <string name="alert_dialog_upload">上传罚单到服务器?</string>
     <string name="alert_dialog_check_yes">是</string>
     <string name="alert_dialog_check_no">否</string>
+    <string name="connect_printer_again">重新连接</string>
+    <string name="print_again">重新打印</string>
+    <string name="manual_ticket">手填罚单</string>
+    <string name="cancel_ticket">取消罚单</string>
+    <string name="current_ticket_id">手写请填当前罚单号: </string>
     <string name="alert_dialog_recognize_again">重新识别</string>
     <string name="alert_dialog_authenticate">正在登录 ...</string>
     <string name="alert_dialog_dbresponse">已上传罚单数: </string>
     <string name="alert_dialog_exit_confirm">退出后需要重新登录, 确认退出?</string>
     <string name="alert_dialog_middle_exit_confirm">返回将丢失本次收集的数据, 确认返回?</string>
+    <string name="alert_dialog_print_exit_confirm">确认返回?</string>
 
     <string name="checkbox_torch">开/关 手电</string>
     <string name="toast_permission_received">已获取权限</string>

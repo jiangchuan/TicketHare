@@ -569,22 +569,11 @@ public class AcquireFragment extends Fragment {
                 .setCancelable(false)
                 .setPositiveButton(android.R.string.ok,
                         new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {
-//                                licenseNum = userInput.getText().toString();
-//                                if (licenseNum.isEmpty()) {
-//                                    Toast.makeText(getActivity(), R.string.toast_wrong_userid, Toast.LENGTH_LONG).show();
-//                                    userInput.setError(getString(R.string.request_wrong_userid));
-//                                } else {
-//                                    userInput.setError(null);
-//                                    showLiscenseColorPrompt();
-//                                }
-                            }
+                            public void onClick(DialogInterface dialog, int id) {}
                         })
-//                .setNegativeButton(android.R.string.cancel,
                 .setNegativeButton(R.string.alert_dialog_recognize_again,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-//                                dialog.cancel();
                                 takeClosePictureIntent();
                                 dialog.dismiss();
                             }
@@ -603,8 +592,8 @@ public class AcquireFragment extends Fragment {
                     userInput.setError(getString(R.string.request_wrong_license_num));
                 } else {
                     userInput.setError(null);
-                    alertDialog.dismiss();
                     showLiscenseColorPrompt();
+                    alertDialog.dismiss();
                 }
             }
         });
@@ -658,12 +647,13 @@ public class AcquireFragment extends Fragment {
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 showVehicleTypePrompt();
+                                dialog.dismiss();
                             }
                         })
-                .setNegativeButton(android.R.string.cancel,
+                .setNegativeButton(R.string.cancel_ticket,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
+                                dialog.dismiss();
                             }
                         });
 
@@ -744,12 +734,13 @@ public class AcquireFragment extends Fragment {
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 showVehicleColorPrompt();
+                                dialog.dismiss();
                             }
                         })
-                .setNegativeButton(android.R.string.cancel,
+                .setNegativeButton(R.string.cancel_ticket,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
+                                dialog.dismiss();
                             }
                         });
 
@@ -787,12 +778,13 @@ public class AcquireFragment extends Fragment {
                             public void onClick(DialogInterface dialog, int id) {
                                 vehicleColor = vehicleColorSpinner.getSelectedItem().toString();
                                 showPreview();
+                                dialog.dismiss();
                             }
                         })
-                .setNegativeButton(android.R.string.cancel,
+                .setNegativeButton(R.string.cancel_ticket,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
-                                dialog.cancel();
+                                dialog.dismiss();
                             }
                         });
 
@@ -1032,23 +1024,12 @@ public class AcquireFragment extends Fragment {
 
             case HPRTPrinterHelper.ACTIVITY_CONNECT_BT:
                 if (resultCode == getActivity().RESULT_OK) {
-                    String strIsConnected = data.getExtras().getString("is_connected");
-                    if (strIsConnected.equals("NO")) {
-                        Toast.makeText(getActivity(), R.string.activity_main_scan_error, Toast.LENGTH_LONG).show();
+                    String isConnectedStr = data.getExtras().getString("is_connected");
+                    if (isConnectedStr.equals("NO")) {
+                        showBlueToothCheckDialog();
                     } else {
-                        printTicket();
                         Toast.makeText(getActivity(), R.string.activity_main_connected, Toast.LENGTH_LONG).show();
-                        final ProgressDialog printProgressDialog = new ProgressDialog(getActivity());
-                        printProgressDialog.setCanceledOnTouchOutside(false);
-                        printProgressDialog.setMessage(getString(R.string.progress_dialog_printing));
-                        printProgressDialog.show();
-                        Handler handler = new Handler();
-                        handler.postDelayed(new Runnable() {
-                            public void run() {
-                                printProgressDialog.dismiss();
-                                showPrintCheckDialog();
-                            }
-                        }, 3 * SECOND_IN_MS); // 3 seconds delay
+                        printWaitAndCheck();
                     }
                 }
                 break;
@@ -1074,6 +1055,101 @@ public class AcquireFragment extends Fragment {
                 }
                 break;
         }
+    }
+
+    private void showBlueToothCheckDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(getString(R.string.activity_main_connecterr));
+        builder.setCancelable(false)
+                .setPositiveButton(R.string.connect_printer_again, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        connectToBlueTooth();
+                        dialog.dismiss();
+                    }
+                })
+                .setNegativeButton(R.string.manual_ticket, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        showManualPrintDialog();
+                        dialog.dismiss();
+                    }
+                });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void printWaitAndCheck() {
+        printTicket();
+        final ProgressDialog printProgressDialog = new ProgressDialog(getActivity());
+        printProgressDialog.setCanceledOnTouchOutside(false);
+        printProgressDialog.setMessage(getString(R.string.progress_dialog_printing));
+        printProgressDialog.show();
+        Handler handler = new Handler();
+        handler.postDelayed(new Runnable() {
+            public void run() {
+                printProgressDialog.dismiss();
+                showPrintCheckDialog();
+            }
+        }, 3 * SECOND_IN_MS); // 3 seconds delay
+    }
+
+    private void showPrintCheckDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(getString(R.string.alert_dialog_check_print_success));
+        builder.setCancelable(false)
+                .setPositiveButton(R.string.alert_dialog_check_yes, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        takeTicketPictureIntent();
+                        dialog.dismiss();
+                    }
+                })
+                .setNegativeButton(R.string.alert_dialog_check_no, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        showPrintChoiceDialog();
+                        dialog.dismiss();
+                    }
+                });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void showPrintChoiceDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(getString(R.string.alert_dialog_check_print_success));
+        builder.setCancelable(false)
+                .setPositiveButton(R.string.print_again, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        printWaitAndCheck();
+                        dialog.dismiss();
+                    }
+                })
+                .setNegativeButton(R.string.manual_ticket, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        showManualPrintDialog();
+                        dialog.dismiss();
+                    }
+                });
+        AlertDialog dialog = builder.create();
+        dialog.show();
+    }
+
+    private void showManualPrintDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle(getString(R.string.current_ticket_id) + ticketID);
+        builder.setCancelable(false)
+                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        takeTicketPictureIntent();
+                        dialog.dismiss();
+                    }
+                })
+                .setNegativeButton(R.string.cancel_ticket, new DialogInterface.OnClickListener() {
+                    public void onClick(DialogInterface dialog, int id) {
+                        dialog.dismiss();
+                    }
+                });
+
+        AlertDialog dialog = builder.create();
+        dialog.show();
     }
 
     private void getCurrentTime() {
@@ -1619,33 +1695,11 @@ public class AcquireFragment extends Fragment {
                     }
                 })
                 .setNegativeButton(R.string.alert_dialog_check_no, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                showLiscenseNumPrompt();
-                dialog.dismiss();
-            }
-        });
-        AlertDialog dialog = builder.create();
-        dialog.show();
-    }
-
-    private void showPrintCheckDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(getString(R.string.alert_dialog_print_again));
-        builder.setCancelable(false)
-                .setPositiveButton(R.string.alert_dialog_check_yes, new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int id) {
-                        printTicket();
-                        Toast.makeText(getActivity(), R.string.activity_main_connected, Toast.LENGTH_LONG).show();
-                        takeTicketPictureIntent();
+                        showLiscenseNumPrompt();
                         dialog.dismiss();
                     }
-                })
-                .setNegativeButton(R.string.alert_dialog_check_no, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                takeTicketPictureIntent();
-                dialog.dismiss();
-            }
-        });
+                });
         AlertDialog dialog = builder.create();
         dialog.show();
     }
@@ -1664,13 +1718,13 @@ public class AcquireFragment extends Fragment {
                     }
                 })
                 .setNegativeButton(R.string.alert_dialog_check_no, new DialogInterface.OnClickListener() {
-            public void onClick(DialogInterface dialog, int id) {
-                isUploaded = 0;
-                saveTicket();
-                recordTicket();
-                dialog.dismiss();
-            }
-        });
+                    public void onClick(DialogInterface dialog, int id) {
+                        isUploaded = 0;
+                        saveTicket();
+                        recordTicket();
+                        dialog.dismiss();
+                    }
+                });
         AlertDialog dialog = builder.create();
         dialog.show();
     }
