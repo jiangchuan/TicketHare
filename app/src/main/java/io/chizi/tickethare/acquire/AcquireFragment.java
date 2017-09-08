@@ -1132,26 +1132,79 @@ public class AcquireFragment extends Fragment {
         dialog.show();
     }
 
+//    private void showManualPrintDialog() {
+//        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+//        builder.setTitle(getString(R.string.current_ticket_id) + ticketID);
+//        builder.setCancelable(false)
+//                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int id) {
+//                        takeTicketPictureIntent();
+//                        dialog.dismiss();
+//                    }
+//                })
+//                .setNegativeButton(R.string.cancel_ticket, new DialogInterface.OnClickListener() {
+//                    public void onClick(DialogInterface dialog, int id) {
+//                        dialog.dismiss();
+//                    }
+//                });
+//
+//        AlertDialog dialog = builder.create();
+//        dialog.show();
+//    }
+
+
     private void showManualPrintDialog() {
-        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setTitle(getString(R.string.current_ticket_id) + ticketID);
-        builder.setCancelable(false)
-                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
+        // get prompts.xml view
+        LayoutInflater li = LayoutInflater.from(getActivity());
+        View promptsView = li.inflate(R.layout.prompt_ticket_id, null);
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                getActivity());
+        // set prompts.xml to alertdialog builder
+        alertDialogBuilder.setView(promptsView);
+        final TextView promptTitle = (TextView) promptsView
+                .findViewById(R.id.textview_ticket_id_prompt);
+        final EditText userInput = (EditText) promptsView
+                .findViewById(R.id.edittext_ticket_id_prompt);
+        promptTitle.setText(getResources().getString(R.string.ticket_id_input_prompt));
+
+        // set dialog message
+        alertDialogBuilder
+                .setCancelable(false)
+                .setPositiveButton(android.R.string.ok,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {}
+                        })
+                .setNegativeButton(R.string.cancel_ticket,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.dismiss();
+                            }
+                        });
+
+        final AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                String ticketIDStr = userInput.getText().toString();
+                if (ticketIDStr.isEmpty()) {
+                    Toast.makeText(getActivity(), R.string.toast_empty_ticket_id, Toast.LENGTH_LONG).show();
+                    userInput.setError(getString(R.string.request_empty_ticket_id));
+                } else {
+                    try {
+                        userInput.setError(null);
+                        ticketID = Long.parseLong(ticketIDStr);
                         takeTicketPictureIntent();
-                        dialog.dismiss();
+                        alertDialog.dismiss();
+                    } catch ( NumberFormatException e) {
+                        Toast.makeText(getActivity(), R.string.toast_wrong_ticket_id, Toast.LENGTH_LONG).show();
+                        userInput.setError(getString(R.string.request_wrong_ticket_id));
                     }
-                })
-                .setNegativeButton(R.string.cancel_ticket, new DialogInterface.OnClickListener() {
-                    public void onClick(DialogInterface dialog, int id) {
-                        dialog.dismiss();
-                    }
-                });
+                }
+            }
+        });
 
-        AlertDialog dialog = builder.create();
-        dialog.show();
     }
-
     private void getCurrentTime() {
         Calendar now = Calendar.getInstance();
         currentTime = dateFormatf.format(now.getTime());

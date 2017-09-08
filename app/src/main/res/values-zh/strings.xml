@@ -240,6 +240,7 @@
     <string name="license_color_prompt">请选择号牌颜色: </string>
     <string name="vehicle_type_prompt">请选择车辆类型: </string>
     <string name="vehicle_color_prompt">请选择车身颜色: </string>
+    <string name="ticket_id_input_prompt">请输入手填罚单号: </string>
 
     <string name="button_submit">生成罚单</string>
     <string name="action_settings">设置</string>
@@ -329,6 +330,10 @@
     <string name="request_wrong_userid">请输入用户名!</string>
     <string name="toast_wrong_license_num">车辆牌号不能为空!</string>
     <string name="request_wrong_license_num">请输入车辆牌号!</string>
+    <string name="toast_empty_ticket_id">罚单号不能为空!</string>
+    <string name="request_empty_ticket_id">请输入罚单号!</string>
+    <string name="toast_wrong_ticket_id">罚单号只能是数字!</string>
+    <string name="request_wrong_ticket_id">请输入正确的数字罚单号!</string>
     <string name="toast_wrong_password">密码不能为空!</string>
     <string name="request_wrong_password">请输入密码!</string>
     <string name="toast_wrong_new_password">新密码不能为空!</string>
