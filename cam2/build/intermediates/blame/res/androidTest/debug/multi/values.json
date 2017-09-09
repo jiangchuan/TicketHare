@@ -387,8 +387,8 @@
                     "startLine": 24,
                     "startColumn": 4,
                     "startOffset": 4741,
-                    "endColumn": 43,
-                    "endOffset": 4780
+                    "endColumn": 52,
+                    "endOffset": 4789
                 },
                 "from": {
                     "file": "/Users/Jiangchuan/Documents/good6/TicketHare/cam2/build/intermediates/bundles/debug/res/values/values.xml",
@@ -396,8 +396,8 @@
                         "startLine": 18,
                         "startColumn": 4,
                         "startOffset": 1038,
-                        "endColumn": 43,
-                        "endOffset": 1077
+                        "endColumn": 52,
+                        "endOffset": 1086
                     }
                 }
             },
@@ -405,18 +405,18 @@
                 "to": {
                     "startLine": 25,
                     "startColumn": 4,
-                    "startOffset": 4785,
-                    "endColumn": 53,
-                    "endOffset": 4834
+                    "startOffset": 4794,
+                    "endColumn": 54,
+                    "endOffset": 4844
                 },
                 "from": {
                     "file": "/Users/Jiangchuan/Documents/good6/TicketHare/cam2/build/intermediates/bundles/debug/res/values/values.xml",
                     "position": {
                         "startLine": 19,
                         "startColumn": 4,
-                        "startOffset": 1082,
-                        "endColumn": 53,
-                        "endOffset": 1131
+                        "startOffset": 1091,
+                        "endColumn": 54,
+                        "endOffset": 1141
                     }
                 }
             },
@@ -424,18 +424,75 @@
                 "to": {
                     "startLine": 26,
                     "startColumn": 4,
-                    "startOffset": 4839,
-                    "endColumn": 70,
-                    "endOffset": 4905
+                    "startOffset": 4849,
+                    "endColumn": 104,
+                    "endOffset": 4949
                 },
                 "from": {
                     "file": "/Users/Jiangchuan/Documents/good6/TicketHare/cam2/build/intermediates/bundles/debug/res/values/values.xml",
                     "position": {
                         "startLine": 20,
                         "startColumn": 4,
-                        "startOffset": 1136,
+                        "startOffset": 1146,
+                        "endColumn": 104,
+                        "endOffset": 1246
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 27,
+                    "startColumn": 4,
+                    "startOffset": 4954,
+                    "endColumn": 43,
+                    "endOffset": 4993
+                },
+                "from": {
+                    "file": "/Users/Jiangchuan/Documents/good6/TicketHare/cam2/build/intermediates/bundles/debug/res/values/values.xml",
+                    "position": {
+                        "startLine": 21,
+                        "startColumn": 4,
+                        "startOffset": 1251,
+                        "endColumn": 43,
+                        "endOffset": 1290
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 28,
+                    "startColumn": 4,
+                    "startOffset": 4998,
+                    "endColumn": 53,
+                    "endOffset": 5047
+                },
+                "from": {
+                    "file": "/Users/Jiangchuan/Documents/good6/TicketHare/cam2/build/intermediates/bundles/debug/res/values/values.xml",
+                    "position": {
+                        "startLine": 22,
+                        "startColumn": 4,
+                        "startOffset": 1295,
+                        "endColumn": 53,
+                        "endOffset": 1344
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 29,
+                    "startColumn": 4,
+                    "startOffset": 5052,
+                    "endColumn": 70,
+                    "endOffset": 5118
+                },
+                "from": {
+                    "file": "/Users/Jiangchuan/Documents/good6/TicketHare/cam2/build/intermediates/bundles/debug/res/values/values.xml",
+                    "position": {
+                        "startLine": 23,
+                        "startColumn": 4,
+                        "startOffset": 1349,
                         "endColumn": 70,
-                        "endOffset": 1202
+                        "endOffset": 1415
                     }
                 }
             }

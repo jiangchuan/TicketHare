@@ -16,6 +16,9 @@
     <dimen name="cwac_cam2_fragment_panel_item_height">48dp</dimen>
     <dimen name="cwac_cam2_fragment_panel_item_width">96dp</dimen>
     <dimen name="cwac_cam2_fragment_panel_padding">16dp</dimen>
+    <string name="alert_dialog_check_no">No</string>
+    <string name="alert_dialog_check_yes">Yes</string>
+    <string name="alert_dialog_middle_exit_confirm">The acquired data will be lost, going back?</string>
     <string name="cwac_cam2_ok">OK</string>
     <string name="cwac_cam2_retry">Try again</string>
     <string name="plate_rect">License plate capture rectangle</string>

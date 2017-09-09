@@ -7,8 +7,65 @@
                     "startLine": 2,
                     "startColumn": 4,
                     "startOffset": 55,
+                    "endColumn": 51,
+                    "endOffset": 102
+                },
+                "from": {
+                    "file": "/Users/Jiangchuan/Documents/good6/TicketHare/cam2/src/main/res/values-zh/strings.xml",
+                    "position": {
+                        "startLine": 8,
+                        "startColumn": 4,
+                        "startOffset": 246,
+                        "endColumn": 51,
+                        "endOffset": 293
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 3,
+                    "startColumn": 4,
+                    "startOffset": 107,
+                    "endColumn": 52,
+                    "endOffset": 155
+                },
+                "from": {
+                    "file": "/Users/Jiangchuan/Documents/good6/TicketHare/cam2/src/main/res/values-zh/strings.xml",
+                    "position": {
+                        "startLine": 7,
+                        "startColumn": 4,
+                        "startOffset": 193,
+                        "endColumn": 52,
+                        "endOffset": 241
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 4,
+                    "startColumn": 4,
+                    "startOffset": 160,
+                    "endColumn": 80,
+                    "endOffset": 236
+                },
+                "from": {
+                    "file": "/Users/Jiangchuan/Documents/good6/TicketHare/cam2/src/main/res/values-zh/strings.xml",
+                    "position": {
+                        "startLine": 9,
+                        "startColumn": 4,
+                        "startOffset": 298,
+                        "endColumn": 80,
+                        "endOffset": 374
+                    }
+                }
+            },
+            {
+                "to": {
+                    "startLine": 5,
+                    "startColumn": 4,
+                    "startOffset": 241,
                     "endColumn": 43,
-                    "endOffset": 94
+                    "endOffset": 280
                 },
                 "from": {
                     "file": "/Users/Jiangchuan/Documents/good6/TicketHare/cam2/src/main/res/values-zh/strings.xml",
@@ -23,11 +80,11 @@
             },
             {
                 "to": {
-                    "startLine": 3,
+                    "startLine": 6,
                     "startColumn": 4,
-                    "startOffset": 99,
+                    "startOffset": 285,
                     "endColumn": 46,
-                    "endOffset": 141
+                    "endOffset": 327
                 },
                 "from": {
                     "file": "/Users/Jiangchuan/Documents/good6/TicketHare/cam2/src/main/res/values-zh/strings.xml",
@@ -42,11 +99,11 @@
             },
             {
                 "to": {
-                    "startLine": 4,
+                    "startLine": 7,
                     "startColumn": 4,
-                    "startOffset": 146,
+                    "startOffset": 332,
                     "endColumn": 44,
-                    "endOffset": 186
+                    "endOffset": 372
                 },
                 "from": {
                     "file": "/Users/Jiangchuan/Documents/good6/TicketHare/cam2/src/main/res/values-zh/strings.xml",

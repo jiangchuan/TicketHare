@@ -318,11 +318,11 @@
     <string name="toast_ticket_no_time">没有提取到时间!</string>
     <string name="toast_map_saved">屏幕截图成功，图片存在: </string>
     <string name="toast_map_saving">正在截取屏幕图片 ...</string>
-    <string name="toast_login_failed">用户名或密码不正确!</string>
+    <string name="toast_login_failed">用户名或密码不正确, 或已在其他手机上登录!</string>
     <string name="toast_login_success">登录成功!</string>
     <string name="toast_signup_failed">新建账户失败!</string>
     <string name="toast_signup_success">新建账户成功!</string>
-    <string name="toast_change_password_failed">更改密码失败!</string>
+    <string name="toast_change_password_failed">用户名或密码不正确, 或已在其他手机上登录!</string>
     <string name="toast_change_password_success">更改密码成功!</string>
     <string name="toast_update_failed">更新账户失败!</string>
     <string name="toast_update_success">更新账户成功!</string>

@@ -599,9 +599,12 @@ containing a value of this type.
         public static final int cwac_cam2_confirm=0x7f090000;
     }
     public static final class string {
-        public static final int cwac_cam2_ok=0x7f050000;
-        public static final int cwac_cam2_retry=0x7f050001;
-        public static final int plate_rect=0x7f050002;
+        public static final int alert_dialog_check_no=0x7f050000;
+        public static final int alert_dialog_check_yes=0x7f050001;
+        public static final int alert_dialog_middle_exit_confirm=0x7f050002;
+        public static final int cwac_cam2_ok=0x7f050003;
+        public static final int cwac_cam2_retry=0x7f050004;
+        public static final int plate_rect=0x7f050005;
     }
     public static final class styleable {
         /** Attributes that can be used with a FloatingActionButton.

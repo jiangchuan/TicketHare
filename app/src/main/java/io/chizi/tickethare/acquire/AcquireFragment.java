@@ -1302,7 +1302,9 @@ public class AcquireFragment extends Fragment {
             ArrayList<String> resultList = new ArrayList<String>();
             try {
                 TicketGrpc.TicketBlockingStub blockingStub = TicketGrpc.newBlockingStub(mChannel);
-                SlaveLoc request = newSlaveLoc(userID, longitude, latitude);
+//                SlaveLoc request = newSlaveLoc(userID, longitude, latitude);
+
+                SlaveLoc request = SlaveLoc.newBuilder().setSid(userID).setPoliceDept(policeDept).setLongitude(longitude).setLatitude(latitude).build();
                 MasterOrder reply = blockingStub.slaveLocSubmit(request);
                 resultList.add(String.valueOf(reply.getMasterOrder()));
                 return resultList;
@@ -1858,6 +1860,7 @@ public class AcquireFragment extends Fragment {
 
     public byte[] getImageBytesfromPath(String filePath) {
         Bitmap bitmap = BitmapUtil.getScaledBitmap(filePath, TRANS_IMAGE_W, TRANS_IMAGE_H);
+//        bitmap = BitmapUtil.scaleBitmap(bitmap, TRANS_IMAGE_W, TRANS_IMAGE_H);
         ByteArrayOutputStream imageOS = new ByteArrayOutputStream();
         bitmap.compress(Bitmap.CompressFormat.JPEG, COMPRESS_RATIO, imageOS);
         return imageOS.toByteArray();
