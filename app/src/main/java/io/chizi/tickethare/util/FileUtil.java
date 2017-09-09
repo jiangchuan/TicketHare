@@ -26,10 +26,10 @@ public class FileUtil {
     private static final String LOG_TAG = FileUtil.class.getName();
 
     public static File createImageFile(Activity activity, String imageFileName, String suffix) throws IOException {
-        // Create an image file name
-//        String imageFileName = getFileName(prefix);
         File storageDir = getStorageDir(activity);
-        File imageF = File.createTempFile(imageFileName, suffix, storageDir);
+//        File imageF = File.createTempFile(imageFileName, suffix, storageDir);
+//        File imageF = new File(storageDir + "/" + imageFileName + suffix);
+        File imageF = new File(storageDir, imageFileName + suffix);
         return imageF;
     }
 

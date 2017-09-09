@@ -121,7 +121,7 @@ public class MainActivity extends AppCompatActivity {
                         .setUserId(userID)
                         .build();
                 LogoutReply reply = blockingStub.hareLogout(request);
-                Boolean theSucess = reply.getLogoutSuccess();
+                boolean theSucess = reply.getLogoutSuccess();
                 resultList.add(String.valueOf(theSucess));
                 return resultList;
             } catch (Exception e) {

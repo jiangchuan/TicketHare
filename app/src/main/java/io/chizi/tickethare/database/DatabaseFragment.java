@@ -25,6 +25,7 @@ import io.chizi.ticket.TicketDetails;
 import io.chizi.ticket.TicketGrpc;
 import io.chizi.tickethare.R;
 import io.chizi.tickethare.util.DateUtil;
+import io.chizi.tickethare.util.FileUtil;
 import io.chizi.tickethare.util.GrpcRunnable;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
@@ -63,7 +64,6 @@ import static io.chizi.tickethare.util.AppConstants.POLICE_USER_ID;
 import static io.chizi.tickethare.util.AppConstants.PORT;
 import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_USER_ID;
 import static io.chizi.tickethare.util.AppConstants.TICKET_IMG_FILE_PREFIX;
-import static io.chizi.tickethare.util.FileUtil.writeByteStringToFile;
 
 /**
  * Created by Jiangchuan on 5/21/17.
@@ -78,10 +78,6 @@ public class DatabaseFragment extends Fragment {
 
     private int updateCount = 0;
 
-    private String mapFilePath;
-    private String farImgFilePath;
-    private String closeImgFilePath;
-    private String ticketImgFilePath;
     // Database
     private ContentResolver resolver; // Provides access to other applications Content Providers
 
@@ -165,26 +161,22 @@ public class DatabaseFragment extends Fragment {
                 values.put(KEY_LONGITUDE, reply.getLongitude());
                 values.put(KEY_LATITUDE, reply.getLatitude());
                 String timeMilsStr = Long.toString(timeMils);
-//                String mapFilePath = writeByteStringToFile(getActivity(),
-                        mapFilePath = writeByteStringToFile(getActivity(),
+                String mapFilePath = FileUtil.writeByteStringToFile(getActivity(),
                         timeMilsStr + MAP_IMG_FILE_PREFIX, JPEG_FILE_SUFFIX,
                         reply.getMapImage());
                 values.put(KEY_MAP_URI, mapFilePath);
 
-//                String farImgFilePath = writeByteStringToFile(getActivity(),
-                        farImgFilePath = writeByteStringToFile(getActivity(),
+                String farImgFilePath = FileUtil.writeByteStringToFile(getActivity(),
                         timeMilsStr + FAR_IMG_FILE_PREFIX, JPEG_FILE_SUFFIX,
                         reply.getFarImage());
                 values.put(KEY_FAR_IMG_URI, farImgFilePath);
 
-//                String closeImgFilePath = writeByteStringToFile(getActivity(),
-                        closeImgFilePath = writeByteStringToFile(getActivity(),
+                String closeImgFilePath = FileUtil.writeByteStringToFile(getActivity(),
                         timeMilsStr + CLOSE_IMG_FILE_PREFIX, JPEG_FILE_SUFFIX,
                         reply.getCloseImage());
                 values.put(KEY_CLOSE_IMG_URI, closeImgFilePath);
 
-//                String ticketImgFilePath = writeByteStringToFile(getActivity(),
-                        ticketImgFilePath = writeByteStringToFile(getActivity(),
+                String ticketImgFilePath = FileUtil.writeByteStringToFile(getActivity(),
                         timeMilsStr + TICKET_IMG_FILE_PREFIX, JPEG_FILE_SUFFIX,
                         reply.getTicketImage());
                 values.put(KEY_TICKET_IMG_URI, ticketImgFilePath);

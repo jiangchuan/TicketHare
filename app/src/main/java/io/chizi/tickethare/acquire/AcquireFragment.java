@@ -248,9 +248,6 @@ public class AcquireFragment extends Fragment {
     private int minute = -1;
     private long timeMilis = 0;
 
-    private File closeImgFile = null;
-    private File farImgFile = null;
-    private File ticketImgFile = null;
     private Bitmap imageBitmap = null;
     //    private byte[] imageBytes;
     private ByteArrayOutputStream imageOS;
@@ -271,7 +268,8 @@ public class AcquireFragment extends Fragment {
     MapView mMapView;
     BaiduMap mBaiduMap;
     // UI相关
-    boolean isFirstLoc = true; // 是否首次定位
+    private boolean isFirstLoc = true; // 是否首次定位
+    private boolean receivedLoc = false;
 
     private String address;
     private double longitude;
@@ -287,13 +285,8 @@ public class AcquireFragment extends Fragment {
 
     private ManagedChannel mChannel;
 
-    private Boolean receivedLoc = false;
-
 
     private static final long LOC_TIME_INTERVAL = 5 * SECOND_IN_MS;
-    private static final long ANCHOR_TIME_INTERVAL = 30 * MINUTE_IN_MS;
-    //    private static final long ANCHOR_TIME_INTERVAL = 1 * MINUTE_IN_MS;
-    private static final long TICKET_STATS_TIME_INTERVAL = 10 * MINUTE_IN_MS;
 
     private String masterOrder;
 
@@ -569,7 +562,8 @@ public class AcquireFragment extends Fragment {
                 .setCancelable(false)
                 .setPositiveButton(android.R.string.ok,
                         new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {}
+                            public void onClick(DialogInterface dialog, int id) {
+                            }
                         })
                 .setNegativeButton(R.string.alert_dialog_recognize_again,
                         new DialogInterface.OnClickListener() {
@@ -1172,7 +1166,8 @@ public class AcquireFragment extends Fragment {
                 .setCancelable(false)
                 .setPositiveButton(android.R.string.ok,
                         new DialogInterface.OnClickListener() {
-                            public void onClick(DialogInterface dialog, int id) {}
+                            public void onClick(DialogInterface dialog, int id) {
+                            }
                         })
                 .setNegativeButton(R.string.cancel_ticket,
                         new DialogInterface.OnClickListener() {
@@ -1196,7 +1191,7 @@ public class AcquireFragment extends Fragment {
                         ticketID = Long.parseLong(ticketIDStr);
                         takeTicketPictureIntent();
                         alertDialog.dismiss();
-                    } catch ( NumberFormatException e) {
+                    } catch (NumberFormatException e) {
                         Toast.makeText(getActivity(), R.string.toast_wrong_ticket_id, Toast.LENGTH_LONG).show();
                         userInput.setError(getString(R.string.request_wrong_ticket_id));
                     }
@@ -1205,6 +1200,7 @@ public class AcquireFragment extends Fragment {
         });
 
     }
+
     private void getCurrentTime() {
         Calendar now = Calendar.getInstance();
         currentTime = dateFormatf.format(now.getTime());
@@ -1378,12 +1374,10 @@ public class AcquireFragment extends Fragment {
         // 截图，在SnapshotReadyCallback中保存图片到 sd 卡
         mBaiduMap.snapshot(new BaiduMap.SnapshotReadyCallback() {
             public void onSnapshotReady(Bitmap snapshot) {
-                mapFilePath = FileUtil.getStorageDir(getActivity()) + "/" + Long.toString(timeMilis) + MAP_IMG_FILE_PREFIX + JPEG_FILE_SUFFIX;
-//                Toast.makeText(getActivity(), mapFilePath, Toast.LENGTH_LONG).show();
-                File file = new File(mapFilePath);
-                FileOutputStream out;
                 try {
-                    out = new FileOutputStream(file);
+                    File mapFile = FileUtil.createImageFile(getActivity(), Long.toString(timeMilis) + MAP_IMG_FILE_PREFIX, JPEG_FILE_SUFFIX);
+                    mapFilePath = mapFile.getAbsolutePath();
+                    FileOutputStream out = new FileOutputStream(mapFile);
                     if (snapshot.compress(
                             Bitmap.CompressFormat.JPEG, COMPRESS_RATIO, out)) {
                         out.flush();
@@ -1632,9 +1626,8 @@ public class AcquireFragment extends Fragment {
 
     private void takeFarPictureIntent() {
         try {
-            farImgFile = FileUtil.createImageFile(getActivity(), Long.toString(timeMilis) + FAR_IMG_FILE_PREFIX, JPEG_FILE_SUFFIX);
+            File farImgFile = FileUtil.createImageFile(getActivity(), Long.toString(timeMilis) + FAR_IMG_FILE_PREFIX, JPEG_FILE_SUFFIX);
             farImgFilePath = farImgFile.getAbsolutePath();
-//            Toast.makeText(getActivity(), farImgFilePath, Toast.LENGTH_LONG).show();
             Intent intent = new CameraActivity.IntentBuilder(getActivity())
                     .facing(Facing.BACK)
                     .to(farImgFile)
@@ -1655,9 +1648,8 @@ public class AcquireFragment extends Fragment {
 
     private void takeClosePictureIntent() {
         try {
-            closeImgFile = FileUtil.createImageFile(getActivity(), Long.toString(timeMilis) + CLOSE_IMG_FILE_PREFIX, JPEG_FILE_SUFFIX);
+            File closeImgFile = FileUtil.createImageFile(getActivity(), Long.toString(timeMilis) + CLOSE_IMG_FILE_PREFIX, JPEG_FILE_SUFFIX);
             closeImgFilePath = closeImgFile.getAbsolutePath();
-//            Toast.makeText(getActivity(), closeImgFilePath, Toast.LENGTH_LONG).show();
             Intent intent = new CameraActivity.IntentBuilder(getActivity())
                     // .skipConfirm()
                     .facing(Facing.BACK)
@@ -1681,9 +1673,8 @@ public class AcquireFragment extends Fragment {
 
     private void takeTicketPictureIntent() {
         try {
-            ticketImgFile = FileUtil.createImageFile(getActivity(), Long.toString(timeMilis) + TICKET_IMG_FILE_PREFIX, JPEG_FILE_SUFFIX);
+            File ticketImgFile = FileUtil.createImageFile(getActivity(), Long.toString(timeMilis) + TICKET_IMG_FILE_PREFIX, JPEG_FILE_SUFFIX);
             ticketImgFilePath = ticketImgFile.getAbsolutePath();
-//            Toast.makeText(getActivity(), ticketImgFilePath, Toast.LENGTH_LONG).show();
             Intent intent = new CameraActivity.IntentBuilder(getActivity())
                     .facing(Facing.BACK)
                     .to(ticketImgFile)
@@ -1804,7 +1795,9 @@ public class AcquireFragment extends Fragment {
             ArrayList<String> resultList = new ArrayList<String>();
             try {
                 TicketGrpc.TicketBlockingStub blockingStub = TicketGrpc.newBlockingStub(mChannel);
-                TicketDetails ticketDetails = TicketDetails.newBuilder()
+                boolean isUploadedBool = isUploaded == 1 ? true : false;
+                TicketDetails.Builder ticketDetailsBuilder = TicketDetails.newBuilder();
+                ticketDetailsBuilder
                         .setTicketId(ticketID)
                         .setUserId(userID)
                         .setLicenseNum(licenseNum)
@@ -1821,12 +1814,16 @@ public class AcquireFragment extends Fragment {
                         .setAddress(address)
                         .setLongitude(longitude)
                         .setLatitude(latitude)
-                        .setMapImage(ByteString.copyFrom(getImageBytesfromPath(mapFilePath)))
-                        .setFarImage(ByteString.copyFrom(getImageBytesfromPath(farImgFilePath)))
-                        .setCloseImage(ByteString.copyFrom(getImageBytesfromPath(closeImgFilePath)))
-                        .setTicketImage(ByteString.copyFrom(getImageBytesfromPath(ticketImgFilePath)))
-                        .setIsUploaded(isUploaded == 1 ? true : false)
-                        .build();
+                        .setIsUploaded(isUploadedBool);
+                if (isUploadedBool) {
+                    ticketDetailsBuilder
+                            .setMapImage(ByteString.copyFrom(getImageBytesfromPath(mapFilePath)))
+                            .setFarImage(ByteString.copyFrom(getImageBytesfromPath(farImgFilePath)))
+                            .setCloseImage(ByteString.copyFrom(getImageBytesfromPath(closeImgFilePath)))
+                            .setTicketImage(ByteString.copyFrom(getImageBytesfromPath(ticketImgFilePath)));
+                }
+                TicketDetails ticketDetails = ticketDetailsBuilder.build();
+
                 RecordReply reply = blockingStub.recordTicket(ticketDetails);
                 resultList.add(String.valueOf(reply.getRecordSuccess()));
                 return resultList;

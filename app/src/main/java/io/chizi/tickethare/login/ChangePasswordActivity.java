@@ -158,7 +158,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
                         .setNewPassword(newPassword)
                         .build();
                 LoginReply reply = blockingStub.hareChangePassword(request);
-                Boolean theSucess = reply.getLoginSuccess();
+                boolean theSucess = reply.getLoginSuccess();
                 resultList.add(String.valueOf(theSucess));
                 resultList.add(reply.getPoliceName());
                 resultList.add(reply.getPoliceType());

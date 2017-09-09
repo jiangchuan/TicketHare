@@ -117,8 +117,8 @@ public class TitlesFragment extends ListFragment {
         }
     }
 
-    private Boolean isDatabaseEmpty() {
-        Boolean result = false;
+    private boolean isDatabaseEmpty() {
+        boolean result = false;
         String[] projection = new String[]{KEY_ROW_ID};
         if (resolver == null) {
             resolver = getActivity().getContentResolver();

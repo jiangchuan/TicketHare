@@ -170,7 +170,7 @@ public class LoginActivity extends RuntimePermissionsActivity {
                         .setPassword(password)
                         .build();
                 LoginReply reply = blockingStub.hareLogin(request);
-                Boolean theSucess = reply.getLoginSuccess();
+                boolean theSucess = reply.getLoginSuccess();
                 resultList.add(String.valueOf(theSucess));
                 resultList.add(reply.getPoliceName());
                 resultList.add(reply.getPoliceType());
