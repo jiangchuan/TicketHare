@@ -235,8 +235,8 @@ public class AcquireFragment extends Fragment {
     private TextView policeDeptTextView;
 
     private String currentTime;
-    private String closeImgFilePath;
     private String farImgFilePath;
+    private String closeImgFilePath;
     private String ticketImgFilePath;
     private String mapFilePath;
     private int isUploaded = -1;
@@ -284,7 +284,6 @@ public class AcquireFragment extends Fragment {
     private ProgressDialog progressDialog;
 
     private ManagedChannel mChannel;
-
 
     private static final long LOC_TIME_INTERVAL = 5 * SECOND_IN_MS;
 
@@ -1539,91 +1538,6 @@ public class AcquireFragment extends Fragment {
         }
     }
 
-    @Override
-    public void onPause() {
-        mMapView.onPause();
-        super.onPause();
-    }
-
-    @Override
-    public void onResume() {
-        mMapView.onResume();
-        super.onResume();
-//        if (!OpenCVLoader.initDebug()) {
-//            Log.d(LOG_TAG, "Internal OpenCV library not found. Using OpenCV Manager for initialization");
-//            OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_1_0, getActivity(), mLoaderCallback);
-//        } else {
-//            Log.d(LOG_TAG, "OpenCV library found inside package. Using it!");
-//            mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
-//        }
-
-        String paper = PFun.ReadSharedPreferencesData("papertype");
-        if (!"".equals(paper)) {
-            this.paper = paper;
-        }
-    }
-
-    @Override
-    public void onDestroy() {
-        // 退出时销毁定位
-        if (mLocClient != null) {
-            mLocClient.stop();
-        }
-        // 关闭定位图层
-        if (mBaiduMap != null) {
-            mBaiduMap.setMyLocationEnabled(false);
-        }
-        if (mMapView != null) {
-            mMapView.onDestroy();
-            mMapView = null;
-        }
-
-        mChannel.shutdown();
-
-        if (HPRTPrinter != null) {
-            HPRTPrinterHelper.PortClose();
-        }
-
-        locTimer.cancel();
-
-        super.onDestroy();
-    }
-
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        outState.putLong(SAVED_INSTANCE_TICKET_ID, ticketID);
-        outState.putString(SAVED_INSTANCE_USER_ID, userID);
-        outState.putString(SAVED_INSTANCE_POLICE_NAME, policeName);
-        outState.putString(SAVED_INSTANCE_POLICE_CITY, policeCity);
-        outState.putString(SAVED_INSTANCE_POLICE_DEPT, policeDept);
-        outState.putString(SAVED_INSTANCE_POLICE_PORTRAIT_PATH, policePortraitPath);
-        outState.putString(SAVED_INSTANCE_LICENSE_NUM, licenseNum);
-        outState.putString(SAVED_INSTANCE_LICENSE_COLOR, licenseColor);
-        outState.putInt(SAVED_INSTANCE_IS_UPLOADED, isUploaded);
-        outState.putString(SAVED_INSTANCE_VEHICLE_TYPE, vehicleType);
-        outState.putString(SAVED_INSTANCE_VEHICLE_COLOR, vehicleColor);
-
-        outState.putString(SAVED_INSTANCE_CURR_TIME, currentTime);
-        outState.putString(SAVED_INSTANCE_CURR_MAP_PATH, mapFilePath);
-        outState.putString(SAVED_INSTANCE_CURR_IMG1_PATH, closeImgFilePath);
-        outState.putString(SAVED_INSTANCE_CURR_IMG2_PATH, farImgFilePath);
-        outState.putString(SAVED_INSTANCE_CURR_IMG3_PATH, ticketImgFilePath);
-
-        outState.putString(SAVED_INSTANCE_ADDRESS, address);
-        outState.putDouble(SAVED_INSTANCE_LONGITUDE, longitude);
-        outState.putDouble(SAVED_INSTANCE_LATITUDE, latitude);
-
-        outState.putInt(SAVED_INSTANCE_YEAR, year);
-        outState.putInt(SAVED_INSTANCE_MONTH, month);
-        outState.putInt(SAVED_INSTANCE_WEEK, week);
-        outState.putInt(SAVED_INSTANCE_DAY, day);
-        outState.putInt(SAVED_INSTANCE_HOUR, hour);
-        outState.putInt(SAVED_INSTANCE_MINUTE, minute);
-        outState.putLong(SAVED_INSTANCE_TIME_MILIS, timeMilis);
-
-        super.onSaveInstanceState(outState);
-    }
-
     private void takeFarPictureIntent() {
         try {
             File farImgFile = FileUtil.createImageFile(getActivity(), Long.toString(timeMilis) + FAR_IMG_FILE_PREFIX, JPEG_FILE_SUFFIX);
@@ -1786,7 +1700,6 @@ public class AcquireFragment extends Fragment {
                 prepareProgressDialog();
             }
         }
-
         @Override
         protected List<String> doInBackground(Void... nothing) {
             if (isUploaded == 1 && progressDialog == null) {
@@ -1817,13 +1730,12 @@ public class AcquireFragment extends Fragment {
                         .setIsUploaded(isUploadedBool);
                 if (isUploadedBool) {
                     ticketDetailsBuilder
-                            .setMapImage(ByteString.copyFrom(getImageBytesfromPath(mapFilePath)))
-                            .setFarImage(ByteString.copyFrom(getImageBytesfromPath(farImgFilePath)))
-                            .setCloseImage(ByteString.copyFrom(getImageBytesfromPath(closeImgFilePath)))
-                            .setTicketImage(ByteString.copyFrom(getImageBytesfromPath(ticketImgFilePath)));
+                            .setMapImage(ByteString.copyFrom(FileUtil.getImageBytesfromPath(mapFilePath)))
+                            .setFarImage(ByteString.copyFrom(FileUtil.getImageBytesfromPath(farImgFilePath)))
+                            .setCloseImage(ByteString.copyFrom(FileUtil.getImageBytesfromPath(closeImgFilePath)))
+                            .setTicketImage(ByteString.copyFrom(FileUtil.getImageBytesfromPath(ticketImgFilePath)));
                 }
                 TicketDetails ticketDetails = ticketDetailsBuilder.build();
-
                 RecordReply reply = blockingStub.recordTicket(ticketDetails);
                 resultList.add(String.valueOf(reply.getRecordSuccess()));
                 return resultList;
@@ -1836,7 +1748,6 @@ public class AcquireFragment extends Fragment {
                 return resultList;
             }
         }
-
         @Override
         protected void onPostExecute(List<String> resultList) {
             if (isUploaded == 1) {
@@ -1853,14 +1764,6 @@ public class AcquireFragment extends Fragment {
                 }
             }
         }
-    }
-
-    public byte[] getImageBytesfromPath(String filePath) {
-        Bitmap bitmap = BitmapUtil.getScaledBitmap(filePath, TRANS_IMAGE_W, TRANS_IMAGE_H);
-//        bitmap = BitmapUtil.scaleBitmap(bitmap, TRANS_IMAGE_W, TRANS_IMAGE_H);
-        ByteArrayOutputStream imageOS = new ByteArrayOutputStream();
-        bitmap.compress(Bitmap.CompressFormat.JPEG, COMPRESS_RATIO, imageOS);
-        return imageOS.toByteArray();
     }
 
     private void prepareProgressDialog() {
@@ -1914,6 +1817,91 @@ public class AcquireFragment extends Fragment {
                 showLiscenseNumPrompt();
             }
         }
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putLong(SAVED_INSTANCE_TICKET_ID, ticketID);
+        outState.putString(SAVED_INSTANCE_USER_ID, userID);
+        outState.putString(SAVED_INSTANCE_POLICE_NAME, policeName);
+        outState.putString(SAVED_INSTANCE_POLICE_CITY, policeCity);
+        outState.putString(SAVED_INSTANCE_POLICE_DEPT, policeDept);
+        outState.putString(SAVED_INSTANCE_POLICE_PORTRAIT_PATH, policePortraitPath);
+        outState.putString(SAVED_INSTANCE_LICENSE_NUM, licenseNum);
+        outState.putString(SAVED_INSTANCE_LICENSE_COLOR, licenseColor);
+        outState.putInt(SAVED_INSTANCE_IS_UPLOADED, isUploaded);
+        outState.putString(SAVED_INSTANCE_VEHICLE_TYPE, vehicleType);
+        outState.putString(SAVED_INSTANCE_VEHICLE_COLOR, vehicleColor);
+
+        outState.putString(SAVED_INSTANCE_CURR_TIME, currentTime);
+        outState.putString(SAVED_INSTANCE_CURR_MAP_PATH, mapFilePath);
+        outState.putString(SAVED_INSTANCE_CURR_IMG1_PATH, closeImgFilePath);
+        outState.putString(SAVED_INSTANCE_CURR_IMG2_PATH, farImgFilePath);
+        outState.putString(SAVED_INSTANCE_CURR_IMG3_PATH, ticketImgFilePath);
+
+        outState.putString(SAVED_INSTANCE_ADDRESS, address);
+        outState.putDouble(SAVED_INSTANCE_LONGITUDE, longitude);
+        outState.putDouble(SAVED_INSTANCE_LATITUDE, latitude);
+
+        outState.putInt(SAVED_INSTANCE_YEAR, year);
+        outState.putInt(SAVED_INSTANCE_MONTH, month);
+        outState.putInt(SAVED_INSTANCE_WEEK, week);
+        outState.putInt(SAVED_INSTANCE_DAY, day);
+        outState.putInt(SAVED_INSTANCE_HOUR, hour);
+        outState.putInt(SAVED_INSTANCE_MINUTE, minute);
+        outState.putLong(SAVED_INSTANCE_TIME_MILIS, timeMilis);
+
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    public void onPause() {
+        mMapView.onPause();
+        super.onPause();
+    }
+
+    @Override
+    public void onResume() {
+        mMapView.onResume();
+        super.onResume();
+//        if (!OpenCVLoader.initDebug()) {
+//            Log.d(LOG_TAG, "Internal OpenCV library not found. Using OpenCV Manager for initialization");
+//            OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_1_0, getActivity(), mLoaderCallback);
+//        } else {
+//            Log.d(LOG_TAG, "OpenCV library found inside package. Using it!");
+//            mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
+//        }
+
+        String paper = PFun.ReadSharedPreferencesData("papertype");
+        if (!"".equals(paper)) {
+            this.paper = paper;
+        }
+    }
+
+    @Override
+    public void onDestroy() {
+        // 退出时销毁定位
+        if (mLocClient != null) {
+            mLocClient.stop();
+        }
+        // 关闭定位图层
+        if (mBaiduMap != null) {
+            mBaiduMap.setMyLocationEnabled(false);
+        }
+        if (mMapView != null) {
+            mMapView.onDestroy();
+            mMapView = null;
+        }
+
+        mChannel.shutdown();
+
+        if (HPRTPrinter != null) {
+            HPRTPrinterHelper.PortClose();
+        }
+
+        locTimer.cancel();
+
+        super.onDestroy();
     }
 
 }

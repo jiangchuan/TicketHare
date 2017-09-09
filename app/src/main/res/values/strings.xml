@@ -242,7 +242,8 @@
     <string name="vehicle_color_prompt">Select the vehicle color please: </string>
     <string name="ticket_id_input_prompt">Input the ticket ID please: </string>
 
-    <string name="button_submit">Generate Ticket</string>
+    <string name="generate_ticket">Generate Ticket</string>
+    <string name="upload_ticket">Upload Ticket</string>
     <string name="action_settings">Settings</string>
     <string name="plate_label">Plate</string>
     <string name="time_label">Time</string>

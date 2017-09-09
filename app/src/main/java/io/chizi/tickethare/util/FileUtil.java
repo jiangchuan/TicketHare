@@ -2,11 +2,13 @@ package io.chizi.tickethare.util;
 
 import android.app.Activity;
 import android.content.res.AssetManager;
+import android.graphics.Bitmap;
 import android.os.Environment;
 import android.util.Log;
 
 import com.google.protobuf.ByteString;
 
+import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -16,6 +18,10 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import io.chizi.tickethare.MainActivity;
+
+import static io.chizi.tickethare.util.AppConstants.COMPRESS_RATIO;
+import static io.chizi.tickethare.util.AppConstants.TRANS_IMAGE_H;
+import static io.chizi.tickethare.util.AppConstants.TRANS_IMAGE_W;
 
 /**
  * Created by Jiangchuan on 5/21/17.
@@ -60,6 +66,14 @@ public class FileUtil {
             Log.v(LOG_TAG, "External storage is not mounted READ/WRITE.");
         }
         return storageDir;
+    }
+
+    public static byte[] getImageBytesfromPath(String filePath) {
+        Bitmap bitmap = BitmapUtil.getScaledBitmap(filePath, TRANS_IMAGE_W, TRANS_IMAGE_H);
+//        bitmap = BitmapUtil.scaleBitmap(bitmap, TRANS_IMAGE_W, TRANS_IMAGE_H);
+        ByteArrayOutputStream imageOS = new ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.JPEG, COMPRESS_RATIO, imageOS);
+        return imageOS.toByteArray();
     }
 
     public static boolean deleteTempFiles(File file) {

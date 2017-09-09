@@ -1,29 +1,14 @@
 package io.chizi.tickethare.acquire;
 
-import android.app.Activity;
 import android.app.AlertDialog;
-import android.app.PendingIntent;
-import android.app.ProgressDialog;
-import android.bluetooth.BluetoothAdapter;
-import android.content.BroadcastReceiver;
 import android.content.ContentResolver;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.IntentFilter;
 import android.graphics.Bitmap;
-import android.hardware.usb.UsbDevice;
-import android.hardware.usb.UsbManager;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.view.ViewTreeObserver;
-import android.view.Window;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
@@ -31,14 +16,10 @@ import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
-import HPRTAndroidSDK.HPRTPrinterHelper;
-import HPRTAndroidSDK.IPort;
-import HPRTAndroidSDK.PublicFunction;
 import io.chizi.tickethare.R;
 import io.chizi.tickethare.util.BitmapUtil;
 import io.chizi.tickethare.util.ColorSpinnerAdapter;
@@ -387,6 +368,7 @@ public class PreviewActivity extends AppCompatActivity {
         licenseColorRadioGroup = (RadioGroup) findViewById(R.id.radiogroup_license_color);
 
         generateTicketButton = (Button) findViewById(R.id.button_generate_ticket);
+        generateTicketButton.setText(getString(R.string.generate_ticket));
         generateTicketButton.setVisibility(View.VISIBLE);
 
         cancelTicketButton = (Button) findViewById(R.id.button_cancel_ticket);
