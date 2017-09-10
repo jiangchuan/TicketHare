@@ -1202,10 +1202,14 @@ public class AcquireFragment extends Fragment {
 
     private void getCurrentTime() {
         Calendar now = Calendar.getInstance();
+
+        now.setMinimalDaysInFirstWeek(4);
+        now.setFirstDayOfWeek(Calendar.MONDAY);
+
         currentTime = dateFormatf.format(now.getTime());
         year = now.get(Calendar.YEAR);
         month = now.get(Calendar.MONTH) + 1; // Note: zero based!
-        week = now.get(Calendar.WEEK_OF_YEAR);
+        week = now.get(Calendar.WEEK_OF_YEAR); /* Get ISO8601 week number */
         day = now.get(Calendar.DAY_OF_MONTH);
         hour = now.get(Calendar.HOUR_OF_DAY);
         minute = now.get(Calendar.MINUTE);
