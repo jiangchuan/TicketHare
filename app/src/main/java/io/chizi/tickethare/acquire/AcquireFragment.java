@@ -94,8 +94,8 @@ import io.grpc.ManagedChannelBuilder;
 
 import static io.chizi.tickethare.acquire.PlateRecognizer.plateRecognition;
 import static io.chizi.tickethare.database.DBProvider.KEY_ADDRESS;
-import static io.chizi.tickethare.database.DBProvider.KEY_CAR_COLOR;
-import static io.chizi.tickethare.database.DBProvider.KEY_CAR_TYPE;
+import static io.chizi.tickethare.database.DBProvider.KEY_VEHICLE_COLOR;
+import static io.chizi.tickethare.database.DBProvider.KEY_VEHICLE_TYPE;
 import static io.chizi.tickethare.database.DBProvider.KEY_DATETIME;
 import static io.chizi.tickethare.database.DBProvider.KEY_DAY;
 import static io.chizi.tickethare.database.DBProvider.KEY_HOUR;
@@ -155,11 +155,11 @@ import static io.chizi.tickethare.util.AppConstants.GOBACK_USER_ID;
 import static io.chizi.tickethare.util.AppConstants.CLOSE_IMG_FILE_PREFIX;
 import static io.chizi.tickethare.util.AppConstants.FAR_IMG_FILE_PREFIX;
 import static io.chizi.tickethare.util.AppConstants.HOST_IP;
-import static io.chizi.tickethare.util.AppConstants.MINUTE_IN_MS;
 import static io.chizi.tickethare.util.AppConstants.PORT;
 import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_IS_UPLOADED;
 import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_POLICE_PORTRAIT_PATH;
 import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_TIME_MILIS;
+import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_TRUE_ADDRESS;
 import static io.chizi.tickethare.util.AppConstants.SECOND_IN_MS;
 import static io.chizi.tickethare.util.AppConstants.TICKET_IMG_FILE_PREFIX;
 import static io.chizi.tickethare.util.AppConstants.JPEG_FILE_SUFFIX;
@@ -219,7 +219,7 @@ public class AcquireFragment extends Fragment {
     private long ticketID = -1L;
     private long ticketIDStart = -1L;
     private long ticketIDEnd = -1L;
-    private String licenseNum;
+    private String licenseNum = null;
     private String licenseColor = "蓝";
     private String vehicleType = "小型客车";
     private String vehicleColor = "黑";
@@ -271,7 +271,8 @@ public class AcquireFragment extends Fragment {
     private boolean isFirstLoc = true; // 是否首次定位
     private boolean receivedLoc = false;
 
-    private String address;
+    private String address = null;
+    private String trueAddress = null;
     private double longitude;
     private double latitude;
     private TextView addressLonLatTextView;
@@ -384,6 +385,7 @@ public class AcquireFragment extends Fragment {
             ticketImgFilePath = savedInstanceState.getString(SAVED_INSTANCE_CURR_IMG3_PATH);
 
             address = savedInstanceState.getString(SAVED_INSTANCE_ADDRESS);
+            trueAddress = savedInstanceState.getString(SAVED_INSTANCE_TRUE_ADDRESS);
             longitude = savedInstanceState.getDouble(SAVED_INSTANCE_LONGITUDE);
             latitude = savedInstanceState.getDouble(SAVED_INSTANCE_LATITUDE);
 
@@ -502,6 +504,20 @@ public class AcquireFragment extends Fragment {
 
     }
 
+    private void initFields() {
+        ticketID = -1L;
+        licenseNum = null;
+        licenseColor = "蓝";
+        vehicleType = "小型客车";
+        vehicleColor = "黑";
+        trueAddress = null;
+        mapFilePath = null;
+        farImgFilePath = null;
+        closeImgFilePath = null;
+        ticketImgFilePath = null;
+        isUploaded = -1;
+    }
+
     private void renewLocTimer() {
         final Handler locHandler = new Handler();
         locTimer = new Timer();
@@ -538,9 +554,8 @@ public class AcquireFragment extends Fragment {
     }
 
     private void showLiscenseNumPrompt() {
-        // get prompts.xml view
         LayoutInflater li = LayoutInflater.from(getActivity());
-        View promptsView = li.inflate(R.layout.prompt_license_num, null);
+        View promptsView = li.inflate(R.layout.prompt_license_num, null); // get prompts.xml view
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                 getActivity());
         // set prompts.xml to alertdialog builder
@@ -555,7 +570,6 @@ public class AcquireFragment extends Fragment {
             promptTitle.setText(getResources().getString(R.string.license_num_correct_prompt));
             userInput.setText(licenseNum);
         }
-
         // set dialog message
         alertDialogBuilder
                 .setCancelable(false)
@@ -572,9 +586,8 @@ public class AcquireFragment extends Fragment {
                             }
                         });
 
-        final AlertDialog alertDialog = alertDialogBuilder.create(); // create alert dialog
-        alertDialog.show(); // show it
-
+        final AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
         //Overriding the handler immediately after show is probably a better approach than OnShowListener as described below
         alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
             @Override
@@ -590,20 +603,14 @@ public class AcquireFragment extends Fragment {
                 }
             }
         });
-
     }
 
     private void showLiscenseColorPrompt() {
-        // get prompts.xml view
         LayoutInflater li = LayoutInflater.from(getActivity());
         View promptsView = li.inflate(R.layout.prompt_license_color, null);
-
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                 getActivity());
-
-        // set prompts.xml to alertdialog builder
         alertDialogBuilder.setView(promptsView);
-
         final RadioGroup licenseColorRadioGroup = (RadioGroup) promptsView
                 .findViewById(R.id.radiogroup_license_color);
         final RadioButton yellowRadioButton = (RadioButton) promptsView
@@ -615,7 +622,6 @@ public class AcquireFragment extends Fragment {
         final RadioButton otherColorRadioButton = (RadioButton) promptsView
                 .findViewById(R.id.radiobutton_other_license_color);
         blueRadioButton.setChecked(true);
-
         licenseColorRadioGroup.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if (yellowRadioButton.isChecked()) {
@@ -632,8 +638,6 @@ public class AcquireFragment extends Fragment {
                 }
             }
         });
-
-        // set dialog message
         alertDialogBuilder
                 .setCancelable(false)
                 .setPositiveButton(android.R.string.ok,
@@ -649,29 +653,22 @@ public class AcquireFragment extends Fragment {
                                 dialog.dismiss();
                             }
                         });
-
-        AlertDialog alertDialog = alertDialogBuilder.create(); // create alert dialog
-        alertDialog.show(); // show it
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
     }
 
     private void showVehicleTypePrompt() {
-        // get prompts.xml view
         LayoutInflater li = LayoutInflater.from(getActivity());
         View promptsView = li.inflate(R.layout.prompt_vehicle_type, null);
-
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                 getActivity());
-
-        // set prompts.xml to alertdialog builder
         alertDialogBuilder.setView(promptsView);
-
         final RadioGroup vehicleTypeRadioGroup1 = (RadioGroup) promptsView
                 .findViewById(R.id.radiogroup_vehicle_type1);
         vehicleTypeRadioGroup1.clearCheck();
         final RadioGroup vehicleTypeRadioGroup2 = (RadioGroup) promptsView
                 .findViewById(R.id.radiogroup_vehicle_type2);
         vehicleTypeRadioGroup2.clearCheck();
-
         final RadioButton bigBusRadioButton = (RadioButton) promptsView
                 .findViewById(R.id.radiobutton_big_bus);
         final RadioButton smallBusRadioButton = (RadioButton) promptsView
@@ -685,7 +682,6 @@ public class AcquireFragment extends Fragment {
         final RadioButton otherCarTypeRadioButton = (RadioButton) promptsView
                 .findViewById(R.id.radiobutton_other_car_type);
         smallBusRadioButton.setChecked(true);
-
         vehicleTypeRadioGroup1.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if (bigBusRadioButton.isChecked()) {
@@ -702,7 +698,6 @@ public class AcquireFragment extends Fragment {
                 }
             }
         });
-
         vehicleTypeRadioGroup2.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if (smallTruckRadioButton.isChecked()) {
@@ -719,8 +714,6 @@ public class AcquireFragment extends Fragment {
                 }
             }
         });
-
-        // set dialog message
         alertDialogBuilder
                 .setCancelable(false)
                 .setPositiveButton(android.R.string.ok,
@@ -736,22 +729,16 @@ public class AcquireFragment extends Fragment {
                                 dialog.dismiss();
                             }
                         });
-
-        AlertDialog alertDialog = alertDialogBuilder.create(); // create alert dialog
-        alertDialog.show(); // show it
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
     }
 
     private void showVehicleColorPrompt() {
-        // get prompts.xml view
         LayoutInflater li = LayoutInflater.from(getActivity());
         View promptsView = li.inflate(R.layout.prompt_vehicle_color, null);
-
         AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
                 getActivity());
-
-        // set prompts.xml to alertdialog builder
         alertDialogBuilder.setView(promptsView);
-
         final Spinner vehicleColorSpinner = (Spinner) promptsView
                 .findViewById(R.id.car_color);
         String[] vehicleColorNames = getResources().getStringArray(R.array.car_color_arrays);
@@ -762,15 +749,13 @@ public class AcquireFragment extends Fragment {
         spinnerArrayAdapter.setDropDownViewResource(R.layout.spinner_item);
         vehicleColorSpinner.setAdapter(spinnerArrayAdapter);
         vehicleColorSpinner.setSelection(0);
-
-        // set dialog message
         alertDialogBuilder
                 .setCancelable(false)
                 .setPositiveButton(android.R.string.ok,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
                                 vehicleColor = vehicleColorSpinner.getSelectedItem().toString();
-                                showPreview();
+                                showAddressPrompt();
                                 dialog.dismiss();
                             }
                         })
@@ -780,9 +765,55 @@ public class AcquireFragment extends Fragment {
                                 dialog.dismiss();
                             }
                         });
+        AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+    }
 
-        AlertDialog alertDialog = alertDialogBuilder.create(); // create alert dialog
-        alertDialog.show(); // show it
+    private void showAddressPrompt() {
+        LayoutInflater li = LayoutInflater.from(getActivity());
+        View promptsView = li.inflate(R.layout.prompt_address, null); // get prompts.xml view
+        AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(
+                getActivity());
+        alertDialogBuilder.setView(promptsView);
+        final TextView promptTitle = (TextView) promptsView
+                .findViewById(R.id.textview_address_prompt);
+        final EditText userInput = (EditText) promptsView
+                .findViewById(R.id.edittext_address_prompt);
+        if (address == null || address.isEmpty()) {
+            promptTitle.setText(getResources().getString(R.string.address_input_prompt));
+        } else {
+            promptTitle.setText(getResources().getString(R.string.address_correct_prompt));
+            userInput.setText(address);
+        }
+        alertDialogBuilder
+                .setCancelable(false)
+                .setPositiveButton(android.R.string.ok,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                            }
+                        })
+                .setNegativeButton(R.string.cancel_ticket,
+                        new DialogInterface.OnClickListener() {
+                            public void onClick(DialogInterface dialog, int id) {
+                                dialog.dismiss();
+                            }
+                        });
+        final AlertDialog alertDialog = alertDialogBuilder.create();
+        alertDialog.show();
+        alertDialog.getButton(AlertDialog.BUTTON_POSITIVE).setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                trueAddress = userInput.getText().toString();
+                if (trueAddress.isEmpty()) {
+                    Toast.makeText(getActivity(), R.string.toast_wrong_address, Toast.LENGTH_LONG).show();
+                    userInput.setError(getString(R.string.request_wrong_address));
+                } else {
+                    userInput.setError(null);
+                    showPreview();
+                    alertDialog.dismiss();
+                }
+            }
+        });
     }
 
     private void connectToBlueTooth() {
@@ -807,7 +838,7 @@ public class AcquireFragment extends Fragment {
             receiptLines[3] = "车辆类型: " + vehicleType;
             receiptLines[4] = "号牌颜色: " + licenseColor;
             receiptLines[5] = "停车时间: " + year + "年" + month + "月" + day + "日" + hour + "时" + minute + "分";
-            receiptLines[6] = "停车地点: " + address;
+            receiptLines[6] = "停车地点: " + trueAddress;
             receiptLines[7] = "该机动车在上述时间、地点未在道路停车泊位或停";
             receiptLines[8] = "车场内停放，现已对现场道路交通情况进行了图像记录，";
             receiptLines[9] = "并报告" + policeDept + "审核认定是否违法停放。";
@@ -962,7 +993,7 @@ public class AcquireFragment extends Fragment {
         params.putString(CURRENT_LICENSE_COLOR, licenseColor);
         params.putString(CURRENT_VEHICLE_TYPE, vehicleType);
         params.putString(CURRENT_VEHICLE_COLOR, vehicleColor);
-        params.putString(CURRENT_ADDRESS, address);
+        params.putString(CURRENT_ADDRESS, trueAddress);
         params.putDouble(CURRENT_LONGITUDE, longitude);
         params.putDouble(CURRENT_LATITUDE, latitude);
         params.putString(MAP_FILE_PATH, mapFilePath);
@@ -1202,19 +1233,17 @@ public class AcquireFragment extends Fragment {
 
     private void getCurrentTime() {
         Calendar now = Calendar.getInstance();
-
-//        now.setMinimalDaysInFirstWeek(4);
-//        now.setFirstDayOfWeek(Calendar.MONDAY);
-
+        week = DateUtil.getCurrentISOWeek();
+//        week = now.get(Calendar.WEEK_OF_YEAR); // Sunday - Saturday
         currentTime = dateFormatf.format(now.getTime());
         year = now.get(Calendar.YEAR);
         month = now.get(Calendar.MONTH) + 1; // Note: zero based!
-        week = now.get(Calendar.WEEK_OF_YEAR); /* Get ISO8601 week number */
         day = now.get(Calendar.DAY_OF_MONTH);
         hour = now.get(Calendar.HOUR_OF_DAY);
         minute = now.get(Calendar.MINUTE);
         timeMilis = now.getTimeInMillis();
     }
+
 
     private void getTicketID() {
         String[] projection = new String[]{KEY_TICKET_RANGE_START, KEY_TICKET_RANGE_END};
@@ -1243,16 +1272,6 @@ public class AcquireFragment extends Fragment {
         values.put(KEY_TICKET_RANGE_START, ticketIDStart);
         values.put(KEY_TICKET_RANGE_END, ticketIDEnd);
         resolver.insert(RANGE_URL, values);
-    }
-
-    private void initFields() {
-        currentTime = null;
-        ticketID = -1L;
-        licenseNum = null;
-        licenseColor = "蓝";
-        isUploaded = -1;
-        vehicleType = "小型客车";
-        vehicleColor = "黑";
     }
 
     private void backToHome() {
@@ -1446,13 +1465,13 @@ public class AcquireFragment extends Fragment {
             values.put(KEY_MINUTE, minute);
             values.put(KEY_TIME_MILIS, timeMilis);
             if (vehicleType != null) {
-                values.put(KEY_CAR_TYPE, vehicleType);
+                values.put(KEY_VEHICLE_TYPE, vehicleType);
             }
             if (vehicleColor != null) {
-                values.put(KEY_CAR_COLOR, vehicleColor);
+                values.put(KEY_VEHICLE_COLOR, vehicleColor);
             }
-            if (address != null) {
-                values.put(KEY_ADDRESS, address);
+            if (trueAddress != null) {
+                values.put(KEY_ADDRESS, trueAddress);
             }
             values.put(KEY_LONGITUDE, longitude);
             values.put(KEY_LATITUDE, latitude);
@@ -1525,6 +1544,7 @@ public class AcquireFragment extends Fragment {
             } else if (location.getLocType() == BDLocation.TypeCriteriaException) {
                 address = "无定位依据，手机可能处于飞行模式，试试重启手机";
             }
+            address = streetName;
             addressLonLatTextView.setText(getString(R.string.ticket_address_header) + streetName);
         }
 
@@ -1728,7 +1748,7 @@ public class AcquireFragment extends Fragment {
                         .setHour(hour)
                         .setMinute(minute)
                         .setTicketTime(timeMilis)
-                        .setAddress(address)
+                        .setAddress(trueAddress)
                         .setLongitude(longitude)
                         .setLatitude(latitude)
                         .setIsUploaded(isUploadedBool);
@@ -1752,6 +1772,7 @@ public class AcquireFragment extends Fragment {
                 return resultList;
             }
         }
+
         @Override
         protected void onPostExecute(List<String> resultList) {
             if (isUploaded == 1) {
@@ -1844,6 +1865,7 @@ public class AcquireFragment extends Fragment {
         outState.putString(SAVED_INSTANCE_CURR_IMG3_PATH, ticketImgFilePath);
 
         outState.putString(SAVED_INSTANCE_ADDRESS, address);
+        outState.putString(SAVED_INSTANCE_TRUE_ADDRESS, trueAddress);
         outState.putDouble(SAVED_INSTANCE_LONGITUDE, longitude);
         outState.putDouble(SAVED_INSTANCE_LATITUDE, latitude);
 

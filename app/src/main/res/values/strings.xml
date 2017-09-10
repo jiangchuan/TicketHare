@@ -237,6 +237,8 @@
 
     <string name="license_num_input_prompt">Input the license number please: </string>
     <string name="license_num_correct_prompt">Correct the license number please: </string>
+    <string name="address_input_prompt">Input the street please: </string>
+    <string name="address_correct_prompt">Confirm the street please: </string>
     <string name="license_color_prompt">Select the license color please: </string>
     <string name="vehicle_type_prompt">Select the vehicle type please: </string>
     <string name="vehicle_color_prompt">Select the vehicle color please: </string>
@@ -331,6 +333,8 @@
     <string name="request_wrong_userid">Enter a user ID please!</string>
     <string name="toast_wrong_license_num">Empty license number!</string>
     <string name="request_wrong_license_num">Enter the license number please!</string>
+    <string name="toast_wrong_address">Empty street!</string>
+    <string name="request_wrong_address">Enter the street please!</string>
     <string name="toast_empty_ticket_id">Empty ticket ID!</string>
     <string name="request_empty_ticket_id">Enter the ticket ID please!</string>
     <string name="toast_wrong_ticket_id">Ticket ID can only be numbers!</string>

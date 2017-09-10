@@ -1,5 +1,7 @@
 package io.chizi.tickethare.util;
 
+import android.text.format.Time;
+
 import java.util.Calendar;
 import java.util.Date;
 
@@ -23,4 +25,12 @@ public class DateUtil {
     public static Date getDate(int year, int month, int day, int hour, int minute) {
         return getDate(year, month, day, hour, minute, 0);
     }
+
+    public static int getCurrentISOWeek() {
+        Time nowTime = new Time();
+        nowTime.setToNow();
+        int week = nowTime.getWeekNumber(); // Monday - Sunday
+        return week;
+    }
+
 }

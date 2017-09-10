@@ -39,8 +39,8 @@ import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 
 import static io.chizi.tickethare.database.DBProvider.KEY_ADDRESS;
-import static io.chizi.tickethare.database.DBProvider.KEY_CAR_COLOR;
-import static io.chizi.tickethare.database.DBProvider.KEY_CAR_TYPE;
+import static io.chizi.tickethare.database.DBProvider.KEY_VEHICLE_COLOR;
+import static io.chizi.tickethare.database.DBProvider.KEY_VEHICLE_TYPE;
 import static io.chizi.tickethare.database.DBProvider.KEY_DAY;
 import static io.chizi.tickethare.database.DBProvider.KEY_HOUR;
 import static io.chizi.tickethare.database.DBProvider.KEY_FAR_IMG_URI;
@@ -273,14 +273,14 @@ public class DetailsFragment extends Fragment {
     }
 
     public void getTicketInfo(String theTicketIDStr) {
-        String[] projection = new String[]{KEY_USER_ID, KEY_LICENSE_NUM, KEY_LICENSE_COLOR, KEY_CAR_TYPE, KEY_CAR_COLOR, KEY_YEAR, KEY_MONTH, KEY_WEEK, KEY_DAY, KEY_HOUR, KEY_MINUTE, KEY_TIME_MILIS, KEY_ADDRESS, KEY_LONGITUDE, KEY_LATITUDE, KEY_MAP_URI, KEY_FAR_IMG_URI, KEY_CLOSE_IMG_URI, KEY_TICKET_IMG_URI, KEY_IS_UPLOADED};
+        String[] projection = new String[]{KEY_USER_ID, KEY_LICENSE_NUM, KEY_LICENSE_COLOR, KEY_VEHICLE_TYPE, KEY_VEHICLE_COLOR, KEY_YEAR, KEY_MONTH, KEY_WEEK, KEY_DAY, KEY_HOUR, KEY_MINUTE, KEY_TIME_MILIS, KEY_ADDRESS, KEY_LONGITUDE, KEY_LATITUDE, KEY_MAP_URI, KEY_FAR_IMG_URI, KEY_CLOSE_IMG_URI, KEY_TICKET_IMG_URI, KEY_IS_UPLOADED};
         Cursor cursor = resolver.query(TICKET_URL, projection, KEY_TICKET_ID + "=?", new String[]{theTicketIDStr}, null);
         if (cursor.moveToFirst()) {
             userID = cursor.getString(cursor.getColumnIndex(KEY_USER_ID));
             licenseNum = cursor.getString(cursor.getColumnIndex(KEY_LICENSE_NUM));
             licenseColor = cursor.getString(cursor.getColumnIndex(KEY_LICENSE_COLOR));
-            vehicleType = cursor.getString(cursor.getColumnIndex(KEY_CAR_TYPE));
-            vehicleColor = cursor.getString(cursor.getColumnIndex(KEY_CAR_COLOR));
+            vehicleType = cursor.getString(cursor.getColumnIndex(KEY_VEHICLE_TYPE));
+            vehicleColor = cursor.getString(cursor.getColumnIndex(KEY_VEHICLE_COLOR));
             year = cursor.getInt(cursor.getColumnIndex(KEY_YEAR));
             month = cursor.getInt(cursor.getColumnIndex(KEY_MONTH));
             week = cursor.getInt(cursor.getColumnIndex(KEY_WEEK));
@@ -314,7 +314,6 @@ public class DetailsFragment extends Fragment {
                 prepareProgressDialog();
             }
         }
-
         @Override
         protected List<String> doInBackground(Void... nothing) {
             if (progressDialog == null) {
@@ -359,7 +358,6 @@ public class DetailsFragment extends Fragment {
                 return resultList;
             }
         }
-
         @Override
         protected void onPostExecute(List<String> resultList) {
             dismissProgressDialog();

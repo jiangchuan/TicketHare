@@ -12,7 +12,6 @@ import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Toast;
 
 import java.io.PrintWriter;
 import java.io.StringWriter;
@@ -32,8 +31,8 @@ import io.grpc.ManagedChannelBuilder;
 import io.grpc.StatusRuntimeException;
 
 import static io.chizi.tickethare.database.DBProvider.KEY_ADDRESS;
-import static io.chizi.tickethare.database.DBProvider.KEY_CAR_COLOR;
-import static io.chizi.tickethare.database.DBProvider.KEY_CAR_TYPE;
+import static io.chizi.tickethare.database.DBProvider.KEY_VEHICLE_COLOR;
+import static io.chizi.tickethare.database.DBProvider.KEY_VEHICLE_TYPE;
 import static io.chizi.tickethare.database.DBProvider.KEY_CLOSE_IMG_URI;
 import static io.chizi.tickethare.database.DBProvider.KEY_DATETIME;
 import static io.chizi.tickethare.database.DBProvider.KEY_DAY;
@@ -55,7 +54,6 @@ import static io.chizi.tickethare.database.DBProvider.KEY_WEEK;
 import static io.chizi.tickethare.database.DBProvider.KEY_YEAR;
 import static io.chizi.tickethare.database.DBProvider.TICKET_URL;
 import static io.chizi.tickethare.util.AppConstants.CLOSE_IMG_FILE_PREFIX;
-import static io.chizi.tickethare.util.AppConstants.FAR_IMG_FILE_PATH;
 import static io.chizi.tickethare.util.AppConstants.FAR_IMG_FILE_PREFIX;
 import static io.chizi.tickethare.util.AppConstants.HOST_IP;
 import static io.chizi.tickethare.util.AppConstants.JPEG_FILE_SUFFIX;
@@ -120,10 +118,11 @@ public class DatabaseFragment extends Fragment {
 
         private String pullTickets(TicketGrpc.TicketBlockingStub blockingStub) throws StatusRuntimeException {
             Calendar now = Calendar.getInstance();
+            int week = DateUtil.getCurrentISOWeek();
             PullTicketsRequest request = PullTicketsRequest.newBuilder()
                     .setSid(userID)
                     .setYear(now.get(Calendar.YEAR))
-                    .setWeek(now.get(Calendar.WEEK_OF_YEAR))
+                    .setWeek(week)
                     .setLastTime(lastTimeMilis)
                     .build();
             Iterator<TicketDetails> hareProfiles;
@@ -155,8 +154,8 @@ public class DatabaseFragment extends Fragment {
                 values.put(KEY_MINUTE, minute);
                 long timeMils = reply.getTicketTime();
                 values.put(KEY_TIME_MILIS, timeMils);
-                values.put(KEY_CAR_TYPE, reply.getVehicleType());
-                values.put(KEY_CAR_COLOR, reply.getVehicleColor());
+                values.put(KEY_VEHICLE_TYPE, reply.getVehicleType());
+                values.put(KEY_VEHICLE_COLOR, reply.getVehicleColor());
                 values.put(KEY_ADDRESS, reply.getAddress());
                 values.put(KEY_LONGITUDE, reply.getLongitude());
                 values.put(KEY_LATITUDE, reply.getLatitude());

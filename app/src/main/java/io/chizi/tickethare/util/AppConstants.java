@@ -98,6 +98,7 @@ public interface AppConstants {
     static final String SAVED_INSTANCE_MINUTE = "saved_instance_minute";
     static final String SAVED_INSTANCE_TIME_MILIS = "saved_instance_time_milis";
     static final String SAVED_INSTANCE_ADDRESS = "saved_instance_address";
+    static final String SAVED_INSTANCE_TRUE_ADDRESS = "saved_instance_true_address";
     static final String SAVED_INSTANCE_LONGITUDE = "saved_instance_longitude";
     static final String SAVED_INSTANCE_LATITUDE = "saved_instance_latitude";
     static final String SAVED_INSTANCE_CURR_MAP_PATH = "saved_instance_curr_map_path";
