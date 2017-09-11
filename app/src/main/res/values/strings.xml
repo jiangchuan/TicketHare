@@ -359,6 +359,7 @@
     <string name="toast_result_code_not_ok">resultCode not OK!</string>
     <string name="toast_record_ticket_success">Record ticket success!</string>
     <string name="toast_record_ticket_failed">Record ticket failed!</string>
+    <string name="toast_ticket_canceled">Current ticket is canceled!</string>
 
     <string name="empty_database">No ticket saved yet, Please acquire ticket first.</string>
     <string name="img_file_create_error">Fail to create image file! Take picture again.</string>

@@ -6,6 +6,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewTreeObserver;
@@ -250,9 +251,9 @@ public class PreviewActivity extends AppCompatActivity {
         ticketTitleTextView.setText(policeCity + getString(R.string.ticket_title));
 
         vehicleColorTextView = (TextView) findViewById(R.id.vehicle_color_textview);
-        vehicleColorTextView.setTextColor(getResources().getColor(R.color.red));
+        vehicleColorTextView.setTextColor(ContextCompat.getColor(this, R.color.red));
         vehicleTypeTextView = (TextView) findViewById(R.id.vehicle_type_textview);
-        vehicleTypeTextView.setTextColor(getResources().getColor(R.color.red));
+        vehicleTypeTextView.setTextColor(ContextCompat.getColor(this, R.color.red));
 
         ticketDespTextView = (TextView) findViewById(R.id.textview_ticket_description);
         ticketDespTextView.setText(getString(R.string.ticket_description1) + policeDept + getString(R.string.ticket_description2));

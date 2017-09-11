@@ -359,6 +359,7 @@
     <string name="toast_result_code_not_ok">resultCode not OK!</string>
     <string name="toast_record_ticket_success">上传罚单成功!</string>
     <string name="toast_record_ticket_failed">上传罚单失败!</string>
+    <string name="toast_ticket_canceled">已取消当前罚单!</string>
 
     <string name="empty_database">无罚单查看, 请先生成罚单</string>
     <string name="img_file_create_error">创建照片文件错误! 请重新拍照。</string>

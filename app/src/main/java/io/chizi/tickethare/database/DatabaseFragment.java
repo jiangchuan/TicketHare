@@ -96,6 +96,8 @@ public class DatabaseFragment extends Fragment {
         mChannel = ManagedChannelBuilder.forAddress(HOST_IP, PORT).usePlaintext(true).build();
         resolver = getActivity().getContentResolver();
 
+        deleteLastWeekTickets();
+
         new GeneralGrpcTask(new PullTicketsRunnable()).execute();
 
         TitlesFragment titlesFragment = (TitlesFragment)
@@ -107,6 +109,26 @@ public class DatabaseFragment extends Fragment {
             ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
             ft.commit();
         }
+    }
+
+    private void deleteLastWeekTickets() {
+        int week = DateUtil.getCurrentISOWeek();
+        String[] projection = new String[]{KEY_MAP_URI, KEY_FAR_IMG_URI, KEY_CLOSE_IMG_URI, KEY_TICKET_IMG_URI};
+        Cursor cursor = resolver.query(TICKET_URL, projection, KEY_WEEK + "<?", new String[]{Integer.toString(week)}, null);
+        // Cycle through and delete every row of data
+        if (cursor.moveToFirst()) {
+            do {
+                String filePath = cursor.getString(cursor.getColumnIndex(KEY_MAP_URI));
+                FileUtil.deleteFile(filePath);
+            } while (cursor.moveToNext());
+        }
+        try {
+            if (cursor != null && !cursor.isClosed())
+                cursor.close();
+        } catch (Exception ex) {
+
+        }
+        resolver.delete(TICKET_URL, KEY_WEEK + "<?", new String[]{Integer.toString(week)});
     }
 
     private class PullTicketsRunnable implements GrpcRunnable {
@@ -133,13 +155,11 @@ public class DatabaseFragment extends Fragment {
                 TicketDetails reply = hareProfiles.next();
                 // Insert the value into the Content Provider
                 ContentValues values = new ContentValues();
-
                 long ticketID = reply.getTicketId();
                 values.put(KEY_TICKET_ID, ticketID);
                 values.put(KEY_USER_ID, reply.getUserId());
                 values.put(KEY_LICENSE_NUM, reply.getLicenseNum());
                 values.put(KEY_LICENSE_COLOR, reply.getLicenseColor());
-
                 int year = reply.getYear();
                 int month = reply.getMonth();
                 int day = reply.getDay();
@@ -164,27 +184,22 @@ public class DatabaseFragment extends Fragment {
                         timeMilsStr + MAP_IMG_FILE_PREFIX, JPEG_FILE_SUFFIX,
                         reply.getMapImage());
                 values.put(KEY_MAP_URI, mapFilePath);
-
                 String farImgFilePath = FileUtil.writeByteStringToFile(getActivity(),
                         timeMilsStr + FAR_IMG_FILE_PREFIX, JPEG_FILE_SUFFIX,
                         reply.getFarImage());
                 values.put(KEY_FAR_IMG_URI, farImgFilePath);
-
                 String closeImgFilePath = FileUtil.writeByteStringToFile(getActivity(),
                         timeMilsStr + CLOSE_IMG_FILE_PREFIX, JPEG_FILE_SUFFIX,
                         reply.getCloseImage());
                 values.put(KEY_CLOSE_IMG_URI, closeImgFilePath);
-
                 String ticketImgFilePath = FileUtil.writeByteStringToFile(getActivity(),
                         timeMilsStr + TICKET_IMG_FILE_PREFIX, JPEG_FILE_SUFFIX,
                         reply.getTicketImage());
                 values.put(KEY_TICKET_IMG_URI, ticketImgFilePath);
                 values.put(KEY_IS_UPLOADED, reply.getIsUploaded() ? 1 : 0);
-
                 resolver.insert(TICKET_URL, values);
                 updateCount++;
             }
-
             return "Pull tickets success!";
         }
     }
@@ -253,6 +268,7 @@ public class DatabaseFragment extends Fragment {
 //            Toast.makeText(getActivity(), "Updated count = " + Integer.toString(updateCount), Toast.LENGTH_SHORT).show();
             if (updateCount > 0) {
                 refreshTitlesFragment();
+
 //                Toast.makeText(getActivity(), mapFilePath, Toast.LENGTH_SHORT).show();
 //                Toast.makeText(getActivity(), farImgFilePath, Toast.LENGTH_SHORT).show();
 //                Toast.makeText(getActivity(), closeImgFilePath, Toast.LENGTH_SHORT).show();

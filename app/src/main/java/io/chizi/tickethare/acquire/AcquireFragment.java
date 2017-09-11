@@ -17,6 +17,7 @@ import android.os.Message;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -650,6 +651,8 @@ public class AcquireFragment extends Fragment {
                 .setNegativeButton(R.string.cancel_ticket,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
+                                Toast.makeText(getActivity(), R.string.toast_ticket_canceled, Toast.LENGTH_LONG).show();
+                                backToHome();
                                 dialog.dismiss();
                             }
                         });
@@ -726,6 +729,8 @@ public class AcquireFragment extends Fragment {
                 .setNegativeButton(R.string.cancel_ticket,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
+                                Toast.makeText(getActivity(), R.string.toast_ticket_canceled, Toast.LENGTH_LONG).show();
+                                backToHome();
                                 dialog.dismiss();
                             }
                         });
@@ -762,6 +767,8 @@ public class AcquireFragment extends Fragment {
                 .setNegativeButton(R.string.cancel_ticket,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
+                                Toast.makeText(getActivity(), R.string.toast_ticket_canceled, Toast.LENGTH_LONG).show();
+                                backToHome();
                                 dialog.dismiss();
                             }
                         });
@@ -795,6 +802,8 @@ public class AcquireFragment extends Fragment {
                 .setNegativeButton(R.string.cancel_ticket,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
+                                Toast.makeText(getActivity(), R.string.toast_ticket_canceled, Toast.LENGTH_LONG).show();
+                                backToHome();
                                 dialog.dismiss();
                             }
                         });
@@ -979,7 +988,6 @@ public class AcquireFragment extends Fragment {
         return bRet;
     }
 
-
     public void showPreview() {
         Intent goToPreviewActivityIntent = new Intent(getActivity(), PreviewActivity.class);
         Bundle params = new Bundle();
@@ -1015,6 +1023,9 @@ public class AcquireFragment extends Fragment {
 //                    else {
 //                        showAlertandRepeat("farImgFilePath is null!", REQUEST_FAR_IMG_CAPTURE);
 //                    }
+                } else {
+                    Toast.makeText(getActivity(), R.string.toast_ticket_canceled, Toast.LENGTH_LONG).show();
+                    backToHome();
                 }
                 break;
 
@@ -1033,6 +1044,9 @@ public class AcquireFragment extends Fragment {
 //                    else {
 //                        showAlertandRepeat("closeImgFilePath is null!", REQUEST_CLOSE_IMG_CAPTURE);
 //                    }
+                } else {
+                    Toast.makeText(getActivity(), R.string.toast_ticket_canceled, Toast.LENGTH_LONG).show();
+                    backToHome();
                 }
                 break;
 
@@ -1043,6 +1057,9 @@ public class AcquireFragment extends Fragment {
                     vehicleType = data.getStringExtra(BACK_VEHICLE_TYPE);
                     licenseColor = data.getStringExtra(BACK_LICENSE_COLOR);
                     getTicketID();
+                } else {
+                    Toast.makeText(getActivity(), R.string.toast_ticket_canceled, Toast.LENGTH_LONG).show();
+                    backToHome();
                 }
                 break;
 
@@ -1055,6 +1072,9 @@ public class AcquireFragment extends Fragment {
                         Toast.makeText(getActivity(), R.string.activity_main_connected, Toast.LENGTH_LONG).show();
                         printWaitAndCheck();
                     }
+                } else {
+                    Toast.makeText(getActivity(), R.string.toast_ticket_canceled, Toast.LENGTH_LONG).show();
+                    backToHome();
                 }
                 break;
 
@@ -1066,6 +1086,9 @@ public class AcquireFragment extends Fragment {
 //                    else {
 //                        showAlertandRepeat("ticketImgFilePath is null!", REQUEST_TICKET_IMG_CAPTURE);
 //                    }
+                } else {
+                    Toast.makeText(getActivity(), R.string.toast_ticket_canceled, Toast.LENGTH_LONG).show();
+                    backToHome();
                 }
                 break;
 
@@ -1156,27 +1179,6 @@ public class AcquireFragment extends Fragment {
         dialog.show();
     }
 
-//    private void showManualPrintDialog() {
-//        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-//        builder.setTitle(getString(R.string.current_ticket_id) + ticketID);
-//        builder.setCancelable(false)
-//                .setPositiveButton(android.R.string.ok, new DialogInterface.OnClickListener() {
-//                    public void onClick(DialogInterface dialog, int id) {
-//                        takeTicketPictureIntent();
-//                        dialog.dismiss();
-//                    }
-//                })
-//                .setNegativeButton(R.string.cancel_ticket, new DialogInterface.OnClickListener() {
-//                    public void onClick(DialogInterface dialog, int id) {
-//                        dialog.dismiss();
-//                    }
-//                });
-//
-//        AlertDialog dialog = builder.create();
-//        dialog.show();
-//    }
-
-
     private void showManualPrintDialog() {
         // get prompts.xml view
         LayoutInflater li = LayoutInflater.from(getActivity());
@@ -1202,6 +1204,8 @@ public class AcquireFragment extends Fragment {
                 .setNegativeButton(R.string.cancel_ticket,
                         new DialogInterface.OnClickListener() {
                             public void onClick(DialogInterface dialog, int id) {
+                                Toast.makeText(getActivity(), R.string.toast_ticket_canceled, Toast.LENGTH_LONG).show();
+                                backToHome();
                                 dialog.dismiss();
                             }
                         });
@@ -1275,7 +1279,10 @@ public class AcquireFragment extends Fragment {
     }
 
     private void backToHome() {
-        takePictureButton.setEnabled(true);
+        FileUtil.deleteFile(mapFilePath);
+        FileUtil.deleteFile(farImgFilePath);
+        FileUtil.deleteFile(closeImgFilePath);
+        FileUtil.deleteFile(ticketImgFilePath);
     }
 
     private class TicketRangeGrpcTask extends AsyncTask<Void, Void, List<String>> {
@@ -1534,18 +1541,24 @@ public class AcquireFragment extends Fragment {
                 String locDesc = location.getLocationDescribe();
                 address = location.getAddrStr();
                 streetName = location.getAddress().street;
+                addressLonLatTextView.setTextColor(ContextCompat.getColor(getActivity(), R.color.black));
+                addressLonLatTextView.setText(getString(R.string.ticket_address_header) + streetName);
                 if (locDesc != null) {
                     address = address + " (" + location.getLocationDescribe() + ")";
                 }
-            } else if (location.getLocType() == BDLocation.TypeServerError) {
-                address = "服务端定位失败,请告知我们";
-            } else if (location.getLocType() == BDLocation.TypeNetWorkException) {
-                address = "定位失败，请检查网络是否通畅";
-            } else if (location.getLocType() == BDLocation.TypeCriteriaException) {
-                address = "无定位依据，手机可能处于飞行模式，试试重启手机";
+                address = streetName;
+            } else {
+                String errorStr = null;
+                if (location.getLocType() == BDLocation.TypeServerError) {
+                    errorStr = "服务端定位失败,请告知我们";
+                } else if (location.getLocType() == BDLocation.TypeNetWorkException) {
+                    errorStr = "定位失败，请检查网络是否通畅";
+                } else if (location.getLocType() == BDLocation.TypeCriteriaException) {
+                    errorStr = "无定位依据，可能定位权限未开，或处于飞行模式";
+                }
+                addressLonLatTextView.setTextColor(ContextCompat.getColor(getActivity(), R.color.red));
+                addressLonLatTextView.setText(errorStr);
             }
-            address = streetName;
-            addressLonLatTextView.setText(getString(R.string.ticket_address_header) + streetName);
         }
 
         public void onReceivePoi(BDLocation poiLocation) {

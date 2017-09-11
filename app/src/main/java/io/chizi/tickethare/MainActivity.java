@@ -41,8 +41,6 @@ public class MainActivity extends AppCompatActivity {
 
     private String userID;
 
-    private SimpleDateFormat dateFormatf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
-
     // Database
     private ContentResolver resolver; // Provides access to other applications Content Providers
 

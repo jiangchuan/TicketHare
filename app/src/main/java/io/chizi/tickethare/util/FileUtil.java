@@ -92,6 +92,13 @@ public class FileUtil {
         return file.delete();
     }
 
+    public static boolean deleteFile(String filePath) {
+        if (filePath == null) {
+            return false;
+        }
+        File file = new File(filePath);
+        return file.delete();
+    }
 
     public static String getFileName(String ticketIDStr, String filePrefix) {
         return (ticketIDStr + filePrefix);
