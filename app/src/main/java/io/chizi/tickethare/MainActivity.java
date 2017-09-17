@@ -29,6 +29,7 @@ import static io.chizi.tickethare.util.AppConstants.HOST_IP;
 import static io.chizi.tickethare.util.AppConstants.POLICE_USER_ID;
 import static io.chizi.tickethare.util.AppConstants.PORT;
 import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_USER_ID;
+import static io.chizi.tickethare.util.AppConstants.SET_IP_ADDRESS;
 
 
 /**
@@ -54,8 +55,12 @@ public class MainActivity extends AppCompatActivity {
         }
         Intent intentFrom = getIntent(); // Get the Intent that called for this Activity to open
         userID = intentFrom.getExtras().getString(POLICE_USER_ID); // Get the data that was sent
-
-        mChannel = ManagedChannelBuilder.forAddress(HOST_IP, PORT).usePlaintext(true).build();
+//        String ipAddress = intentFrom.getExtras().getString(SET_IP_ADDRESS);
+//        if (ipAddress == null || ipAddress.isEmpty()) {
+//            ipAddress = HOST_IP;
+//        }
+        String ipAddress = ((TicketApplication) getApplication()).getIpAddress();
+        mChannel = ManagedChannelBuilder.forAddress(ipAddress, PORT).usePlaintext(true).build();
         resolver = getContentResolver();
 
         // Layout manager that allows the user to flip through the pages

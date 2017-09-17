@@ -94,7 +94,7 @@ public class FileUtil {
 
     public static boolean deleteFile(String filePath) {
         if (filePath == null) {
-            return false;
+            return true;
         }
         File file = new File(filePath);
         return file.delete();

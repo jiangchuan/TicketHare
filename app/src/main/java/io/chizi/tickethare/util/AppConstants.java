@@ -28,6 +28,8 @@ public interface AppConstants {
     static final long SECOND_IN_MS = 1000; // in ms
     static final long MINUTE_IN_MS = 60 * SECOND_IN_MS; // in ms
     static final long HOUR_IN_MS = 60 * MINUTE_IN_MS; // in ms
+    static final long TICKET_DURATION = 7;
+
 
 //    static final double CHINA_WEST = 73.0;
 //    static final double CHINA_EAST = 135.0;
@@ -39,6 +41,7 @@ public interface AppConstants {
     static final double CHINA_SOUTH = 24.0;
     static final double CHINA_NORTH = 49.5;
 
+    static final boolean CUSTOM_IP = false;
     //    static final String HOST_IP = "104.154.251.38";
     static final String HOST_IP = "192.168.0.18";
 //    static final String HOST_IP = "192.168.1.100";
@@ -46,6 +49,7 @@ public interface AppConstants {
 
     static final String POLICE_USER_ID = "police_user_id";
     static final String POLICE_PASSWORD = "police_password";
+    static final String SET_IP_ADDRESS = "set_ip_address";
 
     static final String SCANNED_QR_CODE = "scanned_qr_code";
     static final String CURRENT_USER_ID = "current_user_id";
@@ -80,6 +84,7 @@ public interface AppConstants {
     static final String TITLES_FRAGMENT_TICKET_ID = "titles_fragment_ticket_id";
     static final String SAVED_INSTANCE_TICKET_ID = "saved_instance_ticket_id";
     static final String SAVED_INSTANCE_USER_ID = "saved_instance_user_id";
+    static final String SAVED_INSTANCE_IP_ADDRESS = "saved_instance_ip_address";
     static final String SAVED_INSTANCE_POLICE_NAME = "saved_instance_police_name";
     static final String SAVED_INSTANCE_POLICE_CITY = "saved_instance_police_city";
     static final String SAVED_INSTANCE_POLICE_DEPT = "saved_instance_police_dept";

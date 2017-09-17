@@ -28,6 +28,7 @@ import io.chizi.ticket.PasswordRequest;
 import io.chizi.ticket.TicketGrpc;
 import io.chizi.tickethare.MainActivity;
 import io.chizi.tickethare.R;
+import io.chizi.tickethare.TicketApplication;
 import io.chizi.tickethare.database.DBProvider;
 import io.chizi.tickethare.util.FileUtil;
 import io.grpc.ManagedChannel;
@@ -46,6 +47,7 @@ import static io.chizi.tickethare.util.AppConstants.HOST_IP;
 import static io.chizi.tickethare.util.AppConstants.JPEG_FILE_SUFFIX;
 import static io.chizi.tickethare.util.AppConstants.POLICE_USER_ID;
 import static io.chizi.tickethare.util.AppConstants.PORT;
+import static io.chizi.tickethare.util.AppConstants.SET_IP_ADDRESS;
 
 /**
  * Created by Jiangchuan on 5/21/17.
@@ -58,6 +60,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
     private String password;
     private String newPassword;
     private String reNewPassword;
+    private String ipAddress;
 
     private String policeName;
     private String policeType;
@@ -76,7 +79,6 @@ public class ChangePasswordActivity extends AppCompatActivity {
     private TextView loginLink;
     private ProgressDialog progressDialog;
 
-
     ContentResolver resolver; // Provides access to other applications Content Providers
 
     @Override
@@ -86,6 +88,10 @@ public class ChangePasswordActivity extends AppCompatActivity {
 
         Intent intentFrom = getIntent(); // Get the Intent that called for this Activity to open
         userID = intentFrom.getExtras().getString(POLICE_USER_ID); // Get the data that was sent
+        ipAddress = intentFrom.getExtras().getString(SET_IP_ADDRESS);
+        if (ipAddress == null || ipAddress.isEmpty()) {
+            ipAddress = HOST_IP;
+        }
 
         userIDEditText = (EditText) findViewById(R.id.user_id);
         userIDEditText.setText(userID);
@@ -139,7 +145,7 @@ public class ChangePasswordActivity extends AppCompatActivity {
             if (progressDialog == null) {
                 prepareProgressDialog();
             }
-            mChannel = ManagedChannelBuilder.forAddress(HOST_IP, PORT)
+            mChannel = ManagedChannelBuilder.forAddress(ipAddress, PORT)
                     .usePlaintext(true)
                     .build();
         }
@@ -231,6 +237,8 @@ public class ChangePasswordActivity extends AppCompatActivity {
 
         Intent intent = new Intent(ChangePasswordActivity.this, MainActivity.class);
         intent.putExtra(POLICE_USER_ID, userID);
+//        intent.putExtra(SET_IP_ADDRESS, ipAddress);
+        ((TicketApplication) getApplication()).setIpAddress(ipAddress);
         startActivity(intent);
     }
 

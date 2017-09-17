@@ -35,6 +35,7 @@ import io.chizi.ticket.TicketGrpc;
 import io.chizi.tickethare.MainActivity;
 import io.chizi.tickethare.R;
 import io.chizi.tickethare.RuntimePermissionsActivity;
+import io.chizi.tickethare.TicketApplication;
 import io.chizi.tickethare.database.DBProvider;
 import io.chizi.tickethare.util.FileUtil;
 import io.grpc.ManagedChannel;
@@ -49,11 +50,13 @@ import static io.chizi.tickethare.database.DBProvider.KEY_POLICE_SECTION;
 import static io.chizi.tickethare.database.DBProvider.KEY_POLICE_SQUAD;
 import static io.chizi.tickethare.database.DBProvider.KEY_POLICE_TYPE;
 import static io.chizi.tickethare.database.DBProvider.KEY_USER_ID;
+import static io.chizi.tickethare.util.AppConstants.CUSTOM_IP;
 import static io.chizi.tickethare.util.AppConstants.HOST_IP;
 import static io.chizi.tickethare.util.AppConstants.JPEG_FILE_SUFFIX;
 import static io.chizi.tickethare.util.AppConstants.POLICE_USER_ID;
 import static io.chizi.tickethare.util.AppConstants.PORT;
 import static io.chizi.tickethare.util.AppConstants.REQUEST_PERMISSIONS;
+import static io.chizi.tickethare.util.AppConstants.SET_IP_ADDRESS;
 
 /**
  * Created by Jiangchuan on 5/21/17.
@@ -61,7 +64,8 @@ import static io.chizi.tickethare.util.AppConstants.REQUEST_PERMISSIONS;
 
 public class LoginActivity extends RuntimePermissionsActivity {
     private static final String LOG_TAG = LoginActivity.class.getName();
-    private final static String STORETEXT = "storetext.txt";
+    private final static String STORE_USERID = "store_userid.txt";
+    private final static String STORE_IP = "store_ip.txt";
 
     private String userID;
     private String savedUserID = null;
@@ -73,9 +77,11 @@ public class LoginActivity extends RuntimePermissionsActivity {
     private String policeSquad;
     private String policeSection;
     private String policePortraitPath;
+    private String ipAddress;
 
     private EditText userIDEditText;
     private EditText passwordEditText;
+    private EditText ipEditText;
 
     private Button loginButton;
     private TextView signupLink;
@@ -92,6 +98,13 @@ public class LoginActivity extends RuntimePermissionsActivity {
         passwordEditText = (EditText) findViewById(R.id.input_password);
         getSavedUserID();
         userIDEditText.setText(savedUserID);
+
+        ipEditText = (EditText) findViewById(R.id.edittext_ip_address);
+        if (CUSTOM_IP) {
+            getIPAddressFromTxt();
+            ipEditText.setVisibility(View.VISIBLE);
+            ipEditText.setText(ipAddress);
+        }
 
         resolver = getContentResolver();
 
@@ -111,6 +124,8 @@ public class LoginActivity extends RuntimePermissionsActivity {
                 userID = userIDEditText.getText().toString();
                 Intent intent = new Intent(LoginActivity.this, ChangePasswordActivity.class);
                 intent.putExtra(POLICE_USER_ID, userID);
+                getIPAddress();
+                intent.putExtra(SET_IP_ADDRESS, ipAddress);
                 startActivity(intent);
                 overridePendingTransition(R.anim.push_left_in, R.anim.push_left_out);
             }
@@ -152,9 +167,8 @@ public class LoginActivity extends RuntimePermissionsActivity {
             if (progressDialog == null) {
                 prepareProgressDialog();
             }
-            mChannel = ManagedChannelBuilder.forAddress(HOST_IP, PORT)
-                    .usePlaintext(true)
-                    .build();
+            getIPAddress();
+            mChannel = ManagedChannelBuilder.forAddress(ipAddress, PORT).usePlaintext(true).build();
         }
 
         @Override
@@ -247,6 +261,9 @@ public class LoginActivity extends RuntimePermissionsActivity {
         values.put(KEY_POLICE_PORTRAIT_URI, policePortraitPath);
         resolver.insert(DBProvider.POLICE_URL, values);
 
+        if (ipAddress != null && !ipAddress.isEmpty()) {
+            saveIPAddress();
+        }
         if (userID.equals(savedUserID)) {
             goToMainActivity();
         } else {
@@ -277,7 +294,6 @@ public class LoginActivity extends RuntimePermissionsActivity {
         } else {
             passwordEditText.setError(null);
         }
-
         return true;
     }
 
@@ -315,7 +331,7 @@ public class LoginActivity extends RuntimePermissionsActivity {
 
     public void saveUserID() {
         try {
-            OutputStreamWriter out = new OutputStreamWriter(openFileOutput(STORETEXT, 0));
+            OutputStreamWriter out = new OutputStreamWriter(openFileOutput(STORE_USERID, 0));
             out.write(userIDEditText.getText().toString());
             out.close();
             Toast.makeText(this, R.string.toast_userid_saved, Toast.LENGTH_LONG).show();
@@ -324,9 +340,20 @@ public class LoginActivity extends RuntimePermissionsActivity {
         }
     }
 
+    public void saveIPAddress() {
+        try {
+            OutputStreamWriter out = new OutputStreamWriter(openFileOutput(STORE_IP, 0));
+            out.write(ipEditText.getText().toString());
+            out.close();
+//            Toast.makeText(this, R.string.toast_userid_saved, Toast.LENGTH_LONG).show();
+        } catch (Throwable t) {
+            Toast.makeText(this, "Exception: " + t.toString(), Toast.LENGTH_LONG).show();
+        }
+    }
+
     public void getSavedUserID() {
         try {
-            InputStream in = openFileInput(STORETEXT);
+            InputStream in = openFileInput(STORE_USERID);
             if (in != null) {
                 InputStreamReader tmp = new InputStreamReader(in);
                 BufferedReader reader = new BufferedReader(tmp);
@@ -339,7 +366,35 @@ public class LoginActivity extends RuntimePermissionsActivity {
                 savedUserID = buf.toString();
             }
         } catch (java.io.FileNotFoundException e) {
-            // that's OK, we probably haven't created it yet
+            // TODO:
+        } catch (Throwable t) {
+            Toast.makeText(this, "Exception: " + t.toString(), Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public void getIPAddress() {
+        ipAddress = ipEditText.getText().toString();
+        if (ipAddress == null || ipAddress.isEmpty()) {
+            ipAddress = HOST_IP;
+        }
+    }
+
+    public void getIPAddressFromTxt() {
+        try {
+            InputStream in = openFileInput(STORE_IP);
+            if (in != null) {
+                InputStreamReader tmp = new InputStreamReader(in);
+                BufferedReader reader = new BufferedReader(tmp);
+                String str;
+                StringBuilder buf = new StringBuilder();
+                while ((str = reader.readLine()) != null) {
+                    buf.append(str);
+                }
+                in.close();
+                ipAddress = buf.toString();
+            }
+        } catch (java.io.FileNotFoundException e) {
+            // TODO:
         } catch (Throwable t) {
             Toast.makeText(this, "Exception: " + t.toString(), Toast.LENGTH_LONG).show();
         }
@@ -348,6 +403,8 @@ public class LoginActivity extends RuntimePermissionsActivity {
     private void goToMainActivity() {
         Intent intent = new Intent(LoginActivity.this, MainActivity.class);
         intent.putExtra(POLICE_USER_ID, userID);
+//        intent.putExtra(SET_IP_ADDRESS, ipAddress);
+        ((TicketApplication) getApplication()).setIpAddress(ipAddress);
         startActivity(intent);
     }
 

@@ -9,6 +9,17 @@ import com.baidu.mapapi.SDKInitializer;
  */
 
 public class TicketApplication extends Application {
+
+    private String ipAddress;
+
+    public String getIpAddress() {
+        return ipAddress;
+    }
+
+    public void setIpAddress(String ipAddress) {
+        this.ipAddress = ipAddress;
+    }
+
     @Override
     public void onCreate() {
         super.onCreate();

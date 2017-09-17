@@ -21,6 +21,19 @@
             android:layout_marginBottom="24dp"
             android:src="@drawable/logo" />
 
+        <android.support.design.widget.TextInputLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <EditText android:id="@+id/edittext_ip_address"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:inputType="text"
+                android:imeOptions="flagNoExtractUi"
+                android:hint="IP地址"
+                android:visibility="gone" />
+        </android.support.design.widget.TextInputLayout>
+
         <!--  Email Label -->
         <android.support.design.widget.TextInputLayout
             android:layout_width="match_parent"

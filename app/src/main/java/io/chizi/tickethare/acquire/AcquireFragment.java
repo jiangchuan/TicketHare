@@ -16,6 +16,7 @@ import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.content.ContextCompat;
 import android.util.DisplayMetrics;
@@ -85,6 +86,7 @@ import io.chizi.ticket.TicketGrpc;
 import io.chizi.ticket.TicketRange;
 import io.chizi.ticket.TicketRangeSid;
 import io.chizi.tickethare.R;
+import io.chizi.tickethare.TicketApplication;
 import io.chizi.tickethare.database.TitlesFragment;
 import io.chizi.tickethare.util.BitmapUtil;
 import io.chizi.tickethare.util.ColorSpinnerAdapter;
@@ -157,11 +159,13 @@ import static io.chizi.tickethare.util.AppConstants.CLOSE_IMG_FILE_PREFIX;
 import static io.chizi.tickethare.util.AppConstants.FAR_IMG_FILE_PREFIX;
 import static io.chizi.tickethare.util.AppConstants.HOST_IP;
 import static io.chizi.tickethare.util.AppConstants.PORT;
+import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_IP_ADDRESS;
 import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_IS_UPLOADED;
 import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_POLICE_PORTRAIT_PATH;
 import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_TIME_MILIS;
 import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_TRUE_ADDRESS;
 import static io.chizi.tickethare.util.AppConstants.SECOND_IN_MS;
+import static io.chizi.tickethare.util.AppConstants.SET_IP_ADDRESS;
 import static io.chizi.tickethare.util.AppConstants.TICKET_IMG_FILE_PREFIX;
 import static io.chizi.tickethare.util.AppConstants.JPEG_FILE_SUFFIX;
 import static io.chizi.tickethare.util.AppConstants.MAP_IMG_FILE_PREFIX;
@@ -230,6 +234,8 @@ public class AcquireFragment extends Fragment {
     private String policeCity;
     private String policeDept;
     private String policePortraitPath;
+
+//    private String ipAddress;
 
     private TextView policeNameTextView;
     private TextView policeUserIDTextView;
@@ -369,6 +375,7 @@ public class AcquireFragment extends Fragment {
         if (savedInstanceState != null) {
             ticketID = savedInstanceState.getLong(SAVED_INSTANCE_TICKET_ID);
             userID = savedInstanceState.getString(SAVED_INSTANCE_USER_ID);
+//            ipAddress = savedInstanceState.getString(SAVED_INSTANCE_IP_ADDRESS);
             policeName = savedInstanceState.getString(SAVED_INSTANCE_POLICE_NAME);
             policeCity = savedInstanceState.getString(SAVED_INSTANCE_POLICE_CITY);
             policeDept = savedInstanceState.getString(SAVED_INSTANCE_POLICE_DEPT);
@@ -404,6 +411,14 @@ public class AcquireFragment extends Fragment {
 
         Intent intentFrom = activity.getIntent(); // Get the Intent that called for this Activity to open
         userID = intentFrom.getExtras().getString(POLICE_USER_ID); // Get the data that was sent
+
+//        ipAddress = intentFrom.getExtras().getString(SET_IP_ADDRESS);
+//        if (ipAddress == null || ipAddress.isEmpty()) {
+//            ipAddress = HOST_IP;
+//        }
+        String ipAddress = ((TicketApplication) getActivity().getApplication()).getIpAddress();
+        mChannel = ManagedChannelBuilder.forAddress(ipAddress, PORT).usePlaintext(true).build();
+
         getUserInfo(userID); // Get policeName policeDept, and policeCity
         policeNameTextView.setText(policeName);
         policeUserIDTextView.setText(userID);
@@ -496,10 +511,6 @@ public class AcquireFragment extends Fragment {
         } catch (Exception e) {
             Log.e("HPRTSDKSample", (new StringBuilder("AcquireFragment --> onCreate ")).append(e.getMessage()).toString());
         }
-
-        mChannel = ManagedChannelBuilder.forAddress(HOST_IP, PORT)
-                .usePlaintext(true)
-                .build();
 
         renewLocTimer();
 
@@ -1283,6 +1294,7 @@ public class AcquireFragment extends Fragment {
         FileUtil.deleteFile(farImgFilePath);
         FileUtil.deleteFile(closeImgFilePath);
         FileUtil.deleteFile(ticketImgFilePath);
+        initFields();
     }
 
     private class TicketRangeGrpcTask extends AsyncTask<Void, Void, List<String>> {
@@ -1359,11 +1371,14 @@ public class AcquireFragment extends Fragment {
     }
 
     private void refreshTitlesFragment() {
-        TitlesFragment titlesFragment = (TitlesFragment)
-                getFragmentManager().findFragmentById(R.id.titles);
+        FragmentManager fm = getFragmentManager();
+        if (fm == null) {
+            return;
+        }
+        TitlesFragment titlesFragment = (TitlesFragment) fm.findFragmentById(R.id.titles);
         if (titlesFragment == null) {
             titlesFragment = new TitlesFragment();
-            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            FragmentTransaction ft = fm.beginTransaction();
             ft.replace(R.id.titles, titlesFragment);
             ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
             ft.commit();
@@ -1861,6 +1876,7 @@ public class AcquireFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         outState.putLong(SAVED_INSTANCE_TICKET_ID, ticketID);
         outState.putString(SAVED_INSTANCE_USER_ID, userID);
+//        outState.putString(SAVED_INSTANCE_IP_ADDRESS, ipAddress);
         outState.putString(SAVED_INSTANCE_POLICE_NAME, policeName);
         outState.putString(SAVED_INSTANCE_POLICE_CITY, policeCity);
         outState.putString(SAVED_INSTANCE_POLICE_DEPT, policeDept);

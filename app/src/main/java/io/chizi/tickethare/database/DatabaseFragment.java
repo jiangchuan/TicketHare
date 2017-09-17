@@ -8,6 +8,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -18,11 +19,13 @@ import java.io.StringWriter;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Iterator;
+import java.util.concurrent.TimeUnit;
 
 import io.chizi.ticket.PullTicketsRequest;
 import io.chizi.ticket.TicketDetails;
 import io.chizi.ticket.TicketGrpc;
 import io.chizi.tickethare.R;
+import io.chizi.tickethare.TicketApplication;
 import io.chizi.tickethare.util.DateUtil;
 import io.chizi.tickethare.util.FileUtil;
 import io.chizi.tickethare.util.GrpcRunnable;
@@ -61,6 +64,8 @@ import static io.chizi.tickethare.util.AppConstants.MAP_IMG_FILE_PREFIX;
 import static io.chizi.tickethare.util.AppConstants.POLICE_USER_ID;
 import static io.chizi.tickethare.util.AppConstants.PORT;
 import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_USER_ID;
+import static io.chizi.tickethare.util.AppConstants.SET_IP_ADDRESS;
+import static io.chizi.tickethare.util.AppConstants.TICKET_DURATION;
 import static io.chizi.tickethare.util.AppConstants.TICKET_IMG_FILE_PREFIX;
 
 /**
@@ -93,7 +98,13 @@ public class DatabaseFragment extends Fragment {
         Intent intentFrom = getActivity().getIntent(); // Get the Intent that called for this Activity to open
         userID = intentFrom.getExtras().getString(POLICE_USER_ID); // Get the data that was sent
 
-        mChannel = ManagedChannelBuilder.forAddress(HOST_IP, PORT).usePlaintext(true).build();
+//        String ipAddress = intentFrom.getExtras().getString(SET_IP_ADDRESS);
+//        if (ipAddress == null || ipAddress.isEmpty()) {
+//            ipAddress = HOST_IP;
+//        }
+        String ipAddress = ((TicketApplication) getActivity().getApplication()).getIpAddress();
+        mChannel = ManagedChannelBuilder.forAddress(ipAddress, PORT).usePlaintext(true).build();
+
         resolver = getActivity().getContentResolver();
 
         deleteLastWeekTickets();
@@ -112,10 +123,13 @@ public class DatabaseFragment extends Fragment {
     }
 
     private void deleteLastWeekTickets() {
-        int week = DateUtil.getCurrentISOWeek();
         String[] projection = new String[]{KEY_MAP_URI, KEY_FAR_IMG_URI, KEY_CLOSE_IMG_URI, KEY_TICKET_IMG_URI};
-        Cursor cursor = resolver.query(TICKET_URL, projection, KEY_WEEK + "<?", new String[]{Integer.toString(week)}, null);
-        // Cycle through and delete every row of data
+//        int week = DateUtil.getCurrentISOWeek();
+//        Cursor cursor = resolver.query(TICKET_URL, projection, KEY_WEEK + "<?", new String[]{Integer.toString(week)}, null);
+
+        long daysAgo = Calendar.getInstance().getTimeInMillis() - TimeUnit.DAYS.toMillis(TICKET_DURATION);
+        Cursor cursor = resolver.query(TICKET_URL, projection, KEY_TIME_MILIS + "<?", new String[]{Long.toString(daysAgo)}, null);
+
         if (cursor.moveToFirst()) {
             do {
                 String filePath = cursor.getString(cursor.getColumnIndex(KEY_MAP_URI));
@@ -128,7 +142,8 @@ public class DatabaseFragment extends Fragment {
         } catch (Exception ex) {
 
         }
-        resolver.delete(TICKET_URL, KEY_WEEK + "<?", new String[]{Integer.toString(week)});
+//        resolver.delete(TICKET_URL, KEY_WEEK + "<?", new String[]{Integer.toString(week)});
+        resolver.delete(TICKET_URL, KEY_TIME_MILIS + "<?", new String[]{Long.toString(daysAgo)});
     }
 
     private class PullTicketsRunnable implements GrpcRunnable {
@@ -205,11 +220,14 @@ public class DatabaseFragment extends Fragment {
     }
 
     private void refreshTitlesFragment() {
-        TitlesFragment titlesFragment = (TitlesFragment)
-                getFragmentManager().findFragmentById(R.id.titles);
+        FragmentManager fm = getFragmentManager();
+        if (fm == null) {
+            return;
+        }
+        TitlesFragment titlesFragment = (TitlesFragment) fm.findFragmentById(R.id.titles);
         if (titlesFragment == null) {
             titlesFragment = new TitlesFragment();
-            FragmentTransaction ft = getFragmentManager().beginTransaction();
+            FragmentTransaction ft = fm.beginTransaction();
             ft.replace(R.id.titles, titlesFragment);
             ft.setTransition(FragmentTransaction.TRANSIT_FRAGMENT_FADE);
             ft.commit();

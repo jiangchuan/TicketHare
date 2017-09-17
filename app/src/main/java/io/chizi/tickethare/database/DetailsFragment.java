@@ -2,6 +2,7 @@ package io.chizi.tickethare.database;
 
 import android.app.ProgressDialog;
 import android.content.ContentResolver;
+import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.os.AsyncTask;
@@ -32,6 +33,7 @@ import io.chizi.ticket.RecordReply;
 import io.chizi.ticket.TicketDetails;
 import io.chizi.ticket.TicketGrpc;
 import io.chizi.tickethare.R;
+import io.chizi.tickethare.TicketApplication;
 import io.chizi.tickethare.util.BitmapUtil;
 import io.chizi.tickethare.util.ColorSpinnerAdapter;
 import io.chizi.tickethare.util.FileUtil;
@@ -66,6 +68,7 @@ import static io.chizi.tickethare.database.DBProvider.TICKET_URL;
 import static io.chizi.tickethare.util.AppConstants.HOST_IP;
 import static io.chizi.tickethare.util.AppConstants.PORT;
 import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_CURR_INDEX;
+import static io.chizi.tickethare.util.AppConstants.SET_IP_ADDRESS;
 import static io.chizi.tickethare.util.AppConstants.TITLES_FRAGMENT_TICKET_ID;
 import static io.chizi.tickethare.util.AppConstants.TRANS_IMAGE_H;
 import static io.chizi.tickethare.util.AppConstants.TRANS_IMAGE_W;
@@ -242,9 +245,13 @@ public class DetailsFragment extends Fragment {
     public void onActivityCreated(@Nullable Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
 
-        mChannel = ManagedChannelBuilder.forAddress(HOST_IP, PORT)
-                .usePlaintext(true)
-                .build();
+        Intent intentFrom = getActivity().getIntent(); // Get the Intent that called for this Activity to open
+//        String ipAddress = intentFrom.getExtras().getString(SET_IP_ADDRESS);
+//        if (ipAddress == null || ipAddress.isEmpty()) {
+//            ipAddress = HOST_IP;
+//        }
+        String ipAddress = ((TicketApplication) getActivity().getApplication()).getIpAddress();
+        mChannel = ManagedChannelBuilder.forAddress(ipAddress, PORT).usePlaintext(true).build();
 
         uploadTicketButton.setOnClickListener(new Button.OnClickListener() {
             @Override
