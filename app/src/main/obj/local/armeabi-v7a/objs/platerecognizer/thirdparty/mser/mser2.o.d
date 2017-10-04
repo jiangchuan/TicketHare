@@ -1,5 +1,5 @@
-/Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/obj/local/armeabi-v7a/objs/platerecognizer/thirdparty/mser/mser2.o: \
- /Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/thirdparty/mser/mser2.cpp \
+/Users/Jiangchuan/Documents/TicketHare/app/src/main/obj/local/armeabi-v7a/objs/platerecognizer/thirdparty/mser/mser2.o: \
+ /Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/thirdparty/mser/mser2.cpp \
  /Users/Jiangchuan/Documents/OpenCV-android-sdk/sdk/native/jni/include/opencv2/features2d.hpp \
  /Users/Jiangchuan/Documents/OpenCV-android-sdk/sdk/native/jni/include/opencv2/core.hpp \
  /Users/Jiangchuan/Documents/OpenCV-android-sdk/sdk/native/jni/include/opencv2/core/cvdef.h \
@@ -39,7 +39,7 @@
  /Users/Jiangchuan/Documents/OpenCV-android-sdk/sdk/native/jni/include/opencv2/imgproc/imgproc_c.h \
  /Users/Jiangchuan/Documents/OpenCV-android-sdk/sdk/native/jni/include/opencv2/imgproc/types_c.h \
  /Users/Jiangchuan/Documents/OpenCV-android-sdk/sdk/native/jni/include/opencv2/core/ocl.hpp \
- /Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/thirdparty/mser/mser2.hpp
+ /Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/thirdparty/mser/mser2.hpp
 
 /Users/Jiangchuan/Documents/OpenCV-android-sdk/sdk/native/jni/include/opencv2/features2d.hpp:
 
@@ -119,4 +119,4 @@
 
 /Users/Jiangchuan/Documents/OpenCV-android-sdk/sdk/native/jni/include/opencv2/core/ocl.hpp:
 
-/Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/thirdparty/mser/mser2.hpp:
+/Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/thirdparty/mser/mser2.hpp:

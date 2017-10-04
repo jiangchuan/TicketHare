@@ -66,6 +66,10 @@
             android:screenOrientation="landscape">
         </activity>
 
+        <activity android:name=".LPScanActivity"
+            android:screenOrientation="landscape">
+        </activity>
+
         <activity android:name=".acquire.PreviewActivity"
             android:screenOrientation="landscape">
         </activity>

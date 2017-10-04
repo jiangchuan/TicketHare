@@ -1,5 +1,5 @@
-/Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/obj/local/armeabi-v7a/objs/platerecognizer/thirdparty/textDetect/erfilter.o: \
- /Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/thirdparty/textDetect/erfilter.cpp \
+/Users/Jiangchuan/Documents/TicketHare/app/src/main/obj/local/armeabi-v7a/objs/platerecognizer/thirdparty/textDetect/erfilter.o: \
+ /Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/thirdparty/textDetect/erfilter.cpp \
  /Users/Jiangchuan/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/limits \
  /Users/Jiangchuan/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/fstream \
  /Users/Jiangchuan/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/queue \
@@ -38,7 +38,7 @@
  /Users/Jiangchuan/Documents/OpenCV-android-sdk/sdk/native/jni/include/opencv2/ml.hpp \
  /Users/Jiangchuan/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/map \
  /Users/Jiangchuan/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/iostream \
- /Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/thirdparty/textDetect/erfilter.hpp
+ /Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/thirdparty/textDetect/erfilter.hpp
 
 /Users/Jiangchuan/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/limits:
 
@@ -116,4 +116,4 @@
 
 /Users/Jiangchuan/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/iostream:
 
-/Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/thirdparty/textDetect/erfilter.hpp:
+/Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/thirdparty/textDetect/erfilter.hpp:

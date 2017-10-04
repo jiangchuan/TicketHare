@@ -1,6 +1,6 @@
-/Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/obj/local/armeabi-v7a/objs/platerecognizer/thirdparty/LBP/lbp.o: \
- /Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/thirdparty/LBP/lbp.cpp \
- /Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/thirdparty/LBP/lbp.hpp \
+/Users/Jiangchuan/Documents/TicketHare/app/src/main/obj/local/armeabi-v7a/objs/platerecognizer/thirdparty/LBP/lbp.o: \
+ /Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/thirdparty/LBP/lbp.cpp \
+ /Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/thirdparty/LBP/lbp.hpp \
  /Users/Jiangchuan/Documents/OpenCV-android-sdk/sdk/native/jni/include/opencv2/core/core.hpp \
  /Users/Jiangchuan/Documents/OpenCV-android-sdk/sdk/native/jni/include/opencv2/core.hpp \
  /Users/Jiangchuan/Documents/OpenCV-android-sdk/sdk/native/jni/include/opencv2/core/cvdef.h \
@@ -33,10 +33,10 @@
  /Users/Jiangchuan/Documents/OpenCV-android-sdk/sdk/native/jni/include/opencv2/core/core_c.h \
  /Users/Jiangchuan/Documents/OpenCV-android-sdk/sdk/native/jni/include/opencv2/core/types_c.h \
  /Users/Jiangchuan/Documents/OpenCV-android-sdk/sdk/native/jni/include/opencv2/core/optim.hpp \
- /Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/thirdparty/LBP/helper.hpp \
+ /Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/thirdparty/LBP/helper.hpp \
  /Users/Jiangchuan/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/set
 
-/Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/thirdparty/LBP/lbp.hpp:
+/Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/thirdparty/LBP/lbp.hpp:
 
 /Users/Jiangchuan/Documents/OpenCV-android-sdk/sdk/native/jni/include/opencv2/core/core.hpp:
 
@@ -102,6 +102,6 @@
 
 /Users/Jiangchuan/Documents/OpenCV-android-sdk/sdk/native/jni/include/opencv2/core/optim.hpp:
 
-/Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/thirdparty/LBP/helper.hpp:
+/Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/thirdparty/LBP/helper.hpp:
 
 /Users/Jiangchuan/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/set:

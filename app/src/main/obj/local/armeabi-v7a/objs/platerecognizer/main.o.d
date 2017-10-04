@@ -1,10 +1,10 @@
-/Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/obj/local/armeabi-v7a/objs/platerecognizer/main.o: \
- /Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/main.cpp \
- /Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/easypr.h \
- /Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/easypr/core/plate_recognize.h \
- /Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/easypr/core/plate_detect.h \
- /Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/easypr/core/plate_locate.h \
- /Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/easypr/core/plate.hpp \
+/Users/Jiangchuan/Documents/TicketHare/app/src/main/obj/local/armeabi-v7a/objs/platerecognizer/main.o: \
+ /Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/main.cpp \
+ /Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/easypr.h \
+ /Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/easypr/core/plate_recognize.h \
+ /Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/easypr/core/plate_detect.h \
+ /Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/easypr/core/plate_locate.h \
+ /Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/easypr/core/plate.hpp \
  /Users/Jiangchuan/Documents/OpenCV-android-sdk/sdk/native/jni/include/opencv2/opencv.hpp \
  /Users/Jiangchuan/Documents/OpenCV-android-sdk/sdk/native/jni/include/opencv2/core.hpp \
  /Users/Jiangchuan/Documents/OpenCV-android-sdk/sdk/native/jni/include/opencv2/core/cvdef.h \
@@ -66,51 +66,51 @@
  /Users/Jiangchuan/Documents/OpenCV-android-sdk/sdk/native/jni/include/opencv2/ml.hpp \
  /Users/Jiangchuan/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/map \
  /Users/Jiangchuan/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/iostream \
- /Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/easypr/core/character.hpp \
- /Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/easypr/config.h \
- /Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/easypr/core/plate_judge.h \
- /Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/easypr/core/feature.h \
- /Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/easypr/core/chars_recognise.h \
- /Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/easypr/core/chars_segment.h \
- /Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/easypr/core/chars_identify.h \
+ /Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/easypr/core/character.hpp \
+ /Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/easypr/config.h \
+ /Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/easypr/core/plate_judge.h \
+ /Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/easypr/core/feature.h \
+ /Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/easypr/core/chars_recognise.h \
+ /Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/easypr/core/chars_segment.h \
+ /Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/easypr/core/chars_identify.h \
  /Users/Jiangchuan/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/memory \
- /Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/easypr/util/kv.h \
- /Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/easypr/core/core_func.h \
- /Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/easypr/util/util.h \
+ /Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/easypr/util/kv.h \
+ /Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/easypr/core/core_func.h \
+ /Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/easypr/util/util.h \
  /Users/Jiangchuan/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/fstream \
  /Users/Jiangchuan/Documents/OpenCV-android-sdk/sdk/native/jni/include/opencv2/core/core.hpp \
- /Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/easypr/train/svm_train.h \
- /Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/easypr/train/train.h \
- /Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/easypr/train/ann_train.h \
- /Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/easypr/preprocess/mc_data.h \
- /Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/easypr/preprocess/gdts.h \
- /Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/easypr/preprocess/deface.h \
- /Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/easypr/util/util.h \
- /Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/easypr/util/program_options.h \
+ /Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/easypr/train/svm_train.h \
+ /Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/easypr/train/train.h \
+ /Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/easypr/train/ann_train.h \
+ /Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/easypr/preprocess/mc_data.h \
+ /Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/easypr/preprocess/gdts.h \
+ /Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/easypr/preprocess/deface.h \
+ /Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/easypr/util/util.h \
+ /Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/easypr/util/program_options.h \
  /Users/Jiangchuan/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/cassert \
- /Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/easypr/api.hpp \
- /Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/easypr/config.h \
- /Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/easypr/util/switch.hpp \
- /Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/accuracy.hpp \
+ /Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/easypr/api.hpp \
+ /Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/easypr/config.h \
+ /Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/easypr/util/switch.hpp \
+ /Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/accuracy.hpp \
  /Users/Jiangchuan/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/ctime \
  /Users/Jiangchuan/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/list \
- /Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/easypr/core/core_func.h \
- /Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/thirdparty/xmlParser/xmlParser.h \
- /Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/easypr/core/params.h \
- /Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/config.hpp \
- /Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/result.hpp \
- /Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/chars.hpp \
- /Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/plate.hpp
+ /Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/easypr/core/core_func.h \
+ /Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/thirdparty/xmlParser/xmlParser.h \
+ /Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/easypr/core/params.h \
+ /Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/config.hpp \
+ /Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/result.hpp \
+ /Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/chars.hpp \
+ /Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/plate.hpp
 
-/Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/easypr.h:
+/Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/easypr.h:
 
-/Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/easypr/core/plate_recognize.h:
+/Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/easypr/core/plate_recognize.h:
 
-/Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/easypr/core/plate_detect.h:
+/Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/easypr/core/plate_detect.h:
 
-/Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/easypr/core/plate_locate.h:
+/Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/easypr/core/plate_locate.h:
 
-/Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/easypr/core/plate.hpp:
+/Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/easypr/core/plate.hpp:
 
 /Users/Jiangchuan/Documents/OpenCV-android-sdk/sdk/native/jni/include/opencv2/opencv.hpp:
 
@@ -234,72 +234,72 @@
 
 /Users/Jiangchuan/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/iostream:
 
-/Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/easypr/core/character.hpp:
+/Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/easypr/core/character.hpp:
 
-/Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/easypr/config.h:
+/Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/easypr/config.h:
 
-/Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/easypr/core/plate_judge.h:
+/Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/easypr/core/plate_judge.h:
 
-/Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/easypr/core/feature.h:
+/Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/easypr/core/feature.h:
 
-/Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/easypr/core/chars_recognise.h:
+/Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/easypr/core/chars_recognise.h:
 
-/Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/easypr/core/chars_segment.h:
+/Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/easypr/core/chars_segment.h:
 
-/Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/easypr/core/chars_identify.h:
+/Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/easypr/core/chars_identify.h:
 
 /Users/Jiangchuan/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/memory:
 
-/Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/easypr/util/kv.h:
+/Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/easypr/util/kv.h:
 
-/Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/easypr/core/core_func.h:
+/Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/easypr/core/core_func.h:
 
-/Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/easypr/util/util.h:
+/Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/easypr/util/util.h:
 
 /Users/Jiangchuan/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/fstream:
 
 /Users/Jiangchuan/Documents/OpenCV-android-sdk/sdk/native/jni/include/opencv2/core/core.hpp:
 
-/Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/easypr/train/svm_train.h:
+/Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/easypr/train/svm_train.h:
 
-/Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/easypr/train/train.h:
+/Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/easypr/train/train.h:
 
-/Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/easypr/train/ann_train.h:
+/Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/easypr/train/ann_train.h:
 
-/Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/easypr/preprocess/mc_data.h:
+/Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/easypr/preprocess/mc_data.h:
 
-/Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/easypr/preprocess/gdts.h:
+/Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/easypr/preprocess/gdts.h:
 
-/Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/easypr/preprocess/deface.h:
+/Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/easypr/preprocess/deface.h:
 
-/Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/easypr/util/util.h:
+/Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/easypr/util/util.h:
 
-/Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/easypr/util/program_options.h:
+/Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/easypr/util/program_options.h:
 
 /Users/Jiangchuan/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/cassert:
 
-/Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/easypr/api.hpp:
+/Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/easypr/api.hpp:
 
-/Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/easypr/config.h:
+/Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/easypr/config.h:
 
-/Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/easypr/util/switch.hpp:
+/Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/easypr/util/switch.hpp:
 
-/Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/accuracy.hpp:
+/Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/accuracy.hpp:
 
 /Users/Jiangchuan/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/ctime:
 
 /Users/Jiangchuan/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/list:
 
-/Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/easypr/core/core_func.h:
+/Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/easypr/core/core_func.h:
 
-/Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/thirdparty/xmlParser/xmlParser.h:
+/Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/thirdparty/xmlParser/xmlParser.h:
 
-/Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/easypr/core/params.h:
+/Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/easypr/core/params.h:
 
-/Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/config.hpp:
+/Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/config.hpp:
 
-/Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/result.hpp:
+/Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/result.hpp:
 
-/Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/chars.hpp:
+/Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/chars.hpp:
 
-/Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/plate.hpp:
+/Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/plate.hpp:

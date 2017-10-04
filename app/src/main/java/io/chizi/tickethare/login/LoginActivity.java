@@ -32,6 +32,7 @@ import java.util.concurrent.TimeUnit;
 import io.chizi.ticket.LoginReply;
 import io.chizi.ticket.LoginRequest;
 import io.chizi.ticket.TicketGrpc;
+import io.chizi.tickethare.LPScanActivity;
 import io.chizi.tickethare.MainActivity;
 import io.chizi.tickethare.R;
 import io.chizi.tickethare.RuntimePermissionsActivity;
@@ -112,7 +113,8 @@ public class LoginActivity extends RuntimePermissionsActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                login();
+//                login();
+                goToMainActivity();
             }
         });
 
@@ -401,10 +403,11 @@ public class LoginActivity extends RuntimePermissionsActivity {
     }
 
     private void goToMainActivity() {
-        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
-        intent.putExtra(POLICE_USER_ID, userID);
-//        intent.putExtra(SET_IP_ADDRESS, ipAddress);
-        ((TicketApplication) getApplication()).setIpAddress(ipAddress);
+//        Intent intent = new Intent(LoginActivity.this, MainActivity.class);
+//        intent.putExtra(POLICE_USER_ID, userID);
+//        ((TicketApplication) getApplication()).setIpAddress(ipAddress);
+
+        Intent intent = new Intent(LoginActivity.this, LPScanActivity.class);
         startActivity(intent);
     }
 

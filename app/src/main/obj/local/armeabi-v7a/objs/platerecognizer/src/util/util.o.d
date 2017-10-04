@@ -1,6 +1,6 @@
-/Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/obj/local/armeabi-v7a/objs/platerecognizer/src/util/util.o: \
- /Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/src/util/util.cpp \
- /Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/easypr/util/util.h \
+/Users/Jiangchuan/Documents/TicketHare/app/src/main/obj/local/armeabi-v7a/objs/platerecognizer/src/util/util.o: \
+ /Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/src/util/util.cpp \
+ /Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/easypr/util/util.h \
  /Users/Jiangchuan/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/fstream \
  /Users/Jiangchuan/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/iostream \
  /Users/Jiangchuan/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/vector \
@@ -45,7 +45,7 @@
  /Users/Jiangchuan/Documents/OpenCV-android-sdk/sdk/native/jni/include/opencv2/imgcodecs/imgcodecs_c.h \
  /Users/Jiangchuan/Documents/OpenCV-android-sdk/sdk/native/jni/include/opencv2/videoio/videoio_c.h
 
-/Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/easypr/util/util.h:
+/Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/easypr/util/util.h:
 
 /Users/Jiangchuan/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/fstream:
 

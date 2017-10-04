@@ -1,8 +1,8 @@
-/Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/obj/local/armeabi-v7a/objs/platerecognizer/src/util/kv.o: \
- /Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/src/util/kv.cpp \
- /Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/easypr/util/kv.h \
+/Users/Jiangchuan/Documents/TicketHare/app/src/main/obj/local/armeabi-v7a/objs/platerecognizer/src/util/kv.o: \
+ /Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/src/util/kv.cpp \
+ /Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/easypr/util/kv.h \
  /Users/Jiangchuan/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/map \
- /Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/easypr/util/util.h \
+ /Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/easypr/util/util.h \
  /Users/Jiangchuan/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/fstream \
  /Users/Jiangchuan/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/iostream \
  /Users/Jiangchuan/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/vector \
@@ -37,11 +37,11 @@
  /Users/Jiangchuan/Documents/OpenCV-android-sdk/sdk/native/jni/include/opencv2/core/types_c.h \
  /Users/Jiangchuan/Documents/OpenCV-android-sdk/sdk/native/jni/include/opencv2/core/optim.hpp
 
-/Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/easypr/util/kv.h:
+/Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/easypr/util/kv.h:
 
 /Users/Jiangchuan/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/map:
 
-/Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/easypr/util/util.h:
+/Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/easypr/util/util.h:
 
 /Users/Jiangchuan/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/fstream:
 

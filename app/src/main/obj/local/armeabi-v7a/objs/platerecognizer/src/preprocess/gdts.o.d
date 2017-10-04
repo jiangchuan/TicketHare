@@ -1,6 +1,6 @@
-/Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/obj/local/armeabi-v7a/objs/platerecognizer/src/preprocess/gdts.o: \
- /Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/src/preprocess/gdts.cpp \
- /Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/easypr/preprocess/gdts.h \
+/Users/Jiangchuan/Documents/TicketHare/app/src/main/obj/local/armeabi-v7a/objs/platerecognizer/src/preprocess/gdts.o: \
+ /Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/src/preprocess/gdts.cpp \
+ /Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/easypr/preprocess/gdts.h \
  /Users/Jiangchuan/Documents/OpenCV-android-sdk/sdk/native/jni/include/opencv2/opencv.hpp \
  /Users/Jiangchuan/Documents/OpenCV-android-sdk/sdk/native/jni/include/opencv2/core.hpp \
  /Users/Jiangchuan/Documents/OpenCV-android-sdk/sdk/native/jni/include/opencv2/core/cvdef.h \
@@ -62,12 +62,12 @@
  /Users/Jiangchuan/Documents/OpenCV-android-sdk/sdk/native/jni/include/opencv2/ml.hpp \
  /Users/Jiangchuan/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/map \
  /Users/Jiangchuan/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/iostream \
- /Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/easypr/preprocess/deface.h \
- /Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/easypr/util/util.h \
+ /Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/easypr/preprocess/deface.h \
+ /Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/easypr/util/util.h \
  /Users/Jiangchuan/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/fstream \
  /Users/Jiangchuan/Documents/OpenCV-android-sdk/sdk/native/jni/include/opencv2/core/core.hpp
 
-/Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/easypr/preprocess/gdts.h:
+/Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/easypr/preprocess/gdts.h:
 
 /Users/Jiangchuan/Documents/OpenCV-android-sdk/sdk/native/jni/include/opencv2/opencv.hpp:
 
@@ -191,9 +191,9 @@
 
 /Users/Jiangchuan/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/iostream:
 
-/Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/easypr/preprocess/deface.h:
+/Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/easypr/preprocess/deface.h:
 
-/Users/Jiangchuan/Documents/good6/TicketHare/app/src/main/jni/include/easypr/util/util.h:
+/Users/Jiangchuan/Documents/TicketHare/app/src/main/jni/include/easypr/util/util.h:
 
 /Users/Jiangchuan/Library/Android/sdk/ndk-bundle/sources/cxx-stl/gnu-libstdc++/4.9/include/fstream:
 
