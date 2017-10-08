@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.SurfaceView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import org.opencv.android.BaseLoaderCallback;
 import org.opencv.android.CameraBridgeViewBase;
@@ -38,9 +37,8 @@ public class LPScanActivity extends AppCompatActivity implements CameraBridgeVie
         public void onManagerConnected(int status) {
             switch (status) {
                 case LoaderCallbackInterface.SUCCESS:
-                    cameraBridgeViewBase.enableView();
                     System.loadLibrary("platerecognizer");
-                    new PlateRecognizeTask().execute();
+                    cameraBridgeViewBase.enableView();
                     break;
                 default:
                     super.onManagerConnected(status);
@@ -80,26 +78,22 @@ public class LPScanActivity extends AppCompatActivity implements CameraBridgeVie
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lpscan);
 
+
         recognizeResultTextView = (TextView) findViewById(R.id.textview_recognize_result);
 
         cameraBridgeViewBase = (CameraBridgeViewBase) findViewById(R.id.java_camera_view);
         cameraBridgeViewBase.setVisibility(SurfaceView.VISIBLE);
         cameraBridgeViewBase.setCvCameraViewListener(this);
+        loadLibAndEnableView();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
-        if (!OpenCVLoader.initDebug()) {
-            Log.d(TAG, "OpenCV library not loaded!");
-            OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_1_0, this, baseLoaderCallback);
-        } else {
-            Log.d(TAG, "OpenCV loaded successfully!");
-            baseLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
-        }
+        loadLibAndEnableView();
     }
 
-    private void loadLibAndRecognize() {
+    private void loadLibAndEnableView() {
         if (!OpenCVLoader.initDebug()) {
             Log.d(TAG, "OpenCV library not loaded!");
             OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_1_0, this, baseLoaderCallback);
@@ -123,10 +117,38 @@ public class LPScanActivity extends AppCompatActivity implements CameraBridgeVie
             frameMat.copyTo(recognizeMat); //this will be used for the live stream
             if (recognizeMat != null) {
                 inRecognizing = true;
-                loadLibAndRecognize();
+                new PlateRecognizeTask().execute();
             }
         }
         return frameMat;
     }
 
 }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
