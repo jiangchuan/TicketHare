@@ -34,6 +34,7 @@ public class LPScanActivity extends AppCompatActivity implements CameraBridgeVie
     private ArrayList<String> licenseArray = new ArrayList<String>();
     private String licenseOfCar;
     static final int LICENSE_LENGTH = 7;
+    static final int MAX_VOTE_SIZE = 5;
 
     private BaseLoaderCallback mLoaderCallback = new BaseLoaderCallback(this) {
         @Override
@@ -121,6 +122,7 @@ public class LPScanActivity extends AppCompatActivity implements CameraBridgeVie
             licenseOfCar = licenseArray.get(0);
             return;
         }
+        licenseArraySize = licenseArraySize > MAX_VOTE_SIZE ? MAX_VOTE_SIZE : licenseArraySize;
         char[] licenseChar = new char[LICENSE_LENGTH];
         char[] charArray = new char[licenseArraySize];
         for (int i = 0; i < LICENSE_LENGTH; i++) {
