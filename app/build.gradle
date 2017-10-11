@@ -12,36 +12,30 @@ android {
         versionCode 1
         versionName "1.0"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
-    }
 
-    sourceSets.main {
-        jni.srcDirs = [] // This prevents the auto generation of Android.mk
-        jniLibs.srcDir 'src/main/libs' // This is not necessary unless you have precompiled libraries in your project.
+        ndk {
+            abiFilters 'arm64-v8a'
+        }
+        externalNativeBuild {
+            cmake {
+                cppFlags "-std=c++11"
+            }
+        }
     }
-    task buildNative(type: Exec, description: 'Compile JNI source via NDK') {
-        def ndkDir = android.ndkDirectory
-        commandLine "$ndkDir/ndk-build",
-                '-C', file('src/main/jni').absolutePath, // Change src/main/jni the relative path to your jni source
-                '-j', Runtime.runtime.availableProcessors(),
-                'all',
-                'NDK_DEBUG=0'
-    }
-    task cleanNative(type: Exec, description: 'Clean JNI object files') {
-        def ndkDir = android.ndkDirectory
-        commandLine "$ndkDir/ndk-build",
-                '-C', file('src/main/jni').absolutePath, // Change src/main/jni the relative path to your jni source
-                'clean'
-    }
-    clean.dependsOn 'cleanNative'
-    tasks.withType(JavaCompile) {
-        compileTask -> compileTask.dependsOn buildNative
-    }
-
     buildTypes {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
+    }
+    externalNativeBuild {
+        cmake {
+            path "CMakeLists.txt"
+        }
+    }
+    sourceSets.main {
+//        jniLibs.srcDir 'libs' // let gradle pack the shared library into apk
+        jniLibs.srcDirs = ['libs']
     }
     lintOptions {
         disable 'InvalidPackage', 'HardcodedText'
@@ -76,7 +70,7 @@ protobuf {
 }
 
 dependencies {
-    compile fileTree(include: ['*.jar'], dir: 'libs')
+    compile fileTree(dir: 'libs', include: ['*.jar'])
     androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
         exclude group: 'com.android.support', module: 'support-annotations'
         exclude group: 'com.google.code.findbugs'
@@ -88,21 +82,10 @@ dependencies {
     testCompile 'junit:junit:4.12'
     // You need to build grpc-java to obtain these libraries below.
     compile 'io.grpc:grpc-okhttp:1.1.0-SNAPSHOT'
-    // CURRENT_GRPC_VERSION
     compile 'io.grpc:grpc-protobuf-lite:1.1.0-SNAPSHOT'
-    // CURRENT_GRPC_VERSION
     compile 'io.grpc:grpc-stub:1.1.0-SNAPSHOT'
-    // CURRENT_GRPC_VERSION
     compile 'javax.annotation:javax.annotation-api:1.2'
-    // Baidu Map
-    compile files('src/main/libs/locSDK_6.13.jar')
-    compile files('src/main/libs/baidumapapi_base_v4_1_1.jar')
-    compile files('src/main/libs/baidumapapi_cloud_v4_1_1.jar')
-    compile files('src/main/libs/baidumapapi_map_v4_1_1.jar')
-    compile files('src/main/libs/baidumapapi_radar_v4_1_1.jar')
-    compile files('src/main/libs/baidumapapi_search_v4_1_1.jar')
-    compile files('src/main/libs/baidumapapi_util_v4_1_1.jar')
     compile project(':cam2')
-    compile project(':openCVLibrary310')
-    compile files('src/main/libs/Android_SDK_CPCL_V0.1.1PRO.jar')
+    compile project(':openCVLibrary320')
+    compile files('libs/Android_SDK_CPCL_V0.1.1PRO.jar')
 }

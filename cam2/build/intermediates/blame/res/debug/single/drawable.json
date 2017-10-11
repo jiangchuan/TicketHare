@@ -1,34 +1,34 @@
 [
     {
-        "merged": "/Users/Jiangchuan/Documents/TicketHare/cam2/build/intermediates/res/merged/debug/drawable/cwac_cam2_action_bar_bg_translucent.xml",
-        "source": "/Users/Jiangchuan/Documents/TicketHare/cam2/src/main/res/drawable/cwac_cam2_action_bar_bg_translucent.xml"
+        "merged": "/Users/Jiangchuan/Documents/good7/TicketHare/cam2/build/intermediates/res/merged/debug/drawable/focus_corner.png",
+        "source": "/Users/Jiangchuan/Documents/good7/TicketHare/cam2/src/main/res/drawable/focus_corner.png"
     },
     {
-        "merged": "/Users/Jiangchuan/Documents/TicketHare/cam2/build/intermediates/res/merged/debug/drawable/plate_rect.png",
-        "source": "/Users/Jiangchuan/Documents/TicketHare/cam2/src/main/res/drawable/plate_rect.png"
+        "merged": "/Users/Jiangchuan/Documents/good7/TicketHare/cam2/build/intermediates/res/merged/debug/drawable/focus_bl.png",
+        "source": "/Users/Jiangchuan/Documents/good7/TicketHare/cam2/src/main/res/drawable/focus_bl.png"
     },
     {
-        "merged": "/Users/Jiangchuan/Documents/TicketHare/cam2/build/intermediates/res/merged/debug/drawable/cwac_cam2_action_bar_bg_transparent.xml",
-        "source": "/Users/Jiangchuan/Documents/TicketHare/cam2/src/main/res/drawable/cwac_cam2_action_bar_bg_transparent.xml"
+        "merged": "/Users/Jiangchuan/Documents/good7/TicketHare/cam2/build/intermediates/res/merged/debug/drawable/focus_br.png",
+        "source": "/Users/Jiangchuan/Documents/good7/TicketHare/cam2/src/main/res/drawable/focus_br.png"
     },
     {
-        "merged": "/Users/Jiangchuan/Documents/TicketHare/cam2/build/intermediates/res/merged/debug/drawable/focus_tr.png",
-        "source": "/Users/Jiangchuan/Documents/TicketHare/cam2/src/main/res/drawable/focus_tr.png"
+        "merged": "/Users/Jiangchuan/Documents/good7/TicketHare/cam2/build/intermediates/res/merged/debug/drawable/plate_rect.png",
+        "source": "/Users/Jiangchuan/Documents/good7/TicketHare/cam2/src/main/res/drawable/plate_rect.png"
     },
     {
-        "merged": "/Users/Jiangchuan/Documents/TicketHare/cam2/build/intermediates/res/merged/debug/drawable/focus_br.png",
-        "source": "/Users/Jiangchuan/Documents/TicketHare/cam2/src/main/res/drawable/focus_br.png"
+        "merged": "/Users/Jiangchuan/Documents/good7/TicketHare/cam2/build/intermediates/res/merged/debug/drawable/focus_tr.png",
+        "source": "/Users/Jiangchuan/Documents/good7/TicketHare/cam2/src/main/res/drawable/focus_tr.png"
     },
     {
-        "merged": "/Users/Jiangchuan/Documents/TicketHare/cam2/build/intermediates/res/merged/debug/drawable/focus_tl.png",
-        "source": "/Users/Jiangchuan/Documents/TicketHare/cam2/src/main/res/drawable/focus_tl.png"
+        "merged": "/Users/Jiangchuan/Documents/good7/TicketHare/cam2/build/intermediates/res/merged/debug/drawable/cwac_cam2_action_bar_bg_translucent.xml",
+        "source": "/Users/Jiangchuan/Documents/good7/TicketHare/cam2/src/main/res/drawable/cwac_cam2_action_bar_bg_translucent.xml"
     },
     {
-        "merged": "/Users/Jiangchuan/Documents/TicketHare/cam2/build/intermediates/res/merged/debug/drawable/focus_corner.png",
-        "source": "/Users/Jiangchuan/Documents/TicketHare/cam2/src/main/res/drawable/focus_corner.png"
+        "merged": "/Users/Jiangchuan/Documents/good7/TicketHare/cam2/build/intermediates/res/merged/debug/drawable/cwac_cam2_action_bar_bg_transparent.xml",
+        "source": "/Users/Jiangchuan/Documents/good7/TicketHare/cam2/src/main/res/drawable/cwac_cam2_action_bar_bg_transparent.xml"
     },
     {
-        "merged": "/Users/Jiangchuan/Documents/TicketHare/cam2/build/intermediates/res/merged/debug/drawable/focus_bl.png",
-        "source": "/Users/Jiangchuan/Documents/TicketHare/cam2/src/main/res/drawable/focus_bl.png"
+        "merged": "/Users/Jiangchuan/Documents/good7/TicketHare/cam2/build/intermediates/res/merged/debug/drawable/focus_tl.png",
+        "source": "/Users/Jiangchuan/Documents/good7/TicketHare/cam2/src/main/res/drawable/focus_tl.png"
     }
 ]

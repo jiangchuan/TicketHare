@@ -30,6 +30,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"
@@ -98,7 +99,6 @@
             android:exported="true"
             android:multiprocess="true" >
         </provider>
-
 
     </application>
 

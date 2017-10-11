@@ -43,7 +43,7 @@ public interface AppConstants {
 
     static final boolean CUSTOM_IP = false;
     //    static final String HOST_IP = "104.154.251.38";
-//    static final String HOST_IP = "35.193.67.65";
+//    static final String HOST_IP = "10.217.76.4";
     static final String HOST_IP = "192.168.0.18";
 //    static final String HOST_IP = "192.168.1.100";
     static final int PORT = 50051;

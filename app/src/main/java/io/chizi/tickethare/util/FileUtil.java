@@ -14,10 +14,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-
-import io.chizi.tickethare.MainActivity;
 
 import static io.chizi.tickethare.util.AppConstants.COMPRESS_RATIO;
 import static io.chizi.tickethare.util.AppConstants.TRANS_IMAGE_H;

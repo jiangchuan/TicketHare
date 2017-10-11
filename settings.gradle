@@ -1,2 +1,2 @@
 include ':cam2', ':app'
-include ':openCVLibrary310'
+include ':openCVLibrary320'

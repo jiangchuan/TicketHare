@@ -3,7 +3,6 @@ package io.chizi.tickethare.database;
 import android.content.res.Configuration;
 import android.os.Bundle;
 import android.support.v4.app.FragmentActivity;
-import android.view.Window;
 
 /**
  * Created by Jiangchuan on 5/21/17.

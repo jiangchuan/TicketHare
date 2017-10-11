@@ -92,21 +92,18 @@ import io.chizi.tickethare.util.BitmapUtil;
 import io.chizi.tickethare.util.ColorSpinnerAdapter;
 import io.chizi.tickethare.util.DateUtil;
 import io.chizi.tickethare.util.FileUtil;
+import io.chizi.tickethare.util.MRAssetUtil;
+import io.chizi.tickethare.util.MRCarUtil;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 
-import static io.chizi.tickethare.acquire.PlateRecognizer.plateRecognition;
 import static io.chizi.tickethare.database.DBProvider.KEY_ADDRESS;
-import static io.chizi.tickethare.database.DBProvider.KEY_VEHICLE_COLOR;
-import static io.chizi.tickethare.database.DBProvider.KEY_VEHICLE_TYPE;
+import static io.chizi.tickethare.database.DBProvider.KEY_CLOSE_IMG_URI;
 import static io.chizi.tickethare.database.DBProvider.KEY_DATETIME;
 import static io.chizi.tickethare.database.DBProvider.KEY_DAY;
-import static io.chizi.tickethare.database.DBProvider.KEY_HOUR;
 import static io.chizi.tickethare.database.DBProvider.KEY_FAR_IMG_URI;
-import static io.chizi.tickethare.database.DBProvider.KEY_CLOSE_IMG_URI;
+import static io.chizi.tickethare.database.DBProvider.KEY_HOUR;
 import static io.chizi.tickethare.database.DBProvider.KEY_IS_UPLOADED;
-import static io.chizi.tickethare.database.DBProvider.KEY_POLICE_PORTRAIT_URI;
-import static io.chizi.tickethare.database.DBProvider.KEY_TICKET_IMG_URI;
 import static io.chizi.tickethare.database.DBProvider.KEY_LATITUDE;
 import static io.chizi.tickethare.database.DBProvider.KEY_LICENSE_COLOR;
 import static io.chizi.tickethare.database.DBProvider.KEY_LICENSE_NUM;
@@ -117,11 +114,15 @@ import static io.chizi.tickethare.database.DBProvider.KEY_MONTH;
 import static io.chizi.tickethare.database.DBProvider.KEY_POLICE_CITY;
 import static io.chizi.tickethare.database.DBProvider.KEY_POLICE_DEPT;
 import static io.chizi.tickethare.database.DBProvider.KEY_POLICE_NAME;
+import static io.chizi.tickethare.database.DBProvider.KEY_POLICE_PORTRAIT_URI;
 import static io.chizi.tickethare.database.DBProvider.KEY_TICKET_ID;
+import static io.chizi.tickethare.database.DBProvider.KEY_TICKET_IMG_URI;
 import static io.chizi.tickethare.database.DBProvider.KEY_TICKET_RANGE_END;
 import static io.chizi.tickethare.database.DBProvider.KEY_TICKET_RANGE_START;
 import static io.chizi.tickethare.database.DBProvider.KEY_TIME_MILIS;
 import static io.chizi.tickethare.database.DBProvider.KEY_USER_ID;
+import static io.chizi.tickethare.database.DBProvider.KEY_VEHICLE_COLOR;
+import static io.chizi.tickethare.database.DBProvider.KEY_VEHICLE_TYPE;
 import static io.chizi.tickethare.database.DBProvider.KEY_WEEK;
 import static io.chizi.tickethare.database.DBProvider.KEY_YEAR;
 import static io.chizi.tickethare.database.DBProvider.POLICE_URL;
@@ -136,43 +137,34 @@ import static io.chizi.tickethare.util.AppConstants.CHINA_EAST;
 import static io.chizi.tickethare.util.AppConstants.CHINA_NORTH;
 import static io.chizi.tickethare.util.AppConstants.CHINA_SOUTH;
 import static io.chizi.tickethare.util.AppConstants.CHINA_WEST;
+import static io.chizi.tickethare.util.AppConstants.CLOSE_IMG_FILE_PATH;
+import static io.chizi.tickethare.util.AppConstants.CLOSE_IMG_FILE_PREFIX;
 import static io.chizi.tickethare.util.AppConstants.COMPRESS_RATIO;
 import static io.chizi.tickethare.util.AppConstants.CURRENT_ADDRESS;
-import static io.chizi.tickethare.util.AppConstants.CURRENT_POLICE_PORTRAIT_PATH;
-import static io.chizi.tickethare.util.AppConstants.FAR_IMG_FILE_PATH;
-import static io.chizi.tickethare.util.AppConstants.CLOSE_IMG_FILE_PATH;
 import static io.chizi.tickethare.util.AppConstants.CURRENT_LATITUDE;
 import static io.chizi.tickethare.util.AppConstants.CURRENT_LICENSE_COLOR;
 import static io.chizi.tickethare.util.AppConstants.CURRENT_LICENSE_NUM;
 import static io.chizi.tickethare.util.AppConstants.CURRENT_LONGITUDE;
-import static io.chizi.tickethare.util.AppConstants.MAP_FILE_PATH;
 import static io.chizi.tickethare.util.AppConstants.CURRENT_POLICE_CITY;
 import static io.chizi.tickethare.util.AppConstants.CURRENT_POLICE_DEPT;
 import static io.chizi.tickethare.util.AppConstants.CURRENT_POLICE_NAME;
+import static io.chizi.tickethare.util.AppConstants.CURRENT_POLICE_PORTRAIT_PATH;
 import static io.chizi.tickethare.util.AppConstants.CURRENT_TICKET_ID;
 import static io.chizi.tickethare.util.AppConstants.CURRENT_USER_ID;
 import static io.chizi.tickethare.util.AppConstants.CURRENT_VEHICLE_COLOR;
 import static io.chizi.tickethare.util.AppConstants.CURRENT_VEHICLE_TYPE;
+import static io.chizi.tickethare.util.AppConstants.FAR_IMG_FILE_PATH;
+import static io.chizi.tickethare.util.AppConstants.FAR_IMG_FILE_PREFIX;
 import static io.chizi.tickethare.util.AppConstants.FILE_INSDCARD_DIR;
 import static io.chizi.tickethare.util.AppConstants.GOBACK_USER_ID;
-import static io.chizi.tickethare.util.AppConstants.CLOSE_IMG_FILE_PREFIX;
-import static io.chizi.tickethare.util.AppConstants.FAR_IMG_FILE_PREFIX;
-import static io.chizi.tickethare.util.AppConstants.HOST_IP;
-import static io.chizi.tickethare.util.AppConstants.PORT;
-import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_IP_ADDRESS;
-import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_IS_UPLOADED;
-import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_POLICE_PORTRAIT_PATH;
-import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_TIME_MILIS;
-import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_TRUE_ADDRESS;
-import static io.chizi.tickethare.util.AppConstants.SECOND_IN_MS;
-import static io.chizi.tickethare.util.AppConstants.SET_IP_ADDRESS;
-import static io.chizi.tickethare.util.AppConstants.TICKET_IMG_FILE_PREFIX;
 import static io.chizi.tickethare.util.AppConstants.JPEG_FILE_SUFFIX;
+import static io.chizi.tickethare.util.AppConstants.MAP_FILE_PATH;
 import static io.chizi.tickethare.util.AppConstants.MAP_IMG_FILE_PREFIX;
 import static io.chizi.tickethare.util.AppConstants.POLICE_USER_ID;
+import static io.chizi.tickethare.util.AppConstants.PORT;
 import static io.chizi.tickethare.util.AppConstants.PREF_INSTALLED_KEY;
-import static io.chizi.tickethare.util.AppConstants.REQUEST_FAR_IMG_CAPTURE;
 import static io.chizi.tickethare.util.AppConstants.REQUEST_CLOSE_IMG_CAPTURE;
+import static io.chizi.tickethare.util.AppConstants.REQUEST_FAR_IMG_CAPTURE;
 import static io.chizi.tickethare.util.AppConstants.REQUEST_PREVIEW_SHOW;
 import static io.chizi.tickethare.util.AppConstants.REQUEST_TICKET_IMG_CAPTURE;
 import static io.chizi.tickethare.util.AppConstants.REQUEST_UPDATE_PROFILE;
@@ -185,21 +177,27 @@ import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_CURR_MAP_PATH
 import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_CURR_TIME;
 import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_DAY;
 import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_HOUR;
+import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_IS_UPLOADED;
 import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_LATITUDE;
 import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_LICENSE_COLOR;
 import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_LICENSE_NUM;
 import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_LONGITUDE;
 import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_MINUTE;
 import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_MONTH;
-import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_WEEK;
 import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_POLICE_CITY;
 import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_POLICE_DEPT;
 import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_POLICE_NAME;
+import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_POLICE_PORTRAIT_PATH;
 import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_TICKET_ID;
+import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_TIME_MILIS;
+import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_TRUE_ADDRESS;
 import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_USER_ID;
 import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_VEHICLE_COLOR;
 import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_VEHICLE_TYPE;
+import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_WEEK;
 import static io.chizi.tickethare.util.AppConstants.SAVED_INSTANCE_YEAR;
+import static io.chizi.tickethare.util.AppConstants.SECOND_IN_MS;
+import static io.chizi.tickethare.util.AppConstants.TICKET_IMG_FILE_PREFIX;
 import static io.chizi.tickethare.util.AppConstants.TRANS_IMAGE_H;
 import static io.chizi.tickethare.util.AppConstants.TRANS_IMAGE_W;
 
@@ -262,10 +260,7 @@ public class AcquireFragment extends Fragment {
 
     private Button takePictureButton;
 
-    private String svmPath = "svm.xml";
-    private String annPath = "ann.xml";
-    private String ann_chinesePath = "ann_chinese.xml";
-    private String mappingPath = "province_mapping";
+    private static final String sdcarddir = "/sdcard/" + MRCarUtil.ApplicationDir;
 
     private SimpleDateFormat dateFormatf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 
@@ -314,39 +309,11 @@ public class AcquireFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        initFile();
+        initRecognizeFile();
     }
 
-    private void initFile() {
-        File file = new File(String.format("/sdcard/" + FILE_INSDCARD_DIR + "/"));
-        if (!file.exists()) {
-            file.mkdirs();
-        }
-        CopyOneFile(annPath);
-        CopyOneFile(svmPath);
-        CopyOneFile(mappingPath);
-        CopyOneFile(ann_chinesePath);
-    }
-
-    private void CopyOneFile(String path) {
-        File file = new File(String.format("/sdcard/" + FILE_INSDCARD_DIR + "/" + path));
-        try {
-            copyFileFromAssetsToSDCard(path, "/sdcard/" + FILE_INSDCARD_DIR + "/" + path);
-        } catch (Throwable throwable) {
-            throwable.printStackTrace();
-        }
-    }
-
-    private void copyFileFromAssetsToSDCard(String resname, String sdpath) throws Throwable {
-        InputStream is = getResources().getAssets().open(resname);
-        OutputStream os = new FileOutputStream(sdpath);
-        byte data[] = new byte[1024];
-        int len;
-        while ((len = is.read(data)) > 0) {
-            os.write(data, 0, len);
-        }
-        is.close();
-        os.close();
+    private void initRecognizeFile() {
+        MRAssetUtil.CopyAssets(getActivity(), MRCarUtil.ApplicationDir, sdcarddir);
     }
 
     @Override
@@ -1582,10 +1549,10 @@ public class AcquireFragment extends Fragment {
 
     private void loadLibAndRecognize() {
         if (!OpenCVLoader.initDebug()) {
-            Log.d(LOG_TAG, "Internal OpenCV library not found. Using OpenCV Manager for initialization");
-            OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_1_0, getActivity(), mLoaderCallback);
+            Log.d(LOG_TAG, "OpenCV library not loaded!");
+            OpenCVLoader.initAsync(OpenCVLoader.OPENCV_VERSION_3_2_0, getActivity(), mLoaderCallback);
         } else {
-            Log.d(LOG_TAG, "OpenCV library found inside package. Using it!");
+            Log.d(LOG_TAG, "OpenCV loaded successfully!");
             mLoaderCallback.onManagerConnected(LoaderCallbackInterface.SUCCESS);
         }
     }
@@ -1752,6 +1719,7 @@ public class AcquireFragment extends Fragment {
                 prepareProgressDialog();
             }
         }
+
         @Override
         protected List<String> doInBackground(Void... nothing) {
             if (isUploaded == 1 && progressDialog == null) {
@@ -1836,8 +1804,7 @@ public class AcquireFragment extends Fragment {
         public void onManagerConnected(int status) {
             switch (status) {
                 case LoaderCallbackInterface.SUCCESS:
-                    Log.d(LOG_TAG, "OpenCV loaded successfully");
-                    System.loadLibrary("platerecognizer");
+                    System.loadLibrary("mrcar");
                     new PlateRecognizeTask().execute();
                     break;
                 default:
@@ -1847,6 +1814,7 @@ public class AcquireFragment extends Fragment {
         }
     };
 
+
     private class PlateRecognizeTask extends AsyncTask<String, Integer, String> {
         @Override
         protected String doInBackground(String... params) {
@@ -1854,7 +1822,7 @@ public class AcquireFragment extends Fragment {
             bitmap = BitmapUtil.cropBitmapCenter(bitmap, SCREEN_WIDTH, SCREEN_HEIGHT, RATIO_ENLARGE, VERTICAL_RATIO_W, VERTICAL_RATIO_H, HORIZONTAL_RATIO_W, HORIZONTAL_RATIO_H);
             Mat m = new Mat();
             Utils.bitmapToMat(bitmap, m);
-            String recognizeResult = plateRecognition(m.getNativeObjAddr(), m.getNativeObjAddr());
+            String recognizeResult = MRCarUtil.plateRecognition(m.getNativeObjAddr(), m.getNativeObjAddr());
             return recognizeResult;
         }
 
