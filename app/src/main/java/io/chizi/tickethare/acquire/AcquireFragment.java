@@ -200,6 +200,7 @@ import static io.chizi.tickethare.util.AppConstants.SECOND_IN_MS;
 import static io.chizi.tickethare.util.AppConstants.TICKET_IMG_FILE_PREFIX;
 import static io.chizi.tickethare.util.AppConstants.TRANS_IMAGE_H;
 import static io.chizi.tickethare.util.AppConstants.TRANS_IMAGE_W;
+import static io.chizi.tickethare.util.AppConstants.sdcarddir;
 
 /**
  * Created by Jiangchuan on 5/21/17.
@@ -259,8 +260,6 @@ public class AcquireFragment extends Fragment {
     private ImageView profileImageView;
 
     private Button takePictureButton;
-
-    private static final String sdcarddir = "/sdcard/" + MRCarUtil.ApplicationDir;
 
     private SimpleDateFormat dateFormatf = new SimpleDateFormat("yyyy-MM-dd HH:mm");
 

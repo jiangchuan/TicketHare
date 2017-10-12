@@ -15,7 +15,10 @@ import org.opencv.core.Mat;
 
 import java.util.ArrayList;
 
+import io.chizi.tickethare.util.MRAssetUtil;
 import io.chizi.tickethare.util.MRCarUtil;
+
+import static io.chizi.tickethare.util.AppConstants.sdcarddir;
 
 /**
  * Created by Jiangchuan on 10/10/17.
@@ -59,6 +62,7 @@ public class LPScanActivity extends AppCompatActivity implements CameraBridgeVie
         cameraBridgeViewBase = (CameraBridgeViewBase) findViewById(R.id.java_camera_view);
         cameraBridgeViewBase.setVisibility(SurfaceView.VISIBLE);
         cameraBridgeViewBase.setCvCameraViewListener(this);
+        MRAssetUtil.CopyAssets(LPScanActivity.this, MRCarUtil.ApplicationDir, sdcarddir);
         loadLibAndEnableView();
     }
 

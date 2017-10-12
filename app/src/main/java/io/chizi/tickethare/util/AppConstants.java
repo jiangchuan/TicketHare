@@ -5,6 +5,8 @@ package io.chizi.tickethare.util;
  */
 
 public interface AppConstants {
+    static final String sdcarddir = "/sdcard/" + MRCarUtil.ApplicationDir;
+
     static final int REQUEST_PERMISSIONS = 401;
 
     static final int REQUEST_SIGNUP = 20;
@@ -44,8 +46,8 @@ public interface AppConstants {
     static final boolean CUSTOM_IP = false;
     //    static final String HOST_IP = "104.154.251.38";
 //    static final String HOST_IP = "10.217.76.4";
-    static final String HOST_IP = "192.168.0.18";
-//    static final String HOST_IP = "192.168.1.100";
+//    static final String HOST_IP = "192.168.0.18";
+    static final String HOST_IP = "192.168.1.100";
     static final int PORT = 50051;
 
     static final String POLICE_USER_ID = "police_user_id";
