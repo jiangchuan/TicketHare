@@ -132,6 +132,12 @@ public class DatabaseFragment extends Fragment {
             do {
                 String filePath = cursor.getString(cursor.getColumnIndex(KEY_MAP_URI));
                 FileUtil.deleteFile(filePath);
+                filePath = cursor.getString(cursor.getColumnIndex(KEY_FAR_IMG_URI));
+                FileUtil.deleteFile(filePath);
+                filePath = cursor.getString(cursor.getColumnIndex(KEY_CLOSE_IMG_URI));
+                FileUtil.deleteFile(filePath);
+                filePath = cursor.getString(cursor.getColumnIndex(KEY_TICKET_IMG_URI));
+                FileUtil.deleteFile(filePath);
             } while (cursor.moveToNext());
         }
         try {
